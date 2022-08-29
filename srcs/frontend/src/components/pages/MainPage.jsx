@@ -32,7 +32,7 @@ function MainPage(props) {
 			<LoginButton
 				title="Login"
 				onClick={() => {
-					navigate("/");
+					navigate("/choice");
 					console.log("login success");
 				}}
 			/>
