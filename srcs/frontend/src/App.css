@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+@font-face {
+  font-family: "Establish";
+  font-weight: bolder;
+  src: url("./fonts/establish\ Retrosans\ OTF.otf");
+}
+
+@font-face {
+  font-family: "WelcomeRegular";
+  src: url("./fonts/웰컴체OTF\ Regular.otf");
+}
+
+@font-face {
+  font-family: "WelcomeBold";
+  src: url("./fonts/웰컴체OTF\ Bold.otf");
+}

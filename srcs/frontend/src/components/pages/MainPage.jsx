@@ -1,18 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import LoginButton from "../login/Login";
-
-/**
- * 메인 페이지에서 로고와 로그인 버튼을 함께 가지고 있는 스타일 태그
- */
-const Wrapper = styled.div`
-	padding: 16px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-`;
+import { Container, Spacer } from '@chakra-ui/react';
 
 /**
  * 메인 페이지
@@ -20,23 +9,28 @@ const Wrapper = styled.div`
  * @param {*} props 
  * @returns 로고와 로그인 버튼을 묶고 있는 Wrapper
  */
-function MainPage(props) {
-	const {} = props;
-
+function MainPage() {
 	const navigate = useNavigate();
 
+	const fontStyle = {
+		fontFamily : "Establish",
+		fontSize : "72px",
+	}
+
 	return (
-		<Wrapper>
-			{/* <Logo/> */}
-			2기무슨일이고
+		<Container display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+			<Container h="3xs" />
+			<p style={fontStyle}>2기무슨일이고</p>
+			<Spacer margin="48px" />
 			<LoginButton
 				title="Login"
 				onClick={() => {
 					navigate("/choice");
 					console.log("login success");
 				}}
-			/>
-		</Wrapper>
+				/>
+			<Container h="3xs" />
+		</Container>
 	);
 }
 
