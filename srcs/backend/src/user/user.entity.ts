@@ -1,10 +1,13 @@
 import { BaseEntity, Column, Entity, JoinColumn, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
-@Unique(['nickname'])
+@Unique(['intra_id', 'nickname', 'email'])
 export class User extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
+
+	@Column()
+	intra_id: string;
 
 	@Column({ type: "varchar", length: 20 })
 	nickname: string;
