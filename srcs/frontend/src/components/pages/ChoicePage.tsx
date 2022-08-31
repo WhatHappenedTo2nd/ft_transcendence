@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Divider } from '@chakra-ui/react'
@@ -21,7 +20,7 @@ const Wrapper = styled.div`
  * @param {*} props 
  * @returns 프로필/채팅 버튼을 묶고 있는 Wrapper
  */
-function ChoicePage(props) {
+function ChoicePage(props: {}) {
 	const {} = props;
 
 	const navigate = useNavigate();

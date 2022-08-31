@@ -1,4 +1,3 @@
-import React from "react";
 import { Box } from '@chakra-ui/layout';
 
 /**
@@ -8,7 +7,7 @@ import { Box } from '@chakra-ui/layout';
  * @param onClick : 클릭 시 발생하는 이벤트
  * @returns 
  */
-function ChoiceBox(props) {
+function ChoiceBox(props: { title: any; onClick: any; }) {
 	const { title, onClick } = props;
 
 	return <Box
