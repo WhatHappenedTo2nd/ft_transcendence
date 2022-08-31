@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import LoginButton from "../login/Login";
 import { Container, Spacer } from '@chakra-ui/react';
@@ -6,7 +5,6 @@ import { Container, Spacer } from '@chakra-ui/react';
 /**
  * 메인 페이지
  * 
- * @param {*} props 
  * @returns 로고와 로그인 버튼을 묶고 있는 Wrapper
  */
 function MainPage() {
