@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "intra_id": "mseo",
+        "nickname": "mseopong",
+		"avatar": "",
+		"is_online": false,
+		"now_playing": false,
+		"email": ""
+    },
+    {
+		"id": 2,
+        "intra_id": "yjung",
+        "nickname": "yjungpong",
+		"avatar": "",
+		"is_online": true,
+		"now_playing": false,
+		"email": ""
+	},
+	{
+		"id": 3,
+        "intra_id": "hkwon",
+        "nickname": "hkwonpong",
+		"avatar": "",
+		"is_online": true,
+		"now_playing": false,
+		"email": ""
+	},
+	{
+		"id": 4,
+        "intra_id": "inyang",
+        "nickname": "inyangpong",
+		"avatar": "",
+		"is_online": false,
+		"now_playing": false,
+		"email": ""
+	},
+	{
+		"id": 5,
+        "intra_id": "jkeum",
+        "nickname": "jkeumpong",
+		"avatar": "",
+		"is_online": true,
+		"now_playing": false,
+		"email": ""
+	}
+]
