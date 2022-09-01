@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Container, Divider } from '@chakra-ui/react'
+import { Container, Divider, Box } from '@chakra-ui/react'
 import ChoiceBox from "../login/ChoiceBox";
 import SideBar from "../sidebar/SideBar";
 
@@ -14,9 +14,11 @@ function ChoicePage() {
 	const navigate = useNavigate();
 
 	return (
-		<Container display="flex" flexDirection="row">
-			<SideBar />
-			<Container>
+		<Container maxH="-webkit-max-content" maxW='full' display="flex" flexDirection="row" justifyContent="flex-start" className="test11">
+			<Box display="flex" >
+				<SideBar />
+			</Box>
+			<Container display="flex" flexDirection='column'>
 				<ChoiceBox
 					title="Profile"
 					onClick={() => {

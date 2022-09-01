@@ -1,35 +1,70 @@
-import styled from "styled-components"
 import * as React from "react"
-import { Container } from "@chakra-ui/react"
+import { Box, Flex, Text, Link, FlexProps } from "@chakra-ui/react"
 
-const List = styled.div`
-	width: 150px;
-	height: 500px;
-	border-radius: 8px;
-`
+interface LinkItemProps {
+	name: string;
+  }
 
-const Side = styled.div`
-	display: flex;
-	border-right: 1px solid #000000;
-	width: 20%;
-`
+const LinkItems: Array<LinkItemProps> = [
+	{name: 'test1'},
+	{name: 'test2'},
+	{name: 'test3'},
+	{name: 'test4'},
+	{name: 'test5'},
+]
 
-const Profile = styled.div`
-	width: 150px;
-	height: 150px;
-	border-radius: 100%;
-	fontFamile: "Establish"
-`
+interface NavItemProps extends FlexProps {
+	children: string;
+  }
+
+const NavItem = ({ children, ...rest }: NavItemProps) => {
+	return (
+	  <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+		<Flex
+		  align="center"
+		  p="4"
+		  mx="4"
+		  borderRadius="lg"
+		  role="group"
+		  cursor="pointer"
+		  _hover={{
+			bg: 'cyan.400',
+			color: 'white',
+		  }}
+		  {...rest}>
+		  {children}
+		</Flex>
+	  </Link>
+	);
+  };
+
+const SideBarContent = () => {
+	return (
+		<Box
+			borderRight= "1px"
+			w={{base: 'full', md: 60}}
+			pos="fixed"
+			h="770px">
+		<Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+			<Text fontSize="2xl" fontFamily="Establish">
+				2기무슨일이고
+			</Text>
+		</Flex>
+		{LinkItems.map((link) => (
+			<NavItem key={link.name}>
+				{link.name}
+			</NavItem>
+		))}
+		</Box>
+	);
+};
+
 
 const SideBar: React.FunctionComponent = () => {
 	return (
-		<Side>
-			<Container display="flex" flexDirection="row">
-				1번,
-				2번,
-				3번
-			</Container>
-		</Side>
+		<Box>
+			<SideBarContent />
+		</Box>
 	)
 }
 
