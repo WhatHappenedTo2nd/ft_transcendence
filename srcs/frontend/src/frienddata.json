@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "user_id": "mseo",
+		"friend_id": "inyang"
+    },
+    {
+        "id": 2,
+        "user_id": "inyang",
+		"friend_id": "mseo"
+    },
+	{
+        "id": 3,
+        "user_id": "jkeum",
+		"friend_id": "mseo"
+    },
+	{
+        "id": 4,
+        "user_id": "mseo",
+		"friend_id": "jkeum"
+    },
+	{
+        "id": 5,
+        "user_id": "jkeum",
+		"friend_id": "inyang"
+    },
+	{
+        "id": 6,
+        "user_id": "inyang",
+		"friend_id": "jkeum"
+    },
+	{
+        "id": 7,
+        "user_id": "hkwon",
+		"friend_id": "yjung"
+    },
+	{
+        "id": 8,
+        "user_id": "yjung",
+		"friend_id": "hkwon"
+    },
+	{
+        "id": 9,
+        "user_id": "jkeum",
+		"friend_id": "yjung"
+    },
+	{
+        "id": 10,
+        "user_id": "yjung",
+		"friend_id": "jkeum"
+    },
+	{
+        "id": 11,
+        "user_id": "jkeum",
+		"friend_id": "hkwon"
+    },
+	{
+        "id": 12,
+        "user_id": "hkwon",
+		"friend_id": "jkeum"
+    }
+]
