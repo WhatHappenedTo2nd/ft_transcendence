@@ -42,7 +42,6 @@ const SideBarContent = () => {
 	return (
 		<Box
 			borderRight= "1px"
-			w={{base: 'full', md: 60}}
 			pos="fixed"
 			h="770px">
 		<Flex h="20" alignItems="center" mx="8" justifyContent="space-between">

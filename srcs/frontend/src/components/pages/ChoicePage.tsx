@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Container, Divider, Box } from '@chakra-ui/react'
+import { Divider, Grid, GridItem } from '@chakra-ui/react'
 import ChoiceBox from "../login/ChoiceBox";
 import SideBar from "../sidebar/SideBar";
 
@@ -9,16 +9,25 @@ import SideBar from "../sidebar/SideBar";
  * @param {*} props 
  * @returns 프로필/채팅 버튼을 묶고 있는 Wrapper
  */
+
+
 function ChoicePage() {
 
 	const navigate = useNavigate();
 
 	return (
-		<Container maxH="-webkit-max-content" maxW='full' display="flex" flexDirection="row" justifyContent="flex-start" className="test11">
-			<Box display="flex" >
+		<Grid gridTemplateColumns={{
+			base: "9fr",
+			md: "2fr 7fr"
+		  }}
+		  gridTemplateAreas={{
+			md: `'nav main'`
+		  }}
+		  gap={4}>
+			<GridItem area={'nav'} className="test">
 				<SideBar />
-			</Box>
-			<Container display="flex" flexDirection='column'>
+			</GridItem>
+			<GridItem area={'main'}>
 				<ChoiceBox
 					title="Profile"
 					onClick={() => {
@@ -34,8 +43,8 @@ function ChoicePage() {
 						console.log("채팅 선택");
 					}}
 					/>
-			</Container>
-		</Container>
+			</GridItem>
+		</Grid>
 	);
 }
 
