@@ -15,10 +15,10 @@ export class User extends BaseEntity {
 	@Column()
 	avatar: string;
 	
-	@Column()
+	@Column({ default: false })
 	is_online: boolean;
 	
-	@Column()
+	@Column({ default: false })
 	now_playing: boolean;
 	
 	@Column()
@@ -60,9 +60,9 @@ export class History extends BaseEntity {
 	@JoinColumn()
 	user_b: User;
 
-	@Column()
+	@Column({ default: 0 })
 	score_a: number;
 
-	@Column()
+	@Column({ default: 0 })
 	score_b: number;
 }
