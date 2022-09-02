@@ -16,7 +16,7 @@ function MainPage() {
 	}
 
 	return (
-		<Container display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+		<Container>
 			<Container h="3xs" />
 			<p style={fontStyle}>2기무슨일이고</p>
 			<Spacer margin="48px" />
