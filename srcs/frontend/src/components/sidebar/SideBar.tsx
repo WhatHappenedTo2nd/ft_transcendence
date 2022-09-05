@@ -1,5 +1,6 @@
 import * as React from "react"
-import { Box, Flex, Text, Link, FlexProps } from "@chakra-ui/react"
+import { Box, Flex, Text, Link, FlexProps, Divider } from "@chakra-ui/react"
+import OnlineserListItem from "./UserListItem";
 
 interface LinkItemProps {
 	name: string;
@@ -49,11 +50,8 @@ const SideBarContent = () => {
 				2기무슨일이고
 			</Text>
 		</Flex>
-		{LinkItems.map((link) => (
-			<NavItem key={link.name}>
-				{link.name}
-			</NavItem>
-		))}
+		<Divider borderColor="black" borderWidth="1px" />
+			<OnlineserListItem />
 		</Box>
 	);
 };
