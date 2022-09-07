@@ -1,9 +1,9 @@
 {
-	"id": 2,
-	"intra_id": "yjung",
-	"nickname": "yjungpong",
+	"id": 4,
+	"intra_id": "inyang",
+	"nickname": "inyangpong",
 	"avatar": "",
-	"is_online": true,
+	"is_online": false,
 	"now_playing": false,
 	"email": ""
 }
