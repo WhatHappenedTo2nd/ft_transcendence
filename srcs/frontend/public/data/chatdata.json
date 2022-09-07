@@ -1,0 +1,26 @@
+[
+	{
+		"id": 1,
+		"title": "title1",
+		"passward": "none",
+		"is_private": false,
+		"host": "yjung",
+		"now_playing": false
+	},
+	{
+		"id": 2,
+		"title": "title2",
+		"passward": "1234",
+		"is_private": true,
+		"host": "jkeum",
+		"now_playing": false
+	},
+	{
+		"id": 3,
+		"title": "title3",
+		"passward": "none",
+		"is_private": false,
+		"host": "hkwon",
+		"now_playing": false
+	}
+]
