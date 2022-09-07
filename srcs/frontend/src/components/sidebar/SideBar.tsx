@@ -1,45 +1,13 @@
 import * as React from "react"
-import { Box, Flex, Text, Link, FlexProps, Divider } from "@chakra-ui/react"
-import OnlineserListItem from "./UserListItem";
+import { Box, Flex, Text, Divider } from "@chakra-ui/react"
+import OnlineserList from "./UserListItem";
+import FriendList from "./FriendList";
 
-interface LinkItemProps {
-	name: string;
-  }
+type userProps = {
+	children?: React.ReactNode;
+}
 
-const LinkItems: Array<LinkItemProps> = [
-	{name: 'test1'},
-	{name: 'test2'},
-	{name: 'test3'},
-	{name: 'test4'},
-	{name: 'test5'},
-]
-
-interface NavItemProps extends FlexProps {
-	children: string;
-  }
-
-const NavItem = ({ children, ...rest }: NavItemProps) => {
-	return (
-	  <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
-		<Flex
-		  align="center"
-		  p="4"
-		  mx="4"
-		  borderRadius="lg"
-		  role="group"
-		  cursor="pointer"
-		  _hover={{
-			bg: 'cyan.400',
-			color: 'white',
-		  }}
-		  {...rest}>
-		  {children}
-		</Flex>
-	  </Link>
-	);
-  };
-
-const SideBarContent = () => {
+export default function SideBar({ children }: userProps){
 	return (
 		<Box
 			borderRight= "1px"
@@ -50,19 +18,10 @@ const SideBarContent = () => {
 				2기무슨일이고
 			</Text>
 		</Flex>
-		<Divider borderColor="black" borderWidth="1px" />
-			<OnlineserListItem />
-		</Box>
-	);
-};
-
-
-const SideBar: React.FunctionComponent = () => {
-	return (
-		<Box>
-			<SideBarContent />
+		<Divider borderColor="black" />
+			<FriendList />
+		<Divider borderColor="black" />
+			<OnlineserList />
 		</Box>
 	)
 }
-
-export default SideBar;
