@@ -12,8 +12,8 @@ import SideBar from "../sidebar/SideBar";
 
 
 function ChoicePage() {
-
 	const navigate = useNavigate();
+	const loginUser = "yjungpong"
 
 	return (
 		<Grid gridTemplateColumns={{
