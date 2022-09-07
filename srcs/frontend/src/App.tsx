@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ChakraProvider} from '@chakra-ui/react';
 import MainPage from './components/pages/MainPage';
 import ChoicePage from './components/pages/ChoicePage';
+import ChattingPage from './components/pages/ChattingPage';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <Routes>
             <Route index element={<MainPage />} />
             <Route path="choice" element={<ChoicePage />} />
+            <Route path="chatting" element={<ChattingPage />} />
           </Routes>
       </BrowserRouter>
     </ChakraProvider>
