@@ -7,13 +7,13 @@ export class UserLoginDto {
 	@IsString()
 	intra_id: string;
 
-	@IsString()
-	@MinLength(4)
-	@MaxLength(20)
-	@Matches(/^[a-zA-Z0-9]*$/, {
-		message: 'password only accepts english and number'
-	})
-	nickname: string;
+	// @IsString()
+	// @MinLength(4)
+	// @MaxLength(20)
+	// @Matches(/^[a-zA-Z0-9]*$/, {
+	// 	message: 'password only accepts english and number'
+	// })
+	// nickname: string;
 
 	@IsString()
 	avatar: string;
