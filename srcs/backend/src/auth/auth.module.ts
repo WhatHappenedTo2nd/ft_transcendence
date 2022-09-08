@@ -6,12 +6,13 @@ import { AuthController } from './auth.controller';
 import * as config from 'config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { FtStrategy } from './strategies/ft.strategy';
 
 const jwtConfig = config.get('jwt');
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule.register({ defaultStrategy: '42' }),
     JwtModule.register({
       secret: jwtConfig.secret,
       signOptions: {
@@ -21,6 +22,7 @@ const jwtConfig = config.get('jwt');
     TypeOrmModule.forFeature([UserRepository])
   ],
   controllers: [AuthController],
-  providers: [JwtStrategy]
+  providers: [JwtStrategy, FtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
