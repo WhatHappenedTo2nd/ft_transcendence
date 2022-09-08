@@ -13,8 +13,8 @@ const authConfig = config.get('auth');
 export class FtStrategy extends PassportStrategy(Strategy, '42') {
 	constructor() {
 		super({
-			uid: authConfig.uid,
-			secret: authConfig.secret,
+			clientID: authConfig.uid,
+			clientSecret: authConfig.secret,
 			callbackURL: authConfig.callbackURL
 		});
 	}
