@@ -26,9 +26,9 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
 		cb: VerifyCallback,
 	  ): Promise<VerifyCallback> {
 		return cb(null, {
-			intra_id: profile.intra_id,
-			nickname: profile.intra_id,
-			avatar: profile.avatar,
+			intra_id: profile.username,
+			nickname: profile.username,
+			avatar: profile.photos[0].value,
 			accessToken,
 			refreshToken,
 		});
