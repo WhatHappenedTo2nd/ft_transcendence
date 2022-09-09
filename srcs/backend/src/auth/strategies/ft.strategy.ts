@@ -6,11 +6,11 @@ import * as config from 'config';
 const authConfig = config.get('auth');
 
 /**
- * 42API
- * 
+ * 42API 사용을 위함
  */
 @Injectable()
 export class FtStrategy extends PassportStrategy(Strategy, '42') {
+	// super() 안의 값들은 42API 요청할 때 필요한 정보
 	constructor() {
 		super({
 			clientID: authConfig.uid,
@@ -19,6 +19,7 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
 		});
 	}
 
+	// 여기서 return한 값들이 request의 user에 저장됨.
 	async validate(
 		accessToken: string,
 		refreshToken: string,

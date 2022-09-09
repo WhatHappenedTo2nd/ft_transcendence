@@ -21,7 +21,7 @@ export class User extends BaseEntity {
 	@Column({ default: false })
 	now_playing: boolean;
 	
-	@Column()
+	@Column({ default: "" })
 	email: string;
 }
 
