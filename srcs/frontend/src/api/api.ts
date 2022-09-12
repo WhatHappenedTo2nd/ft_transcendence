@@ -14,3 +14,7 @@ export const getLoginUserFriendList = async() => {
 	const { data: friend } = await axios.get('/data/frienddata.json');
 	return friend;
 }
+export const getChatList = async () => {
+	const { data: chat } = await axios.get('/data/chatdata.json');
+	return chat;
+}
