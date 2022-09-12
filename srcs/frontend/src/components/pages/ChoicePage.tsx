@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { Divider, Grid, GridItem } from '@chakra-ui/react'
 import ChoiceBox from "../login/ChoiceBox";
