@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Image, Container, Box } from '@chakra-ui/react';
-import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Image, Button, Container, Box } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { getLoginUserData } from '../../api/api';
+import Modal from '../mypage/MyPageModal';
+import styled from 'styled-components';
 
 interface UserProps {
 	id: number;
@@ -15,6 +16,13 @@ interface UserProps {
 }
 
 function MyPage() {
+	
+	const [isOpeenModal, setOpenModal] = useState<boolean>(false);
+	
+	const onClickToggleModal = useCallback(() => {
+		setOpenModal(!isOpeenModal);
+	}, [isOpeenModal]);
+
 	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
@@ -36,6 +44,19 @@ function MyPage() {
 				alt='british short hair'
 			/>
 			<h1>{Mydata?.nickname}</h1>
+			<Button onClick={onClickToggleModal}>별명 바꾸기</Button>
+			{isOpeenModal && (
+				<Modal onClickToggleModal={onClickToggleModal}>
+					여기에 childeren이 들어간다고 합니다. 닉네임 수정을 할 수 있도록 해봅시다~
+				</Modal>
+			)}
+			<h1>{Mydata?.email}</h1>
+			<Button onClick={onClickToggleModal}>2차 인증</Button>
+			{isOpeenModal && (
+				<Modal onClickToggleModal={onClickToggleModal}>
+					여기에 childeren이 들어간다고 합니다. 2차 인증을 할 수 있도록 해봅시다~
+				</Modal>
+			)}
 		{/* <ul>
 			{users.map((user: any) => (
 				<li key={user.id}>
@@ -46,5 +67,33 @@ function MyPage() {
 		</>
 	);
 }
+
+const Main = styled.main`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Title = styled.h3`
+  text-align: center;
+`;
+
+const DialogButton = styled.button`
+  width: 160px;
+  height: 48px;
+  background-color: blueviolet;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 400;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+`;
 
 export default MyPage;
