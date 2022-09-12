@@ -5,8 +5,8 @@ import SideBar from "../sidebar/SideBar";
 
 /**
  * 로그인에 성공하면 나오는 프로필/채팅 선택 페이지
- * 
- * @param {*} props 
+ *
+ * @param {*} props
  * @returns 프로필/채팅 버튼을 묶고 있는 Wrapper
  */
 
@@ -39,7 +39,7 @@ function ChoicePage() {
 				<ChoiceBox
 					title="Chatting"
 					onClick={() => {
-						navigate("/choice");
+						navigate("/chatting");
 						console.log("채팅 선택");
 					}}
 					/>
