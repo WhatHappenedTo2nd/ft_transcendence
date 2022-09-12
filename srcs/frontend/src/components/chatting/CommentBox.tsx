@@ -2,6 +2,12 @@ import { Avatar, IconButton, Grid, GridItem, Text } from "@chakra-ui/react";
 import { Input } from '@chakra-ui/react';
 import { IoMdSend } from 'react-icons/io';
 
+/**
+ * 댓글 작성하는 부분 컴포넌트
+ * @param avatar 작성자 프로필 이미지
+ * @param name 작성자 닉네임
+ * @returns 댓글 작성하는 부분을 묶고 있는 Grid
+ */
 function CommentBox(props: { avatar: any; name: string; }) {
 	const { avatar, name } = props;
 
