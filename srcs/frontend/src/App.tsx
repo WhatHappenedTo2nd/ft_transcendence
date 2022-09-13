@@ -4,6 +4,7 @@ import { ChakraProvider} from '@chakra-ui/react';
 import MainPage from './components/pages/MainPage';
 import ChoicePage from './components/pages/ChoicePage';
 import ChattingPage from './components/pages/ChattingPage';
+import GamePage from './components/pages/GamePage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Route index element={<MainPage />} />
             <Route path="choice" element={<ChoicePage />} />
             <Route path="chatting" element={<ChattingPage />} />
+            <Route path="game" element={<GamePage />} />
           </Routes>
       </BrowserRouter>
     </ChakraProvider>
