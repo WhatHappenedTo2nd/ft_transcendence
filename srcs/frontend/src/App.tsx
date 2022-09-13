@@ -5,6 +5,7 @@ import MainPage from './components/pages/MainPage';
 import ChoicePage from './components/pages/ChoicePage';
 import MyPage from './components/pages/MyPage';
 import ChattingPage from './components/pages/ChattingPage';
+import GamePage from './components/pages/GamePage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="choice" element={<ChoicePage />} />
             <Route path="mypage" element={<MyPage />} />
             <Route path="chatting" element={<ChattingPage />} />
+            <Route path="game" element={<GamePage />} />
           </Routes>
       </BrowserRouter>
     </ChakraProvider>
