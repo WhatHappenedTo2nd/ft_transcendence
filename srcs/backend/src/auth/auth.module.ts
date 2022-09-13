@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { FtStrategy } from './strategies/ft.strategy';
 import { UserRepository } from 'src/user/user.repository';
-import { TypeOrmExModule } from 'src/user/typeorm-ex/typeorm-ex.module';
+import { TypeOrmExModule } from 'src/typeorm-ex/typeorm-ex.module';
 
 const jwtConfig = config.get('jwt');
 
