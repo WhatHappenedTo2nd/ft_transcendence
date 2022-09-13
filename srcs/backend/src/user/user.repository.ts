@@ -5,7 +5,7 @@ import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { User } from "./user.entity";
 
 /**
- * 유저 관련 데이터를 저장하기 위한 Repository 클래스
+ * 유저 관련 데이터를 저장 및 관리하기 위한 Repository 클래스
  */
 @CustomRepository(User)
 export class UserRepository extends Repository<User> {

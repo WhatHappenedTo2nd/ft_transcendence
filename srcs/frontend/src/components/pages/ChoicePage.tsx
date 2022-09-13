@@ -7,13 +7,11 @@ import SideBar from "../sidebar/SideBar";
  * 로그인에 성공하면 나오는 프로필/채팅 선택 페이지
  *
  * @param {*} props
- * @returns 프로필/채팅 버튼을 묶고 있는 Wrapper
+ * @returns 좌측 내비 바와 프로필/채팅 버튼을 묶고 있는 Grid
  */
-
-
 function ChoicePage() {
-
 	const navigate = useNavigate();
+	const loginUser = "yjungpong"
 
 	return (
 		<Grid gridTemplateColumns={{
