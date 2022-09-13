@@ -1,4 +1,23 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Logger } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from './user.entity';
+import { UserService } from './user.service';
 
 @Controller('user')
-export class UserController {}
+// @UseGuards(AuthGuard())
+export class UserController {
+	private logger = new Logger('UserController');
+	constructor(private userService: UserService) {}
+
+	@Get()
+	async getUserList(): Promise<User[]> {
+		const users = await this.userService.getUserList();
+		return users;
+	}
+
+	// @Get()
+	// async getFriendList(): Promise<Friend[]> {
+	// 	const friends = await this.userService.getFriendList();
+	// 	return friends;
+	// }
+}

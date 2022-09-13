@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, JoinColumn, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 @Unique(['intra_id', 'nickname', 'email'])
@@ -26,38 +26,14 @@ export class User extends BaseEntity {
 }
 
 @Entity()
-export class Block extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
-	
-	@JoinColumn()
-	blocker: User;
-	
-	@JoinColumn()
-	blocked: User;
-}
-
-@Entity()
-export class Friend extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
-
-	@JoinColumn()
-	user_id: User;
-
-	@JoinColumn()
-	friend_id: User;
-}
-
-@Entity()
 export class History extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@JoinColumn()
+	@ManyToOne(() => User, (user) => user.id)
 	user_a: User;
 
-	@JoinColumn()
+	@ManyToOne(() => User, (user) => user.id)
 	user_b: User;
 
 	@Column({ default: 0 })
