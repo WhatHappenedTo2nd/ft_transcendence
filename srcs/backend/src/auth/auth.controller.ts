@@ -18,6 +18,10 @@ export class AuthController {
 		private jwtService: JwtService
 	) {}
 
+	/**
+	 * 42API로 유저 인증하고 access token까지 생성해서 로그인 처리
+	 * DB의 USER 테이블에 해당 intra_id의 유저가 없다면 새로 추가함
+	 */
 	@Get('42')
 	@UseGuards(AuthGuard('42'))
 	async ftCallback(@Req() req, @Res() res: Response): Promise<void> {
