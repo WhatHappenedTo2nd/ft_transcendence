@@ -1,63 +1,99 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import styled from "styled-components";
-import { Box } from '@chakra-ui/react'
+import { useQuery } from 'react-query';
+import { getLoginUserData } from '../../api/api';
+import {
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalHeader,
+	ModalFooter,
+	ModalBody,
+	ModalCloseButton,
+	Button,
+	useDisclosure,
+	FormControl,
+	FormLabel,
+	FormErrorMessage,
+	FormHelperText,
+	Input,
+	Image
+} from '@chakra-ui/react';
+import axios from "axios";
 
-
-interface ModalDefaultType {
-  onClickToggleModal: () => void;
+interface UserProps {
+	id: number;
+	intra_id: string;
+	nickname: string;
+	avatar: string;
+	is_online: boolean;
+	now_playing: boolean;
+	email: string;
 }
 
-function Modal({
-  onClickToggleModal,
-  children,
-}: PropsWithChildren<ModalDefaultType>) {
-  return (
-	  // <Box bg='tomato' w='100%' p={4} color='white'>
-	<ModalContainer>
-      <DialogBox>{children}</DialogBox>
-      <Backdrop
-        onClick={(e: React.MouseEvent) => {
-          e.preventDefault();
+function MyPageModal() {
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const [inputValue, setInputValue] = useState('');
 
-          if (onClickToggleModal) {
-            onClickToggleModal();
-          }
-        }}
-      />
-	</ModalContainer>
-    // </Box>
-  );
+	const {data:Mydata} = useQuery<UserProps>('me', getLoginUserData);
+
+
+	const handleSubmit = async () => {
+		const formData = new FormData();
+		formData.append("nickname", inputValue);
+		// formData.append('avatar', inputAvatar);
+		if (inputValue)
+			await axios
+				.patch('data/loginuserdata.json', formData)
+				.then((res) => {
+					alert(res.data.message);
+					setInputValue('');
+				return (res);
+				// handleClose();
+			})
+			.catch((err) => {
+					console.log(inputValue);
+					console.log(formData.append);
+					const errMsg = err.response.data.message;
+					alert(errMsg);
+			});
+		else alert('빈칸으로 제출할 수 없습니다.')
+	};
+
+	return (
+		<>
+		<Button onClick={onOpen}>프로필 수정</Button>
+
+		<Modal isOpen={isOpen} onClose={onClose}>
+			<ModalOverlay />
+			<ModalContent>
+			<ModalHeader>프로필 정보 수정</ModalHeader>
+			<ModalCloseButton />
+			<ModalBody>
+				<Image borderRadius='full' boxSize='150px' marginLeft='auto' marginRight='auto' src={Mydata?.avatar}/>
+				<FormControl onSubmit={handleSubmit}>
+					<FormLabel>아바타 변경</FormLabel>
+					<Input type='file' />
+					<FormLabel>닉네임 변경</FormLabel>
+					<div>현재 닉네임 : {Mydata?.nickname} </div>
+					<Input
+						type='text'
+						placeholder='변경할 닉네임을 입력해주세요.'
+						onChange={(e) => setInputValue(e.target.value)}
+					/>
+				</FormControl>
+			</ModalBody>
+
+			<ModalFooter>
+				<Button colorScheme='blue' mr={3} onClick={handleSubmit}>
+					수정 완료
+				</Button>
+				<Button variant='ghost' onClick={onClose}>취소</Button>
+			</ModalFooter>
+			</ModalContent>
+		</Modal>
+		</>
+	)
 }
 
-const ModalContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const DialogBox = styled.dialog`
-  width: 800px;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: none;
-  border-radius: 3px;
-  box-shadow: 0 0 30px rgba(30, 30, 30, 0.185);
-  box-sizing: border-box;
-  background-color: white;
-  z-index: 10000;
-`;
-
-const Backdrop = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.2);
-`;
-
-export default Modal;
+export default MyPageModal;
