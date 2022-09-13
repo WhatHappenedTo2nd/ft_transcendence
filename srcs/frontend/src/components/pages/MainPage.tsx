@@ -9,7 +9,7 @@ const login = () => {
 /**
  * 메인 페이지
  * 
- * @returns 로고와 로그인 버튼을 묶고 있는 Wrapper
+ * @returns 로고와 로그인 버튼을 묶고 있는 Container
  */
 function MainPage() {
 	const fontStyle = {
@@ -22,6 +22,7 @@ function MainPage() {
 			<Container h="3xs" />
 			<p style={fontStyle}>2기무슨일이고</p>
 			<Spacer margin="48px" />
+			{/* 로그인 버튼 누르면 42 로그인 화면으로 이동함 */}
 			<LoginButton
 				title="Login"
 				onClick={login}
