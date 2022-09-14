@@ -17,8 +17,8 @@ import styled from 'styled-components';
 import { GameState, IRoom } from './GameInterface';
 import GameScreen from './GameScreen';
 import GameRooms from './GameRoom';
-import { IMyData } from '../../modules/Interface/chatInterface';
-import { getUserData } from '../../modules/api';
+import { IMyData } from './modules/Interface/chatInterface';
+import { getUserData } from './modules/api';
 
 /**
  * Game Start
