@@ -172,7 +172,7 @@ export class FriendRepository extends Repository<Friend> {
 		return result;
 	}
 
-	async FriendList(user: User): Promise<FriendDto[]> {
+	async FriendList(user: string): Promise<FriendDto[]> {
 		const result = await this.find({
 			relations: {
 				user_id: true,
