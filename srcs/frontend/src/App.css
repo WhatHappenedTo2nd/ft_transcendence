@@ -46,10 +46,10 @@
 
 @font-face {
   font-family: "WelcomeRegular";
-  src: url("./fonts/웰컴체OTF\ Regular.otf");
+  src: url("./fonts/welcomeOTF\ Regular.otf");
 }
 
 @font-face {
   font-family: "WelcomeBold";
-  src: url("./fonts/웰컴체OTF\ Bold.otf");
+  src: url("./fonts/welcomeOTF\ Bold.otf");
 }
