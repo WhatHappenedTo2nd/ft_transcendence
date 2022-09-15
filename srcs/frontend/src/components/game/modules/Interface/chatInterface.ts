@@ -3,7 +3,7 @@
  * 그대로 사용하지않고
  */
 import { StringLiteral } from 'typescript';
-import { IUser } from '../../components/Game/GameInterface';
+import { IUser } from '../..//GameInterface';
 import IUserData from './userInterface'
 
 export interface IChatUser

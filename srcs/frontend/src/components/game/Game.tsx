@@ -17,8 +17,8 @@ import styled from 'styled-components';
 import { GameState, IRoom } from './GameInterface';
 import GameScreen from './GameScreen';
 import GameRooms from './GameRoom';
-import { IMyData } from '../../modules/Interface/chatInterface';
-import { getUserData } from '../../modules/api';
+import { IMyData } from './modules/Interface/chatInterface';
+import { getUserData } from './modules/api';
 
 /**
  * Game Start
@@ -38,7 +38,26 @@ function Game() {
 	const [room, setRoom] = useState<IRoom | null>(null);
 	const [queue, setQueue] = useState(false);
 	const [gameRooms, setGameRooms] = useState<IRoom[]>([]);
+	/**
+	 * @func useQuery
+	 * @see https://velog.io/@dkdlel102/React-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%BF%BC%EB%A6%AC-useQuery-%EC%82%AC%EC%9A%A9%EB%B2%95
+	 * @see https://kyounghwan01.github.io/blog/React/react-query/basic/
+	 *
+	 * 서버의 값을 클라이언트로 가져온다.
+	 * @param first : unique key
+	 * @param second : api call func(promise)
+	 * @retrun
+	 *  api의 성공, 실패여부, api return 값을 포함한 객체
+	 *  loading : 데이터 fetch 중인 상태
+	 *  error : 데이터 fetch에 실패한 상태
+	 */
 	const { isLoading, data: userData, error } = useQuery<IMyData>('me', getUserData);
+	console.log("getUserData 가져오기 확인")
+	if (isLoading)
+		console.log("Game useQuery isLoading 확인");
+	if (error)
+		console.log("Game useQuery error 확인");
+
 	const joinQueue = (event: React.MouseEvent<HTMLButtonElement>) => {
 		socket.emit('joinQueue', event.currentTarget.value);
 	};
@@ -60,19 +79,17 @@ function Game() {
 
 	/**
 	 * socket.io method
-	 * client에서 server로 메세지를 보내고
-	 * server에서 client로 메세지를 받는다.
-	 * socket.on : receive a message from the server
+	 * client에서 server로 메세지를 보내고, server에서 client로 메세지를 받는다.
+	 * socket.on: receive a message from the server
 	 * socket.emit: send a message to the server
 	 */
 	useEffect(() => {
 		if (isLoading || !userData || error) return () => {};
-		//연결할 서버를 설정
-		socket = io('http://localhost:3000/api/games');
 		/**
-		 * 서버와 연결된 이벤트 처리
-		 * 서버에게 메세지 전송
+		 * 연결할 서버를 설정
+		 * on/emit : 서버와 연결된 이벤트 처리, 서버에게 메세지 전송
 		 */
+		socket = io('http://localhost:3000/api/games');
 		socket = socket.on('connect', () => {
 			socket.emit('handleUserConnect', userData);
 			socket.emit('getCurrentGames');
@@ -115,8 +132,17 @@ function Game() {
 			setGameRooms([]);
 		};
 	}, [userData]);
-	if (isLoading || error)
-		return null;
+	/**
+	 * 서버와 연동 전이라 데이터를 가져올 수 없음.
+	 * return NULL에서 걸림
+	 */
+	// if (isLoading || error)
+	// 	return null;
+
+	/**
+	 * @qna
+	 * 	return문 안에서 console.log를 이용해서 확인하는 것처럼 할 수 없는지?
+	 */
 	return (
 		<div>
 			{isDisplayGame ? (
