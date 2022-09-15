@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ChakraProvider} from '@chakra-ui/react';
 import MainPage from './components/pages/MainPage';
 import ChoicePage from './components/pages/ChoicePage';
-import ChattingPage from './components/pages/ChattingPage';
+import ChattingRoomPage from './components/pages/ChattingRoomPage';
 import GamePage from './components/pages/GamePage';
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
           <Routes>
             <Route index element={<MainPage />} />
             <Route path="choice" element={<ChoicePage />} />
-            <Route path="chatting" element={<ChattingPage />} />
+            <Route path="chattingroom" element={<ChattingRoomPage />} />
             <Route path="game" element={<GamePage />} />
           </Routes>
       </BrowserRouter>

@@ -12,7 +12,7 @@ interface ChatListProps {
 		now_playing: boolean;
 }
 
-function Chatting(props: { onClick: any; }){
+function ChattingRoom(props: { onClick: any; }){
 	const { status , data: ChatList, error } = useQuery<ChatListProps[]>('chat', getChatList);
 	if (status === "loading") return <h1>Loading</h1>;
 	if (status === "error") return <div>Error</div>;
@@ -35,4 +35,4 @@ function Chatting(props: { onClick: any; }){
 	);
 }
 
-export default Chatting;
+export default ChattingRoom;
