@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Logger } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Logger, Post, Req, Patch } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -23,5 +23,17 @@ export class UserController {
 	// async getFriendList(): Promise<Friend[]> {
 	// 	const friends = await this.userService.getFriendList();
 	// 	return friends;
+	// }
+
+	@Patch('/:id/editProfile')
+	UpdateUserNickname(id: number, nickname:string|undefined): Promise<User> {
+		console.log(nickname);
+		return this.userService.updateUserNickname(id, nickname);
+	}
+	// async UpdateUserNickname(@Req() req:any): Promise<Object> {
+	// 	const nickname = req.body.nickname;
+
+	// 	const user = await this.getUserById(req);
+	// 	return this.userService.updateUserNickname(user.id, nickname);
 	// }
 }
