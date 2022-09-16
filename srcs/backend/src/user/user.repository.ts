@@ -27,4 +27,15 @@ export class UserRepository extends Repository<User> {
 			}
 		}
 	}
+
+	/**
+	 * 유저의 is_online 상태를 true로 바꿔주는 함수
+	 * @param userLoginDto intra_id를 받아오기 위해 auth.controller에서 받아옴
+	 */
+	async onlineStatus(userLoginDto: UserLoginDto): Promise<void> {
+		const { intra_id } = userLoginDto;
+		const user = await this.findOne({ where: { intra_id } });
+		user.is_online = true;
+		await this.save(user);
+	}
 }
