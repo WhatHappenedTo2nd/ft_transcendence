@@ -3,7 +3,7 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
-import { User} from './user.entity'
+import { User } from './user.entity'
 import { ConflictException } from '@nestjs/common';
 
 @Injectable()
@@ -26,6 +26,8 @@ export class UserService {
 		if (!user) {
 			throw new NotFoundException(`해당 유저를 찾을 수 없습니다`)
 		}
+		if (!id)
+			return ;
 		return user;
 	}
 
