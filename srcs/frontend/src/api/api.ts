@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 export const getUserList = async () => {
-	const { data: user } = await axios.get('localhost:9633/user');
+	const { data: user } = await axios.get('//localhost:9633/user');
 	return user;
 }
 
 export const getLoginUserData = async() => {
-	const { data: me } = await axios.get('localhost:9633/user');
+	const { data: me } = await axios.get('//localhost:9633/user/me');
 	return me;
 }
 
