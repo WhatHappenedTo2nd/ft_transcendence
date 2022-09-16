@@ -46,6 +46,7 @@ export class AuthController {
 		const accessToken = await this.jwtService.sign(payload);
 		// accessToken을 cookie에 저장함
 		res.cookie('token', accessToken);
+		res.cookie('intra_id', intra_id);
 		// 후에 프론트 choice 페이지로 redirect
 		res.status(302).redirect('http://localhost:3000/choice');
 	}
