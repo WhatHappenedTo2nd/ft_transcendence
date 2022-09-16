@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
-import { User} from './user.entity'
+import { User } from './user.entity'
+import { UserDefaultDto } from './dto/user-default.dto';
 
 @Injectable()
 export class UserService {
@@ -16,4 +17,12 @@ export class UserService {
 		const users = await this.userRepository.find({});
 		return users;
 	}
+
+	async infoUser(user: User, nickname?: string): Promise<UserDefaultDto> {
+		if (nickname) {
+			user = await (await this.userRepository.findByNickname(nickname));
+		}
+		return this.userRepository.infoUser(user);
+	}
+
 }

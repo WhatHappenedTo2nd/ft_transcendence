@@ -1,10 +1,12 @@
-import { Controller, Get, Param, UseGuards, Logger } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Param, UseGuards, Logger, Req, Body } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { UserDefaultDto } from './dto/user-default.dto';
+import { GetUser } from './get.user.decorator';
 
 @Controller('user')
-// @UseGuards(AuthGuard())
+@UseGuards(JwtAuthGuard)
 export class UserController {
 	private logger = new Logger('UserController');
 	constructor(private userService: UserService) {}
@@ -15,9 +17,8 @@ export class UserController {
 		return users;
 	}
 
-	// @Get()
-	// async getFriendList(): Promise<Friend[]> {
-	// 	const friends = await this.userService.getFriendList();
-	// 	return friends;
-	// }
+	@Get('/me')
+	async getMe(@GetUser() user: User): Promise<UserDefaultDto> {
+		return this.userService.infoUser(user);
+	}
 }
