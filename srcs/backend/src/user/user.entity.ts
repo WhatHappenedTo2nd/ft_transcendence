@@ -60,23 +60,3 @@ export class History extends BaseEntity {
 	@Column({ default: 0 })
 	score_b: number;
 }
-
-// /*
-// * 마이페이지에서 수정 가능한 데이터 
-// */
-// @Entity()
-// @Unique(['intra_id', 'nickname', 'email'])
-// export class EditableMyPageData extends BaseEntity {
-// 	@PrimaryGeneratedColumn()
-// 	id: number;
-
-// 	// 사이트에서 사용하는 닉네임.
-// 	// 처음 로그인을 했을 때는 intra_id와 동일하게 설정됨.
-// 	@Column({ type: "varchar", length: 20 })
-// 	nickname: string;
-
-// 	// 사용자 프로필 이미지.
-// 	// 처음 로그인을 했을 때는 인트라 프로필 이미지와 동일하게 설정됨.
-// 	@Column()
-// 	avatar: string;
-// }

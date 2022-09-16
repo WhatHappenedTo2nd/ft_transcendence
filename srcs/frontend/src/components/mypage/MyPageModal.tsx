@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useQuery } from 'react-query';
 import { getLoginUserData } from '../../api/api';
@@ -34,20 +34,31 @@ interface UserProps {
 function MyPageModal() {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [inputValue, setInputValue] = useState('');
+	const [previewPhoto, setPreviewPhoto] = useState('');
+	const [inputPhoto, setInputPhoto] = useState('');
 
 	const {data:Mydata} = useQuery<UserProps>('me', getLoginUserData);
 
+	useEffect(() => {
+		if (Mydata?.avatar) setPreviewPhoto(Mydata.avatar); 
+	}, []);
+
+	const handleFile = (e: any) => {
+		setInputPhoto(e.target.files[0]);
+		setPreviewPhoto(URL.createObjectURL(e.target.files[0]));
+	};
 
 	const handleSubmit = async () => {
 		const formData = new FormData();
-		formData.append("nickname", inputValue);
-		// formData.append('avatar', inputAvatar);
+		formData.append('nickname', inputValue);
+		formData.append('avatar', inputPhoto);
 		if (inputValue)
 			await axios
 				.patch('data/loginuserdata.json', formData)
 				.then((res) => {
 					alert(res.data.message);
 					setInputValue('');
+					setInputPhoto('');
 				return (res);
 				// handleClose();
 			})
@@ -70,10 +81,15 @@ function MyPageModal() {
 			<ModalHeader>프로필 정보 수정</ModalHeader>
 			<ModalCloseButton />
 			<ModalBody>
-				<Image borderRadius='full' boxSize='150px' marginLeft='auto' marginRight='auto' src={Mydata?.avatar}/>
+				<Image borderRadius='full' boxSize='150px' marginLeft='auto' marginRight='auto' src={previewPhoto}/>
 				<FormControl onSubmit={handleSubmit}>
 					<FormLabel>아바타 변경</FormLabel>
-					<Input type='file' />
+					<Input 
+						type='file'
+						accept="image/*"
+						onChange={(e) => {
+							handleFile(e);
+						}} />
 					<FormLabel>닉네임 변경</FormLabel>
 					<div>현재 닉네임 : {Mydata?.nickname} </div>
 					<Input
