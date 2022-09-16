@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity'
 import { ConflictException } from '@nestjs/common';
+import { UserDefaultDto } from './dto/user-default.dto';
 
 @Injectable()
 export class UserService {
@@ -58,4 +59,11 @@ export class UserService {
 		await this.userRepository.save(user);
 		return user;
 	}
+	async infoUser(user: User, nickname?: string): Promise<UserDefaultDto> {
+		if (nickname) {
+			user = await (await this.userRepository.findByNickname(nickname));
+		}
+		return this.userRepository.infoUser(user);
+	}
+
 }

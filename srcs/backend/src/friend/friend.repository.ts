@@ -172,7 +172,7 @@ export class FriendRepository extends Repository<Friend> {
 		return result;
 	}
 
-	async FriendList(user: string): Promise<FriendDto[]> {
+	async FriendList(user: User): Promise<FriendDto[]> {
 		const result = await this.find({
 			relations: {
 				user_id: true,
@@ -186,14 +186,31 @@ export class FriendRepository extends Repository<Friend> {
 		const friendList: FriendDto[] = [];
 		result.forEach((e) => {
 			if (e.user_id.id === user.id) {
-				friendList.push({
-					id: e.another_id.id,
-					nickname: e.another_id.nickname,
-					avatar: e.another_id.avatar,
-					isblock: e.block,
-				});
-			}
-		});
+				if (e.another_id.is_online && e.another_id.now_playing) {
+					friendList.push({
+						id: e.another_id.id,
+						nickname: e.another_id.nickname,
+						avatar: e.another_id.avatar,
+						isblock: e.block,
+						status: 3,
+				})}
+				else if (e.another_id.is_online) {
+					friendList.push({
+						id: e.another_id.id,
+						nickname: e.another_id.nickname,
+						avatar: e.another_id.avatar,
+						isblock: e.block,
+						status: 2
+				})}
+				else {
+					friendList.push({
+						id: e.another_id.id,
+						nickname: e.another_id.nickname,
+						avatar: e.another_id.avatar,
+						isblock: e.block,
+						status: 1
+				})}
+			}});
 		return friendList;
 	}
 
@@ -216,6 +233,7 @@ export class FriendRepository extends Repository<Friend> {
 					nickname: e.another_id.nickname,
 					avatar: e.another_id.avatar,
 					isblock: e.block,
+					status: 0,
 				});
 			}
 		});

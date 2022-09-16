@@ -6,4 +6,6 @@ export class FriendDto {
 	avatar: string;
 	
 	isblock: boolean;
+
+	status: number;
 }
