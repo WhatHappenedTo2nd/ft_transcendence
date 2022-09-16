@@ -37,6 +37,9 @@ export class AuthController {
 			// 데이터를 createUser 함수로 보내서 디비에 저장하게 함
 			await this.userRepository.createUser(userLoginDto);
 		}
+		// user가 접속 중인지 확인이 가능하게 is_online을 true로 변경함
+		const userOnlineDto: UserLoginDto = { intra_id, avatar };
+		await this.userRepository.onlineStatus(userOnlineDto);
 		// 토큰에 넣어줄 정보. intra_id만 넣어줌
 		const payload = { intra_id };
 		// 토큰 생성
