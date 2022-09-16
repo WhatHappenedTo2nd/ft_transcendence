@@ -11,7 +11,7 @@ export class FriendService {
 		private friendRepository: FriendRepository,
 	) {}
 
-	async getFriendList(user: string): Promise<FriendDto[]> {
+	async getFriendList(user: User): Promise<FriendDto[]> {
 		return await this.friendRepository.FriendList(user);
 	}
 
