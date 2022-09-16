@@ -2,6 +2,14 @@ import { Controller, Get, Param, UseGuards, Logger, Post, Req, Patch, Res, Body 
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { Cookies } from 'react-cookie';
+
+export function getCookie(key: string): string {
+	const cookies = new Cookies();
+	console.log(cookies);
+
+	return cookies.get(key);
+}
 
 @Controller('user')
 // @UseGuards(AuthGuard)
@@ -10,8 +18,9 @@ export class UserController {
 	constructor(private userService: UserService) {}
 
 	@Get('me')
-	async getLoginUserData(@Req() req): Promise<any> {
-		// console.log(req.body);
+	async getLoginUserData(@Req() req, @Body() body): Promise<any> {
+		const intra = getCookie('intra_id');
+		console.log(intra);
 		// const intra_id = req.user.intra_id;
 		// console.log(intra_id);
 		// const user = await this.userService.getUserById(id);
