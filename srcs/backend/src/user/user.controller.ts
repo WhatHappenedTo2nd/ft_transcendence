@@ -1,13 +1,31 @@
-import { Controller, Get, Param, UseGuards, Logger, Post, Req, Patch } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Logger, Post, Req, Patch, Res, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
 @Controller('user')
-// @UseGuards(AuthGuard())
+// @UseGuards(AuthGuard)
 export class UserController {
 	private logger = new Logger('UserController');
 	constructor(private userService: UserService) {}
+
+	@Get('me')
+	async getLoginUserData(@Req() req): Promise<any> {
+		// console.log(req.body);
+		// const intra_id = req.user.intra_id;
+		// console.log(intra_id);
+		// const user = await this.userService.getUserById(id);
+
+		// const res = {
+		// 	id: user.id,
+		// 	intra_id: user.intra_id,
+		// 	email: user.email,
+		// 	nickname: user.nickname,
+		// 	is_online: user.is_online,
+		// 	now_playing: user.now_playing,
+		// };
+		// return res;
+	}
 
 	@Get()
 	async getUserList(): Promise<User[]> {
