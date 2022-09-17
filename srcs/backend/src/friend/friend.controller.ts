@@ -11,8 +11,13 @@ export class FriendController {
 	private logger = new Logger('FriendController');
 	constructor (private friendService: FriendService) {}
 	
-	@Get()
+	@Get('/friendlist')
 	async getFriendList(@GetUser() user: User): Promise<FriendDto[]> {
 		return await this.friendService.getFriendList(user);
+	}
+
+	@Get('/blocklist')
+	async getBlockList(@GetUser() user: User): Promise<FriendDto[]> {
+		return await this.friendService.getBlockList(user);
 	}
 }

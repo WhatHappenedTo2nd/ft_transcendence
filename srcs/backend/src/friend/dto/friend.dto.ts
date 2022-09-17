@@ -1,3 +1,9 @@
+export enum Status {
+	PLAYING = 'PLAYING',
+	ONLINE = 'ONLINE',
+	OFFLINE = 'OFFLINE',
+}
+
 export class FriendDto {
 	id: number;
 	
@@ -7,5 +13,5 @@ export class FriendDto {
 	
 	isblock: boolean;
 
-	status: number;
+	status: Status;
 }
