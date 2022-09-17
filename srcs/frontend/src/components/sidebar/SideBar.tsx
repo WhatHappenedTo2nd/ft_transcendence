@@ -19,8 +19,10 @@ export default function SideBar({ children }: userProps){
 			</Text>
 		</Flex>
 		<Divider borderColor="black" />
+		<div>friend</div>
 			<FriendList />
 		<Divider borderColor="black" />
+		<div>online</div>
 			<OnlineserList />
 		</Box>
 	)
