@@ -1,8 +1,9 @@
-import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { ConflictException, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { UserLoginDto } from "./dto/user-login.dto";
 import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { User } from "./user.entity";
+import { UserDefaultDto } from "./dto/user-default.dto";
 
 /**
  * 유저 관련 데이터를 저장 및 관리하기 위한 Repository 클래스
@@ -37,5 +38,26 @@ export class UserRepository extends Repository<User> {
 		const user = await this.findOne({ where: { intra_id } });
 		user.is_online = true;
 		await this.save(user);
+	}
+
+	async findByNickname(nickname: string): Promise<User> {
+		const user: User = await this.findOneBy({nickname});
+		if (user == null) {
+			throw new NotFoundException(`User not found`);
+		}
+		return user;
+	}
+
+	async infoUser(user: User): Promise<UserDefaultDto> {
+		const result: UserDefaultDto = {
+			id: user.id,
+			intra_id: user.intra_id,
+			nickname: user.nickname,
+			avatar: user.avatar,
+			is_online: user.is_online,
+			now_playing: user.now_playing,
+			email: user.email
+		};
+		return result;
 	}
 }

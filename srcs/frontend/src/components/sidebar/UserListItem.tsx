@@ -35,7 +35,9 @@ function OnlineUserList() {
 						<Container key={user?.id} display='flex'>
 							<Box boxSize='10' justifyContent='center'>
 								<Avatar size='sm' src={user?.avatar}>
-									<AvatarBadge boxSize='1em' bg='green.500' />
+									{user.now_playing 
+									? <AvatarBadge boxSize='1em' bg='yellow.500' /> 
+									: <AvatarBadge boxSize='1em' bg='green.500' />}
 								</Avatar>
 							</Box>
 							<Box justifyContent='flex-end'>
@@ -44,7 +46,7 @@ function OnlineUserList() {
 						</Container>
 					);
 				}
-				})}
+			})}
 		</div>
 	);
 }
