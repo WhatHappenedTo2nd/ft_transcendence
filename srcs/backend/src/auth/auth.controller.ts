@@ -5,11 +5,13 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
 /**
  * auth 경로 그룹
  * 42API로 유저 인증 혹은 2단계 인증 관련한 작업 처리
  */
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 	constructor(
