@@ -20,7 +20,6 @@ function FriendList() {
 	const { isLoading: isFriendListLoading, data: FriendList, error: FriendListError} = useQuery<FriendListProps[]>('Friend', getLoginUserFriendList);
 	if ( isFriendListLoading ) return <h1>Loading</h1>;
 	if ( FriendListError ) return <div>Error</div>;
-	console.log(FriendList);
 	return (
 		<div>
 			{FriendList?.map((user) => {
