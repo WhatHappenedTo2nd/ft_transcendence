@@ -4,7 +4,9 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from 'src/user/user.entity';
 import { FriendDto } from './dto/friend.dto';
 import { FriendService } from './friend.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('friend')
 @Controller('friend')
 @UseGuards(JwtAuthGuard)
 export class FriendController {
