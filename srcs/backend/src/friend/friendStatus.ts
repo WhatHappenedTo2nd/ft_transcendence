@@ -3,4 +3,3 @@ export enum FriendStatus {
 	FRIEND = 'FRIEND',
 	NONE = 'NONE',
 }
-  
