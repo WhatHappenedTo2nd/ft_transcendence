@@ -22,7 +22,7 @@ export const getLoginUserData = async() => {
 }
 
 export const getLoginUserFriendList = async() => {
-	const { data: friend } = await axios.get('/friend', {
+	const { data: friend } = await axios.get('/friend/friendlist', {
 		method: "GET",
 		headers: {
 			Authorization: 'Bearer ' + getCookie("token")
@@ -30,6 +30,17 @@ export const getLoginUserFriendList = async() => {
 	});
 	return friend;
 }
+
+export const getBlockList = async() => {
+	const { data: block } = await axios.get('/friend/blocklist', {
+		method: "GET",
+		headers: {
+			Authorization: 'Bearer ' + getCookie("token")
+		}
+	});
+	return block;
+}
+
 export const getChatList = async () => {
 	const { data: chat } = await axios.get('/data/chatdata.json');
 	return chat;
