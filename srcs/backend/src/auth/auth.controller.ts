@@ -5,11 +5,13 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
 /**
  * auth 경로 그룹
  * 42API로 유저 인증 혹은 2단계 인증 관련한 작업 처리
  */
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
 	constructor(
@@ -45,7 +47,7 @@ export class AuthController {
 		// 토큰 생성
 		const accessToken = await this.jwtService.sign(payload);
 		// accessToken을 cookie에 저장함
-		res.cookie('token', accessToken);
+		res.cookie('accessToken', accessToken);
 		res.cookie('intra_id', intra_id);
 		// 후에 프론트 choice 페이지로 redirect
 		res.status(302).redirect('http://localhost:3000/choice');

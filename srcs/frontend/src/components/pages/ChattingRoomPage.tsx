@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Grid, GridItem } from '@chakra-ui/react'
 import SideBar from "../sidebar/SideBar";
-import Chatting from "../chatting/Chatting";
+import ChattingRoom from "../chatting/ChattingRoom";
 import RandomButton from "../chatting/RandomButton";
 /**
  * ChoicePage에서 채팅을 선택하면 나오는 선택 페이지
 
  */
 
-function ChattingPage() {
+function ChattingRoomPage() {
 	const navigate = useNavigate();
 
 	return (
@@ -29,21 +29,21 @@ function ChattingPage() {
 					}}
 					gridTemplateAreas={{
 						md: `'random'
-							'chat'`
+							'chattingroom'`
 						}}
 						gap={4}>
 					<GridItem area={'random'}>
 						<RandomButton
 						title="Random"
 						onClick={() => {
-							navigate("/chatting");
+							navigate("/chattingroom");
 							console.log("랜덤 매칭");
 						}}/>
 					</GridItem>
-					<GridItem area={'chat'}>
-						<Chatting
+					<GridItem area={'chattingroom'}>
+						<ChattingRoom
 							onClick={() => {
-								navigate("/chatting");
+								navigate("/chattingroom");
 								console.log("채팅방 선택");
 							}}
 							/>
@@ -54,4 +54,4 @@ function ChattingPage() {
 	);
 }
 
-export default ChattingPage;
+export default ChattingRoomPage;

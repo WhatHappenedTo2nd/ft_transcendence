@@ -2,12 +2,18 @@ import { useQuery } from 'react-query'
 import { getLoginUserFriendList } from '../../api/api';
 import { Box, Avatar, AvatarBadge, Container } from '@chakra-ui/react'
 
+export enum Status {
+	PLAYING = 'PLAYING',
+	ONLINE = 'ONLINE',
+	OFFLINE = 'OFFLINE',
+}
+
 interface FriendListProps {
 	id: number;
 	nickname: string;
 	avatar: string;
 	isblock: boolean;
-	status: number;
+	status: Status;
 }
 
 function FriendList() {
@@ -21,9 +27,9 @@ function FriendList() {
 					<Container key={user?.id} display='flex'>
 						<Box boxSize='10' justifyContent='center'>
 							<Avatar size='sm' src={user?.avatar}>
-								{user.status > 1
-								? (user.status === 3 ? <AvatarBadge boxSize='1em' bg='yellow.500' /> : <AvatarBadge boxSize='1em' bg='green.500' />)
-								: <AvatarBadge boxSize='1em' bg='grey' />}
+								{user.status === Status.PLAYING ? <AvatarBadge boxSize='1em' bg='yellow.500' /> : null}
+								{user.status === Status.ONLINE ? <AvatarBadge boxSize='1em' bg='green.500' /> : null}
+								{user.status === Status.OFFLINE ? <AvatarBadge boxSize='1em' bg='grey' /> : null }
 							</Avatar>
 						</Box>
 						<Box justifyContent='flex-end'>
