@@ -34,14 +34,13 @@ export class UserService {
 
 	//유저 닉네임 변경
 	async updateUserNickname(id: number, nickname: string | undefined): Promise<User> {
+		console.log(id);
 		const user = await this.getUserById(id);
 		const rule = /^[0-9a-zA-Z]+$/;
 		if (!user) {
 			throw new BadRequestException(`해당 유저를 찾을 수 없습니다.`)
 		}
 		if (!nickname) {
-			console.log(user.nickname);
-			console.log(nickname);
 			throw new BadRequestException(`변경된 내용이 없습니다.`)
 		}
 		if (nickname) {
@@ -59,6 +58,7 @@ export class UserService {
 		await this.userRepository.save(user);
 		return user;
 	}
+
 	async infoUser(user: User, nickname?: string): Promise<UserDefaultDto> {
 		if (nickname) {
 			user = await (await this.userRepository.findByNickname(nickname));

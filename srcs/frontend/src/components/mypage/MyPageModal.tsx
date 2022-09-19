@@ -20,6 +20,7 @@ import {
 	Image
 } from '@chakra-ui/react';
 import axios from "axios";
+import { getCookie } from "../../api/cookieFunc";
 
 interface UserProps {
 	id: number;
@@ -37,7 +38,7 @@ function MyPageModal() {
 	const [previewPhoto, setPreviewPhoto] = useState('');
 	const [inputPhoto, setInputPhoto] = useState('');
 
-	const {data:Mydata} = useQuery<UserProps>('me', getLoginUserData);
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<UserProps>('me', getLoginUserData);
 
 	useEffect(() => {
 		if (Mydata?.avatar) setPreviewPhoto(Mydata.avatar); 
@@ -48,23 +49,32 @@ function MyPageModal() {
 		setPreviewPhoto(URL.createObjectURL(e.target.files[0]));
 	};
 
+
 	const handleSubmit = async () => {
-		const formData = new FormData();
-		formData.append('nickname', inputValue);
-		formData.append('avatar', inputPhoto);
+		// const formData = new FormData();
+		// formData.append('nickname', inputValue);
+		// formData.append('avatar', inputPhoto);
 		if (inputValue)
-			await axios
-				.patch('data/loginuserdata.json', formData)
-				.then((res) => {
-					alert(res.data.message);
-					setInputValue('');
-					setInputPhoto('');
+			await axios({
+				method: 'post',
+				headers: {
+					'content-type': 'application/json',
+					Authorization: 'Bearer ' + getCookie("accessToken")
+				},
+				url: '/user/me',
+				data: {
+					nickname: inputValue,
+				}
+			})
+			.then((res) => {
+				alert(res.data.message);
+				setInputValue('');
+					// setInputPhoto('');
 				return (res);
 				// handleClose();
 			})
 			.catch((err) => {
 					console.log(inputValue);
-					console.log(formData.append);
 					const errMsg = err.response.data.message;
 					alert(errMsg);
 			});
