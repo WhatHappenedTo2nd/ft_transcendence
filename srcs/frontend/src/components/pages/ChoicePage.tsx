@@ -29,7 +29,7 @@ function ChoicePage() {
 				<ChoiceBox
 					title="Profile"
 					onClick={() => {
-						navigate("/choice");
+						navigate("/mypage");
 						console.log("프로필 선택");
 					}}
 					/>

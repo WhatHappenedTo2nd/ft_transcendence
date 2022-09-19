@@ -3,11 +3,7 @@
  * 그대로 사용하지않고
  */
 import { StringLiteral } from 'typescript';
-<<<<<<< HEAD
-import { IUser } from '../..//GameInterface';
-=======
 import { IUser } from '../../GameInterface';
->>>>>>> c1b15d29be89ebf77d86a10996c3783411bbf8c4
 import IUserData from './userInterface'
 
 export interface IChatUser
