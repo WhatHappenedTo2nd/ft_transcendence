@@ -37,7 +37,7 @@ function ChoicePage() {
 				<ChoiceBox
 					title="Chatting"
 					onClick={() => {
-						navigate("/chatting");
+						navigate("/chattingroom");
 						console.log("채팅 선택");
 					}}
 					/>
