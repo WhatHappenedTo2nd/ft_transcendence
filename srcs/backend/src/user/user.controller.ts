@@ -1,10 +1,13 @@
-import { Controller, Get, Param, UseGuards, Logger, Req, Body, Post } from '@nestjs/common';
+import { multerOptions } from '../profile/multerOption';
+import { Controller, Get, Param, UseGuards, Logger, Req, Body, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserDefaultDto } from './dto/user-default.dto';
 import { GetUser } from './get.user.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @ApiTags('user')
 @Controller('user')
@@ -24,12 +27,18 @@ export class UserController {
 		return this.userService.infoUser(user);
 	}
 
+	/* 
+	*  프로필 사진 저장, 닉네임 저장
+	*  multer를 이용해 multipart/form-data 로 넘어온 파일 관리
+	*  사진 한 장이므로 uploadedfile() 사용
+	*/
 	@Post('/me')
-	async updateUserData(@Req() req: any): Promise<Object> {
+	@UseInterceptors(FileInterceptor('file', multerOptions))
+	async updateUserProfile(@Req() req, @UploadedFile() file) {
 		
 		const nickname = req.body.nickname;
 
 		const user = await this.getMe(req.user);
-		return this.userService.updateUserNickname(user.id, nickname);
+		return this.userService.updateUserProfile(user.id, file, nickname);
 	}
 }
