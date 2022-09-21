@@ -1,11 +1,11 @@
-//유저 전체 서비스
-
+import { join } from 'path';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity'
 import { ConflictException } from '@nestjs/common';
 import { UserDefaultDto } from './dto/user-default.dto';
+import { Multer } from 'multer';
 
 @Injectable()
 export class UserService {
@@ -32,16 +32,26 @@ export class UserService {
 		return user;
 	}
 
-	//유저 닉네임 변경
-	async updateUserNickname(id: number, nickname: string | undefined): Promise<User> {
-		console.log(id);
+	/* 
+	* 유저 닉네임, 아바타 변경
+	* @param id
+	* @param file
+	*/
+	async updateUserProfile(id: number, file: Express.Multer.File, nickname: string | undefined): Promise<User> {
+
 		const user = await this.getUserById(id);
 		const rule = /^[0-9a-zA-Z]+$/;
 		if (!user) {
 			throw new BadRequestException(`해당 유저를 찾을 수 없습니다.`)
 		}
-		if (!nickname) {
+		if (!nickname && !file) {
 			throw new BadRequestException(`변경된 내용이 없습니다.`)
+		}
+		if (file) {
+			const server = 'http://localhost:9633';
+			const photoUrl = server + join('/', file.path);
+			user.avatar = photoUrl;
+			await this.userRepository.save(user);
 		}
 		if (nickname) {
 			const isDuplicateNick = await this.userRepository.findOne({where: {nickname}});
@@ -53,7 +63,6 @@ export class UserService {
 				throw new ConflictException('닉네임은 20자 이내로 작성하세요.');
 			}
 			user.nickname = nickname;
-			console.log(nickname);
 		}
 		await this.userRepository.save(user);
 		return user;

@@ -49,32 +49,29 @@ function MyPageModal() {
 		setPreviewPhoto(URL.createObjectURL(e.target.files[0]));
 	};
 
-
 	const handleSubmit = async () => {
-		// const formData = new FormData();
-		// formData.append('nickname', inputValue);
-		// formData.append('avatar', inputPhoto);
-		if (inputValue)
+
+		if (inputValue || inputPhoto)
 			await axios({
 				method: 'post',
 				headers: {
-					'content-type': 'application/json',
+					'content-type': 'multipart/form-data',
 					Authorization: 'Bearer ' + getCookie("accessToken")
 				},
 				url: '/user/me',
 				data: {
-					nickname: inputValue,
+					"nickname" : inputValue,
+					"file" : inputPhoto
 				}
 			})
 			.then((res) => {
-				alert(res.data.message);
+				alert(`성공적으로 업데이트 되었습니다.`);
 				setInputValue('');
-					// setInputPhoto('');
+				setInputPhoto('');
 				return (res);
 				// handleClose();
 			})
 			.catch((err) => {
-					console.log(inputValue);
 					const errMsg = err.response.data.message;
 					alert(errMsg);
 			});
@@ -99,6 +96,7 @@ function MyPageModal() {
 						accept="image/*"
 						onChange={(e) => {
 							handleFile(e);
+							
 						}} />
 					<FormLabel>닉네임 변경</FormLabel>
 					<div>현재 닉네임 : {Mydata?.nickname} </div>
@@ -111,7 +109,12 @@ function MyPageModal() {
 			</ModalBody>
 
 			<ModalFooter>
-				<Button colorScheme='blue' mr={3} onClick={handleSubmit}>
+				<Button
+				colorScheme='blue'
+				mr={3}
+				onClick={() => {
+					handleSubmit();
+					onClose();}}>
 					수정 완료
 				</Button>
 				<Button variant='ghost' onClick={onClose}>취소</Button>

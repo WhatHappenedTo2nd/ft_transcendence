@@ -21,5 +21,11 @@ async function bootstrap() {
     credentials: true,
   });
   await app.listen(9633);
+
+  //
+  app.useStaticAssets(join(__dirname, '..', '/profilePicture'), {
+    index: false,
+    prefix: '/profilePicture'
+  });
 }
 bootstrap();
