@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -7,15 +8,22 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatModule } from './chat/chat.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '/profilePicture'),
+    }),
     TypeOrmModule.forRoot(typeORMConfig),
     AuthModule,
     UserModule,
     FriendModule,
     ChatModule,
+    ProfileModule,
   ],
+
   controllers: [AppController],
   providers: [AppService],
 })

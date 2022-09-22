@@ -4,6 +4,8 @@ WORKDIR /usr/app
 
 COPY	. .
 
-RUN		npm install && npm i socket.io-client && npm run build
+RUN		npm i --save socket.io-client @types/socket.io-client
+RUN		npm install
+RUN		npm run build
 
 CMD		[ "npm", "start" ]

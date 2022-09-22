@@ -1,38 +1,96 @@
-import { Box, Text } from '@chakra-ui/react';
-import { useQuery } from 'react-query'
-import { getChatList } from '../../api/api';
-import { UnlockIcon, LockIcon } from '@chakra-ui/icons'
+import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { io } from 'socket.io-client';
+import classNames from 'classnames';
+import {
+	ChatContainer,
+	Message,
+	MessageBox,
+	MessageForm,
+  } from '../../styles/chat.styles';
 
-interface ChatListProps {
-		id: number;
-		title: string;
-		passward: string;
-		is_private: boolean;
-		host: number;
-		now_playing: boolean;
+const socket = io('http://localhost:9633/api/chat');
+
+interface IChat {
+	nickname: string;
+	avatar: string;
+	message: string;
 }
 
-function Chatting(props: { onClick: any; }){
-	const { status , data: ChatList, error } = useQuery<ChatListProps[]>('chat', getChatList);
-	if (status === "loading") return <h1>Loading</h1>;
-	if (status === "error") return <div>Error</div>;
+function Chatting(props: any) {
+	const [chats, setChats] = useState<IChat[]>([]);
+	const [message, setMessage] = useState<string>('');
+	const chatContainerEl = useRef<HTMLDivElement>(null);
+
+	// 채팅이 길어지면(chats.length) 스크롤이 생성되므로, 스크롤의 위치를 최근 메시지에 위치시키기 위함
+	useEffect(() => {
+		if (!chatContainerEl.current) return;
+
+		const chatContainer = chatContainerEl.current;
+		const { scrollHeight, clientHeight } = chatContainer;
+
+		if (scrollHeight > clientHeight) {
+			chatContainer.scrollTop = scrollHeight - clientHeight;
+		}
+	}, [chats.length]);
+
+	// message event listener
+	useEffect(() => {
+		const messageHandler = (chat: IChat) =>
+			setChats((prevChats) => [...prevChats, chat]);
+
+		socket.on('message', messageHandler);
+
+		return () => {
+			socket.off('message', messageHandler);
+		};
+	}, []);
+
+	const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+		setMessage(e.target.value);
+	}, []);
+
+	const onSendMessage = useCallback(
+		(e: FormEvent<HTMLFormElement>) => {
+			e.preventDefault();
+			if (!message) return alert('메시지를 입력해 주세요.');
+
+			socket.emit('message', message, (chat: IChat) => {
+				setChats((prevChats) => [...prevChats, chat]);
+				setMessage('');
+			});
+		}, [message]
+	);
 
 	return (
-		<div>
-			{ChatList?.map((chat) => {
-				return(
-					<Box p='4' display='flex' flex-basis={"auto"} alignItems='baseline'
-					style={{border: '1px solid black',borderRadius: '5px'}}
-					mx='4' my='4' width='100wh' key={chat.id}>
-						{chat.is_private ? <LockIcon/> : <UnlockIcon/>}
-						<Text text-align="center" paddingX="2">
-							{chat.title}
-						</Text>
-					</Box>
-				);
-			})}
-		</div>
+		<>
+			<h1>WebSocket Chat</h1>
+			<ChatContainer ref={chatContainerEl}>
+			{chats.map((chat, index) => (
+				<MessageBox
+				key={index}
+				className={classNames({
+					my_message: socket.id === chat.nickname,
+					alarm: !chat.nickname,
+				})}
+				>
+				<span>
+					{chat.nickname
+					? socket.id === chat.nickname
+						? ''
+						: chat.nickname
+					: ''}
+				</span>
+				<Message className="message">{chat.message}</Message>
+				</MessageBox>
+			))}
+			</ChatContainer>
+			<MessageForm onSubmit={onSendMessage}>
+			<input type="text" onChange={onChange} value={message} />
+			<button>보내기</button>
+			</MessageForm>
+		</>
 	);
+
 }
 
 export default Chatting;

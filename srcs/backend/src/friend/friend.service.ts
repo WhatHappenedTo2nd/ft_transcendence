@@ -12,10 +12,10 @@ export class FriendService {
 	) {}
 
 	async getFriendList(user: User): Promise<FriendDto[]> {
-		return this.friendRepository.FriendList(user);
+		return await this.friendRepository.FriendList(user);
 	}
 
 	async getBlockList(user: User): Promise<FriendDto[]> {
-		return this.friendRepository.BlockList(user);
+		return await this.friendRepository.BlockList(user);
 	}
 }
