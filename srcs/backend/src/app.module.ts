@@ -7,6 +7,7 @@ import { typeORMConfig } from './configs/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { FriendModule } from './friend/friend.module';
+import { ChatModule } from './chat/chat.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ProfileModule } from './profile/profile.module';
 
@@ -19,6 +20,7 @@ import { ProfileModule } from './profile/profile.module';
     AuthModule,
     UserModule,
     FriendModule,
+    ChatModule,
     ProfileModule,
   ],
 
