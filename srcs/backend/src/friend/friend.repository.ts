@@ -4,7 +4,7 @@ import { FriendStatus } from "./friendStatus";
 import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { User } from "../user/user.entity";
 import { Friend } from "./friend.entity";
-import { FriendDto } from "./dto/friend.dto";
+import { FriendDto, Status } from "./dto/friend.dto";
 
 /**
  * 친구 & 차단(block) 관련 데이터를 저장하기 위한 Repository 클래스
@@ -186,14 +186,19 @@ export class FriendRepository extends Repository<Friend> {
 		const friendList: FriendDto[] = [];
 		result.forEach((e) => {
 			if (e.user_id.id === user.id) {
-				friendList.push({
-					id: e.another_id.id,
-					nickname: e.another_id.nickname,
-					avatar: e.another_id.avatar,
-					isblock: e.block,
-				});
-			}
-		});
+				const friend = new FriendDto;
+				friend.id = e.another_id.id;
+				friend.nickname = e.another_id.nickname;
+				friend.avatar = e.another_id.avatar;
+				friend.isblock = e.block;
+				if (e.another_id.now_playing)
+					friend.status = Status.PLAYING;
+				else if (e.another_id.is_online)
+					friend.status = Status.ONLINE;
+				else
+					friend.status = Status.OFFLINE;
+				friendList.push(friend);
+			}});
 		return friendList;
 	}
 
@@ -211,12 +216,18 @@ export class FriendRepository extends Repository<Friend> {
 		const blockList: FriendDto[] = [];
 		block.forEach((e) => {
 			if (e.user_id.id === user.id) {
-				blockList.push({
-					id: e.another_id.id,
-					nickname: e.another_id.nickname,
-					avatar: e.another_id.avatar,
-					isblock: e.block,
-				});
+				const block = new FriendDto;
+				block.id = e.another_id.id;
+				block.nickname = e.another_id.nickname;
+				block.avatar = e.another_id.avatar;
+				block.isblock = e.block;
+				if (e.another_id.now_playing)
+					block.status = Status.PLAYING;
+				else if (e.another_id.is_online)
+					block.status = Status.ONLINE;
+				else
+					block.status = Status.OFFLINE;
+				blockList.push(block);
 			}
 		});
 		return blockList;
