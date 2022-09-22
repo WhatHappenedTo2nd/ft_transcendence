@@ -3,6 +3,7 @@ import { ChatService } from './chat.service';
 import { ChatController } from './chat.controller';
 import { ChatRepository } from './chat.repository';
 import { TypeOrmExModule } from '../typeorm-ex/typeorm-ex.module';
+import { ChatGateway } from './chat.gateway';
 
 @Module({
   imports: [
@@ -10,7 +11,7 @@ import { TypeOrmExModule } from '../typeorm-ex/typeorm-ex.module';
       ChatRepository
     ])
   ],
-  providers: [ChatService],
+  providers: [ChatService, ChatGateway],
   controllers: [ChatController]
 })
 export class ChatModule {}
