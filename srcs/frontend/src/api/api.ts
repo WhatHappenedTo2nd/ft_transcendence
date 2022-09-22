@@ -42,6 +42,12 @@ export const getBlockList = async() => {
 }
 
 export const getChatList = async () => {
-	const { data: chat } = await axios.get('/data/chatdata.json');
+	//TODO: get 할 정보 수정 필요
+	const { data: chat } = await axios.get('/chat', {
+		method: "GET",
+		headers: {
+			Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
 	return chat;
 }
