@@ -56,7 +56,9 @@ export class UserRepository extends Repository<User> {
 			avatar: user.avatar,
 			is_online: user.is_online,
 			now_playing: user.now_playing,
-			email: user.email
+			email: user.email,
+			tfaCode: user.tfaCode,
+			tfaAuthorized: user.tfaAuthorized
 		};
 		return result;
 	}
