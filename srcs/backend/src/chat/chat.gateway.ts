@@ -3,7 +3,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Namespace, Socket } from "socket.io";
 
 @WebSocketGateway({
-	namespace: 'chat',
+	namespace: 'api/chat',
 	cors: {
 		origin: ['http://localhost:3000'],
 	},

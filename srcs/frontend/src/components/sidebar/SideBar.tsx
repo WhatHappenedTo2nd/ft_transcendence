@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Box, Flex, Text, Divider } from "@chakra-ui/react"
-import OnlineserList from "./UserListItem";
+import OnlineserList from "./UserList";
 import FriendList from "./FriendList";
 
 type userProps = {
