@@ -6,6 +6,7 @@ import ChoicePage from './components/pages/ChoicePage';
 import ChattingRoomPage from './components/pages/ChattingRoomPage';
 import GamePage from './components/pages/GamePage';
 import MyPage from './components/pages/MyPage';
+import WaitingRoom from './components/chatting/WaitingRoom';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
             <Route path="mypage" element={<MyPage />} />
             <Route path="chattingroom" element={<ChattingRoomPage />} />
             <Route path="game" element={<GamePage />} />
+            <Route path="room/:roomId" element={<GamePage />} />
+            <Route path="waiting" element={<WaitingRoom />} />
           </Routes>
       </BrowserRouter>
     </ChakraProvider>
