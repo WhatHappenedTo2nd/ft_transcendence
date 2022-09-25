@@ -4,6 +4,8 @@ import { useQuery } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import MyPageModal from '../mypage/MyPageModal';
 import styled from 'styled-components';
+import CheckTFA from '../mypage/tfa';
+import CheckTFACode from '../mypage/tfaCodeCheck';
 
 interface UserProps {
 	id: number;
@@ -13,6 +15,8 @@ interface UserProps {
 	is_online: boolean;
 	now_playing: boolean;
 	email: string;
+	tfaCode:string;
+	tfaAuthorized: boolean;
 }
 
 function MyPage() {
@@ -31,6 +35,8 @@ function MyPage() {
 			/>
 			<Text fontSize='30px' color='#53B7BA' as='b'>{Mydata?.nickname}</Text>
 			<MyPageModal />
+			<CheckTFA />
+			<CheckTFACode />
 		</Main>
 	);
 }
