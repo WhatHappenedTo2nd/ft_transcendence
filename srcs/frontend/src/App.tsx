@@ -5,8 +5,8 @@ import MainPage from './components/pages/MainPage';
 import ChoicePage from './components/pages/ChoicePage';
 import ChattingRoomPage from './components/pages/ChattingRoomPage';
 import GamePage from './components/pages/GamePage';
-import MyPage from './components/pages/MyPage';
 import WaitingRoom from './components/chatting/WaitingRoom';
+import MyPage from './components/pages/MyProfilePage';
 import { io } from 'socket.io-client';
 
 export const socket = io('http://localhost:9633/api/chat');

@@ -41,4 +41,11 @@ export class UserController {
 		const user = await this.getMe(req.user);
 		return this.userService.updateUserProfile(user.id, file, nickname);
 	}
+
+	@Post('/me/tfa')
+	async tfaCheck(@Req() req) {
+		const email = req.body.email;
+		const user = await this.getMe(req.user);
+		return this.userService.sendEmail(user.id, email);
+	}
 }

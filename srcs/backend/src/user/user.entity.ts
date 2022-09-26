@@ -34,8 +34,14 @@ export class User extends BaseEntity {
 
 	// 2차 인증할 때 받는 이메일.
 	// 이메일이 비어있으면 아직 2차 인증을 하지 않은 것임.
-	@Column({ default: "" })
-	email: string;
+	@Column({ nullable : true })
+	email: string ;
+
+	@Column({nullable: true})
+	tfaCode: string;
+
+	@Column({ default: false })
+	tfaAuthorized: boolean;
 }
 
 /**
