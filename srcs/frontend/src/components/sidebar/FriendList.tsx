@@ -1,11 +1,10 @@
 import { useQuery } from 'react-query'
 import { getLoginUserFriendList } from '../../api/api';
-import FriendProps from '../interface/IFriendProps';
+import IFriendProps from '../interface/IFriendProps';
 import FriendItem from './FriendItem';
 
 function FriendList() {
-
-	const { isLoading: isFriendListLoading, data: FriendList, error: FriendListError} = useQuery<FriendProps[]>('Friend', getLoginUserFriendList);
+	const { isLoading: isFriendListLoading, data: FriendList, error: FriendListError} = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList);
 	if ( isFriendListLoading ) return <h1>Loading</h1>;
 	if ( FriendListError ) return <div>Error</div>;
 	return (

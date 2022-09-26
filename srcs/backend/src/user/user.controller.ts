@@ -35,15 +35,6 @@ export class UserController {
 	}
 
 	/* 
-	*  유저와 친구인 유저를 제외한 온라인 유저 정보를 리턴
-	*/
-	@Get('/online')
-	async getUserwithoutFriend(@GetUser() user: User): Promise<User[]> {
-		const users = await this.userService.getUserwithoutFriend(user);
-		return users;
-	}
-
-	/* 
 	*  프로필 사진 저장, 닉네임 저장
 	*  multer를 이용해 multipart/form-data 로 넘어온 파일 관리
 	*  사진 한 장이므로 uploadedfile() 사용

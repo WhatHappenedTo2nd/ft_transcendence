@@ -21,12 +21,6 @@ export class UserService {
 		return users;
 	}
 
-	async getUserwithoutFriend(): Promise<User[]> {
-		const users = await this.userRepository.find({});
-		
-		return users;
-	}
-
 	//파라미터로 전달받은 Id와 일치하는 유저 리턴
 	async getUserById(id: number): Promise<User> {
 		const user = await this.userRepository.findOne({where: {id}});
