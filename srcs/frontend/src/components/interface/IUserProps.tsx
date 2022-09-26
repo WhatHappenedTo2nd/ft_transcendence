@@ -6,4 +6,6 @@ export default interface UserProps {
 	is_online: boolean;
 	now_playing: boolean;
 	email: string;
+	tfaCode:string;
+	tfaAuthorized: boolean;
 };

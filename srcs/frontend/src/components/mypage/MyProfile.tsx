@@ -6,21 +6,9 @@ import MyPageModal from '../mypage/MyPageModal';
 import styled from 'styled-components';
 import CheckTFA from '../mypage/tfa';
 import CheckTFACode from '../mypage/tfaCodeCheck';
+import UserProps from '../interface/IUserProps';
 
-interface UserProps {
-	id: number;
-	intra_id: string;
-	nickname: string;
-	avatar: string;
-	is_online: boolean;
-	now_playing: boolean;
-	email: string;
-	tfaCode:string;
-	tfaAuthorized: boolean;
-}
-
-function MyPage() {
-
+function MyProfile(){
 	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
@@ -43,7 +31,7 @@ function MyPage() {
 
 const Main = styled.main`
   width: 100%;
-  height: 100vh;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,4 +57,4 @@ const DialogButton = styled.button`
   }
 `;
 
-export default MyPage;
+export default MyProfile;
