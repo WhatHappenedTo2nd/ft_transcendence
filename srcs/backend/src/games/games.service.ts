@@ -97,3 +97,7 @@ export class GamesService {
 		return updatedUser;
 	}
 }
+
+/**
+ * GameService
+ */

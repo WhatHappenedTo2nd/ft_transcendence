@@ -32,3 +32,7 @@ import { Games } from './games.entity';
  */
  @CustomRepository(Games)
 export class GamesRepository extends Repository<Games> {}
+
+/**
+ * GameRepository
+ */

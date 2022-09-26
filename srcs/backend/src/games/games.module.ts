@@ -14,3 +14,7 @@ import { UserModule } from 'src/user/user.module';
 	exports: [GamesGateway],
 })
 export class GamesModule {}
+
+/**
+ * GameModule
+ */

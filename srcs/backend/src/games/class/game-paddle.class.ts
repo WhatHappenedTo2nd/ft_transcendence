@@ -130,3 +130,7 @@ export class Paddle implements IPaddle {
 		}
 	}
 }
+
+/**
+ * GamePaddle class
+ */

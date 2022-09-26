@@ -37,3 +37,7 @@ export const DEFAULT_MAX_USER = 100;
 export const SET_INTERVAL_MILISECONDS = 3000;
 export const MAX_GOAL = 2;
 export const MAX_QUEUE = 100;
+
+/**
+ * Game에서 필요한 값
+ */

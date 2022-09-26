@@ -10,42 +10,46 @@ import { Games } from './games.entity';
  */
 @Controller('games')
 export class GamesController {
-    /**
-     *
-     * @param gameService
-     */
-    constructor (private gameService: GamesService) {}
+	/**
+	 *
+	 * @param gameService
+	 */
+	constructor (private gameService: GamesService) {}
 
-    /**
-     * 게임 유저 정보 반환
-     * @returns gameusers
-     */
-    @Get()
-    async findAll(): Promise<Games[]> {
-        const gameusers = await this.gameService.findAll();
-        return gameusers;
-    }
+	/**
+	 * 게임 유저 정보 반환
+	 * @returns gameusers
+	 */
+	@Get()
+	async findAll(): Promise<Games[]> {
+		const gameusers = await this.gameService.findAll();
+		return gameusers;
+	}
 
-    @Get(':id')
-    async findByGameUser(@Param('id') id: number): Promise<Games[]> {
-        const games = await this.gameService.find(id);
+	@Get(':id')
+	async findByGameUser(@Param('id') id: number): Promise<Games[]> {
+		const games = await this.gameService.find(id);
 
-        let response = [];
+		let response = [];
 
-        for (let i = 0; i < games.length; i++) {
-            const winnerId = games[i].winner_id;
-            const loserId = games[i].loser_id;
-            const winner = games[i].players.find((value) => value.id === winnerId);
-            const loser = games[i].players.find((value) => value.id === loserId);
+		for (let i = 0; i < games.length; i++) {
+			const winnerId = games[i].winner_id;
+			const loserId = games[i].loser_id;
+			const winner = games[i].players.find((value) => value.id === winnerId);
+			const loser = games[i].players.find((value) => value.id === loserId);
 
-            response.push({
-                id:games[i].id,
-                me: id,
-                winner: winner,
-                loser: loser,
-            });
-        }
+			response.push({
+				id:games[i].id,
+				me: id,
+				winner: winner,
+				loser: loser,
+			});
+		}
 
-        return response;
-    }
+		return response;
+	}
 }
+
+/**
+ * GameController
+ */

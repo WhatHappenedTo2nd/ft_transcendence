@@ -942,3 +942,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		return roomId;
 	}
 }
+
+/**
+ * GameGateway 주석 추가 및 로그 확인
+ */

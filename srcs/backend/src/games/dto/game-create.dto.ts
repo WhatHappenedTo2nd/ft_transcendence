@@ -29,3 +29,7 @@ export class GameCreateDto {
     @IsInt()
     readonly mode: GameMode;
 }
+
+/**
+ * GameCreate DTO
+ */

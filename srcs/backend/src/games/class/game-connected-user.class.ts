@@ -63,3 +63,7 @@ export class GameConnectedUser {
 		gameuser.setMode(mode);
 	}
 }
+
+/**
+ * GameConnect class
+ */

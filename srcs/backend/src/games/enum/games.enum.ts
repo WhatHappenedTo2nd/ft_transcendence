@@ -57,9 +57,12 @@ export enum GameMode {
 /**
  * User Achievement
  */
-export enum AchievementList {
-	SIGN_UP,
-	FRIENDS_FIRST_MAKE,
-	GAME_FIRST_WIN,
-}
+// export enum AchievementList {
+// 	SIGN_UP,
+// 	FRIENDS_FIRST_MAKE,
+// 	GAME_FIRST_WIN,
+// }
 
+/**
+ * Game에서 사용할 enum
+ */

@@ -7,3 +7,7 @@ export class UserConnectDto {
     @IsNotEmpty()
     nickname: string;
 }
+
+/**
+ * GameConnect DTO
+ */

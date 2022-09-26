@@ -167,3 +167,7 @@ export class Ball implements IBall {
 		}
 	}
 }
+
+/**
+ * GameBall class
+ */

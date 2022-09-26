@@ -91,3 +91,7 @@ export default class Queue {
 		return players;
 	}
 }
+
+/**
+ * GameQueue class
+ */

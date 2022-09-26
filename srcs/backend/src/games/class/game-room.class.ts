@@ -382,3 +382,7 @@ export default class Room implements IRoom {
 		return newSerializeRoom;
 	}
 }
+
+/**
+ * GameRoom class
+ */

@@ -47,7 +47,7 @@ export class Games extends BaseEntity {
 	@Column()
 	mode: number;
 
-	/** 추가로 필요한가? */
+	/** 추가로 필요한가 */
 	@Column()
 	wins: number;
 
@@ -57,3 +57,7 @@ export class Games extends BaseEntity {
 	@Column()
 	ratio: number;
 }
+
+/**
+ * 추가로 필요하다고 생각하는 데이터 추가
+ */
