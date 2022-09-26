@@ -35,6 +35,17 @@ export class UserService {
 		return user;
 	}
 
+	//파라미터로 전달받은 nickname과 일치하는 유저를 리턴
+	async getUserByNickname(nickname: string): Promise<User> {
+		const user = await this.userRepository.findOne({where: {nickname}});
+		if (!user) {
+			throw new NotFoundException(`해당 유저를 찾을 수 없습니다`)
+		}
+		if (!nickname)
+			return ;
+		return user;
+	}
+
 	/* 
 	* 유저 닉네임, 아바타 변경
 	* @param id

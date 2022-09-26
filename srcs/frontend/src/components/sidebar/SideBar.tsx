@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Box, Flex, Text, Divider } from "@chakra-ui/react"
-import OnlineserList from "./UserList";
+import OnlineUserList from "./UserList";
 import FriendList from "./FriendList";
 
 type userProps = {
@@ -23,7 +23,7 @@ export default function SideBar({ children }: userProps){
 			<FriendList />
 		<Divider borderColor="black" />
 		<div>online</div>
-			<OnlineserList />
+			<OnlineUserList />
 		</Box>
 	)
 }

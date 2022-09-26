@@ -1,6 +1,5 @@
 import { Box, Avatar, AvatarBadge, Container } from '@chakra-ui/react'
 
-
 function UserItem(props: any) {
 	const { user } = props;
 

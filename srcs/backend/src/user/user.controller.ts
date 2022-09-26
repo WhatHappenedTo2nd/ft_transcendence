@@ -7,7 +7,6 @@ import { UserDefaultDto } from './dto/user-default.dto';
 import { GetUser } from './get.user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 
 @ApiTags('user')
 @Controller('user')
@@ -16,12 +15,19 @@ export class UserController {
 	private logger = new Logger('UserController');
 	constructor(private userService: UserService) {}
 
+
+	/* 
+	*  로그인한 모든 유저의 정보를 리턴
+	*/
 	@Get()
 	async getUserList(): Promise<User[]> {
 		const users = await this.userService.getUserList();
 		return users;
 	}
 
+	/* 
+	*  유저 본인의 정보를 리턴
+	*/
 	@Get('/me')
 	async getMe(@GetUser() user: User): Promise<UserDefaultDto> {
 		return this.userService.infoUser(user);
@@ -41,6 +47,11 @@ export class UserController {
 		const user = await this.getMe(req.user);
 		return this.userService.updateUserProfile(user.id, file, nickname);
 	}
+
+
+	@Get('/profile/:nickname')
+	async getOtherByNickname(@Param('nickname') nickname: string): Promise<User> {
+		return this.userService.getUserByNickname(nickname);
 
 	@Post('/me/tfa')
 	async tfaCheck(@Req() req) {

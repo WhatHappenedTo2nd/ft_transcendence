@@ -1,13 +1,14 @@
 import { useQuery } from 'react-query'
 import { getLoginUserData, getUserList } from '../../api/api';
-import UserProps from '../interface/IUserProps'
+import IUserProps from '../interface/IUserProps'
 import UserItem from './UserItem';
 
 function OnlineUserList() {
-	const { isLoading: isUserListLoading, data: UserList, error: UserListError} = useQuery<UserProps[]>('users', getUserList);
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<UserProps>('me', getLoginUserData);
+	const { isLoading: isUserListLoading, data: UserList, error: UserListError} = useQuery<IUserProps[]>('users', getUserList);
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
 	if (isUserListLoading || amILoading ) return <h1>Loading</h1>;
 	if (UserListError || amIError ) return <div>Error</div>;
+
 	return (
 		<div>
 			{UserList?.map((user) => {
