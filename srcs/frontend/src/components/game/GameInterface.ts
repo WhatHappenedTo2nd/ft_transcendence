@@ -93,3 +93,8 @@ export interface IRoom {
 	timer: number;
 	gameDuration: number;
 }
+
+/**
+ * IPlayer의 user를 gameuser로 변경
+ * 백엔드의 변수명과 동일해야한다!!!
+ */

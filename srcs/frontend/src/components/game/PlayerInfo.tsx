@@ -109,3 +109,7 @@ function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
 }
 
 export default PlayerInfo;
+
+/**
+ * 프로필에서 게임 유저 정보 가져오기 수정 필요
+ */

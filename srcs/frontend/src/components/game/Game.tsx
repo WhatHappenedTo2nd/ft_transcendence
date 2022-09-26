@@ -201,3 +201,7 @@ function Game() {
 }
 
 export default Game;
+
+/**
+ * GameRooms 주석처리 및 주석추가
+ */

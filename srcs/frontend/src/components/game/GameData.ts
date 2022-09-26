@@ -124,3 +124,7 @@ export default class GameData {
 		this.drawCenteredTexture(`PAUSED`, this.screenWidth / 2, this.screenHeight / 2, 90, 'white');
 	}
 }
+
+/**
+ * GameData!!
+ */

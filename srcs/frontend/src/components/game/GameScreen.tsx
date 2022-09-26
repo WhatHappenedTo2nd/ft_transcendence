@@ -239,3 +239,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 }
 
 export default GameScreen;
+
+/**
+ * Player Info 주석처리
+ */
