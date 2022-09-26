@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Head, Table } from '../../styles/waiting.styles';
-import { io } from 'socket.io-client';
 import { useQuery } from 'react-query';
 import UserProps from '../interface/IUserProps';
 import { getLoginUserData } from '../../api/api';
+import { socket } from '../../App';
 
-export const socket = io('http://localhost:9633/api/chat');
 
 interface CreateRoomResponse {
 	success: boolean;
@@ -57,7 +56,7 @@ const WaitingRoom = () => {
 		(roomName: string) => () => {
 			if (Mydata?.nickname) setNickname(Mydata.nickname);
 
-			socket.emit('join-room', { roomName, name }, () => {
+			socket.emit('join-room', roomName, () => {
 				navigate(`/room/${roomName}`);
 			});
 		}, [navigate]

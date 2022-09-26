@@ -55,7 +55,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		@MessageBody() { roomName, message, name }: MessagePayload
 	) {
 		const socket_id = socket.id;
-		this.logger.log(`${name}: 닉네임`);
 		socket.broadcast.to(roomName).emit('message', { name, message });
 		return { name, message, socket_id };
 	}
@@ -78,7 +77,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 			
 		socket.join(roomName); // 기존에 없던 room으로 join하면 room이 생성됨
 		createdRooms.push(roomName); // 유저가 생성한 room 목록에 추가
-		this.logger.log(`roomName: ${roomName}`)
 		this.nsp.emit('create-room', roomName); // 대기실 방 생성
 
 		return { success: true, payload: roomName };
@@ -87,23 +85,18 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('join-room')
 	handleJoinRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomName, name }: MessagePayload,
+		@MessageBody() roomName : string,
 	) {
 		socket.join(roomName); // join room
-		this.logger.log(`roomName: ${roomName}`)
-		socket.broadcast.to(roomName).emit('message', { message: `${name}(이)가 들어왔습니다.` });
-
 		return { success: true };
 	}
 
 	@SubscribeMessage('leave-room')
 	handleLeaveRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomName, name }: MessagePayload,
+		@MessageBody() roomName: string,
 	) {
 		socket.leave(roomName); // leave room
-		socket.broadcast.to(roomName).emit('message', { message: `${name}(이)가 나갔습니다.` });
-
 		return { success: true };
 	}
 

@@ -7,6 +7,9 @@ import ChattingRoomPage from './components/pages/ChattingRoomPage';
 import GamePage from './components/pages/GamePage';
 import MyPage from './components/pages/MyPage';
 import WaitingRoom from './components/chatting/WaitingRoom';
+import { io } from 'socket.io-client';
+
+export const socket = io('http://localhost:9633/api/chat');
 
 function App() {
   return (
@@ -18,7 +21,7 @@ function App() {
             <Route path="mypage" element={<MyPage />} />
             <Route path="chattingroom" element={<ChattingRoomPage />} />
             <Route path="game" element={<GamePage />} />
-            <Route path="room/:roomId" element={<GamePage />} />
+            <Route path="room/:roomName" element={<GamePage />} />
             <Route path="waiting" element={<WaitingRoom />} />
           </Routes>
       </BrowserRouter>

@@ -1,5 +1,4 @@
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
 import classNames from 'classnames';
 import {
 	ChatContainer,
@@ -11,13 +10,13 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { getLoginUserData } from '../../api/api';
 import { useQuery } from 'react-query';
+import { socket } from '../../App';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
  * 두 번째 인자에 쿠키를 보낼 때 설정해야 하는 credentials와 같은 옵션들을 설정할 수 있다.
  * /api/chat은 namespace로, 일종의 통신 채널이다. 서로 다른 namespace에 있는 소켓들은 서로 다른 통신 채널에 있게 된다.
 **/
-const socket = io('http://localhost:9633/api/chat');
 
 interface IChat {
 	name: string;
@@ -90,7 +89,6 @@ function Chatting(props: any) {
 
 			if (Mydata?.nickname) setNickname(Mydata.nickname);
 
-			console.log(`roomName: ${roomName}`);
 			// socket.emit()에서 첫 번째 인자에는 이벤트 이름을, 두 번째 인자에는 전송할 데이터를,
 			// 세 번째 인자에는 콜백 함수로 서버에서 응답이 오면 실행할 함수를 넣어준다. 콜백 함수의 인자로는 서버에서 보내준 데이터가 들어온다.
 			socket.emit('message', { roomName, message, name }, (chat: IChat) => {
@@ -102,7 +100,7 @@ function Chatting(props: any) {
 		
 	const onLeaveRoom = useCallback(() => {
 		socket.emit('leave-room', { roomName, name }, () => {
-			navigate('/chatting');
+			navigate('/waiting');
 		});
 	}, [navigate, roomName]);
 
@@ -115,7 +113,7 @@ function Chatting(props: any) {
 				<MessageBox
 					key={index}
 					className={classNames({
-						my_message: socket.id === chat.name,
+						my_message: socket.id === chat.socket_id,
 						alarm: !chat.name,
 					})}
 				>
@@ -124,7 +122,7 @@ function Chatting(props: any) {
 					? socket.id === chat.socket_id
 						? ''
 						: chat.name
-					: 'second'}
+					: ''}
 				</span>
 				<Message className="message">{chat.message}</Message>
 				</MessageBox>
