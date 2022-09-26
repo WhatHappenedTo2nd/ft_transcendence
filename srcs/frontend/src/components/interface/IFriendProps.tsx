@@ -4,7 +4,7 @@ export enum Status {
 	OFFLINE = 'OFFLINE',
 }
 
-export default interface FriendProps {
+export default interface IFriendProps {
 	id: number;
 	nickname: string;
 	avatar: string;
