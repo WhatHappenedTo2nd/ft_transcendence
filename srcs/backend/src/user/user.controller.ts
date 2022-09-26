@@ -16,15 +16,31 @@ export class UserController {
 	private logger = new Logger('UserController');
 	constructor(private userService: UserService) {}
 
+
+	/* 
+	*  로그인한 모든 유저의 정보를 리턴
+	*/
 	@Get()
 	async getUserList(): Promise<User[]> {
 		const users = await this.userService.getUserList();
 		return users;
 	}
 
+	/* 
+	*  유저 본인의 정보를 리턴
+	*/
 	@Get('/me')
 	async getMe(@GetUser() user: User): Promise<UserDefaultDto> {
 		return this.userService.infoUser(user);
+	}
+
+	/* 
+	*  유저와 친구인 유저를 제외한 온라인 유저 정보를 리턴
+	*/
+	@Get('/online')
+	async getUserwithoutFriend(@GetUser() user: User): Promise<User[]> {
+		const users = await this.userService.getUserwithoutFriend(user);
+		return users;
 	}
 
 	/* 
