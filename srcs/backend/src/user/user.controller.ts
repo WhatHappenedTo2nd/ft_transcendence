@@ -7,7 +7,6 @@ import { UserDefaultDto } from './dto/user-default.dto';
 import { GetUser } from './get.user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 
 @ApiTags('user')
 @Controller('user')
@@ -47,5 +46,10 @@ export class UserController {
 
 		const user = await this.getMe(req.user);
 		return this.userService.updateUserProfile(user.id, file, nickname);
+	}
+
+	@Get('/profile/:nickname')
+	async getOtherByNickname(@Param('nickname') nickname: string): Promise<User> {
+		return this.userService.getUserByNickname(nickname);
 	}
 }
