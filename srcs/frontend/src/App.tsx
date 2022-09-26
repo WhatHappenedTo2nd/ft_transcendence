@@ -5,7 +5,7 @@ import MainPage from './components/pages/MainPage';
 import ChoicePage from './components/pages/ChoicePage';
 import ChattingRoomPage from './components/pages/ChattingRoomPage';
 import GamePage from './components/pages/GamePage';
-import MyPage from './components/pages/MyPage';
+import MyPage from './components/pages/MyProfilePage';
 
 function App() {
   return (
