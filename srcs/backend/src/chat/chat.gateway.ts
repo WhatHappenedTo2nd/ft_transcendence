@@ -1,15 +1,15 @@
 import { Logger } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import e from "express";
 import { Namespace, Socket } from "socket.io";
 
 interface MessagePayload {
-	roomId: string;
+	roomName: string;
 	message: string;
 	name: string;
 }
 
-let createdRooms: string[] = [];  
+let createdRooms: string[] = [];
+
 @WebSocketGateway({
 	namespace: 'api/chat',
 	cors: {
@@ -18,6 +18,7 @@ let createdRooms: string[] = [];
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() nsp: Namespace;
+
 	private logger = new Logger('ChatGateWay');
 
 	// 초기화 이후에 실행
@@ -51,11 +52,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('message')
 	handleMessage(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomId, message, name }: MessagePayload
+		@MessageBody() { roomName, message, name }: MessagePayload
 	) {
+		const socket_id = socket.id;
 		this.logger.log(`${name}: 닉네임`);
-		socket.broadcast.to(roomId).emit('message', { name, message });
-		return { name, message };
+		socket.broadcast.to(roomName).emit('message', { name, message });
+		return { name, message, socket_id };
 	}
 
 	@SubscribeMessage('room-list')
@@ -67,27 +69,29 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('create-room')
 	handleCreateRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() roomId: string,
-	) {
-		const exists = createdRooms.find((createdRoom) => createdRoom === roomId);
-		if (exists) {
-			return { success: false, payload: `${roomId} 방이 이미 존재합니다.` };
-		}
+		@MessageBody() roomName: string,
+		) {
+			const exists = createdRooms.find((createdRoom) => createdRoom === roomName);
+			if (exists) {
+				return { success: false, payload: `${roomName} 방이 이미 존재합니다.` };
+			}
+			
+		socket.join(roomName); // 기존에 없던 room으로 join하면 room이 생성됨
+		createdRooms.push(roomName); // 유저가 생성한 room 목록에 추가
+		this.logger.log(`roomName: ${roomName}`)
+		this.nsp.emit('create-room', roomName); // 대기실 방 생성
 
-		socket.join(roomId); // 기존에 없던 room으로 join하면 room이 생성됨
-		createdRooms.push(roomId); // 유저가 생성한 room 목록에 추가
-		this.nsp.emit('create-room', roomId); // 대기실 방 생성
-
-		return { success: true, payload: roomId };
+		return { success: true, payload: roomName };
 	}
 
 	@SubscribeMessage('join-room')
 	handleJoinRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() roomId: string,
+		@MessageBody() { roomName, name }: MessagePayload,
 	) {
-		socket.join(roomId); // join room
-		socket.broadcast.to(roomId).emit('message', { message: `${socket.id}가 들어왔습니다.` });
+		socket.join(roomName); // join room
+		this.logger.log(`roomName: ${roomName}`)
+		socket.broadcast.to(roomName).emit('message', { message: `${name}(이)가 들어왔습니다.` });
 
 		return { success: true };
 	}
@@ -95,10 +99,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('leave-room')
 	handleLeaveRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() roomId: string,
+		@MessageBody() { roomName, name }: MessagePayload,
 	) {
-		socket.leave(roomId); // leave room
-		socket.broadcast.to(roomId).emit('message', { message: `${socket.id}가 나갔습니다.` });
+		socket.leave(roomName); // leave room
+		socket.broadcast.to(roomName).emit('message', { message: `${name}(이)가 나갔습니다.` });
 
 		return { success: true };
 	}

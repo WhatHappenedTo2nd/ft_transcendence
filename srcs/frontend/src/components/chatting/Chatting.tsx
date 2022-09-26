@@ -42,13 +42,12 @@ function Chatting(props: any) {
 	const [name, setNickname] = useState<string>('');
 	const chatContainerEl = useRef<HTMLDivElement>(null);
 	
-	const { roomId } = useParams<'roomId'>();
+	const { roomName } = useParams<'roomName'>();
 	const navigate = useNavigate();
 	
 	// 채팅이 길어지면(chats.length) 스크롤이 생성되므로, 스크롤의 위치를 최근 메시지에 위치시키기 위함
 	useEffect(() => {
 		if (!chatContainerEl.current) return;
-		if (Mydata?.nickname) setNickname(Mydata.nickname);
 		
 		const chatContainer = chatContainerEl.current;
 		const { scrollHeight, clientHeight } = chatContainer;
@@ -60,7 +59,6 @@ function Chatting(props: any) {
 	
 	// message event listener
 	useEffect(() => {
-		if (Mydata?.nickname) setNickname(Mydata.nickname);
 		const messageHandler = (chat: IChat) => setChats((prevChats) => [...prevChats, chat]);
 		
 		socket.on('message', messageHandler);
@@ -71,6 +69,7 @@ function Chatting(props: any) {
 	}, []);
 	
 	const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+		if (Mydata?.nickname) setNickname(Mydata.nickname);
 		setMessage(e.target.value);
 	}, []);
 	
@@ -90,28 +89,26 @@ function Chatting(props: any) {
 			if (!message) return alert('메시지를 입력해 주세요.');
 
 			if (Mydata?.nickname) setNickname(Mydata.nickname);
-			// if (Mydata?.nickname) console.log(Mydata.nickname);
 
-			console.log(name);
+			console.log(`roomName: ${roomName}`);
 			// socket.emit()에서 첫 번째 인자에는 이벤트 이름을, 두 번째 인자에는 전송할 데이터를,
 			// 세 번째 인자에는 콜백 함수로 서버에서 응답이 오면 실행할 함수를 넣어준다. 콜백 함수의 인자로는 서버에서 보내준 데이터가 들어온다.
-			socket.emit('message', { roomId, message, name }, (chat: IChat) => {
+			socket.emit('message', { roomName, message, name }, (chat: IChat) => {
 				setChats((prevChats) => [...prevChats, chat]);
 				setMessage('');
-				// if (Mydata?.nickname) setNickname(Mydata.nickname);
 			});
-		}, [message, roomId, name]
+		}, [message, roomName]
 	);
 		
 	const onLeaveRoom = useCallback(() => {
-		socket.emit('leave-room', roomId, () => {
+		socket.emit('leave-room', { roomName, name }, () => {
 			navigate('/chatting');
 		});
-	}, [navigate, roomId]);
+	}, [navigate, roomName]);
 
 	return (
 		<>
-		<h1>Chat Room: {roomId}</h1>
+		<h1>Chat Room: {roomName}</h1>
 		<LeaveButton onClick={onLeaveRoom}>방 나가기</LeaveButton>
 		<ChatContainer ref={chatContainerEl}>
 			{chats.map((chat, index) => (
@@ -125,7 +122,7 @@ function Chatting(props: any) {
 				<span>
 					{chat.name
 					? socket.id === chat.socket_id
-						? 'first'
+						? ''
 						: chat.name
 					: 'second'}
 				</span>

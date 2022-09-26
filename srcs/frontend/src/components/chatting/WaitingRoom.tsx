@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Head, Table } from '../../styles/waiting.styles';
 import { io } from 'socket.io-client';
+import { useQuery } from 'react-query';
+import UserProps from '../interface/IUserProps';
+import { getLoginUserData } from '../../api/api';
 
 export const socket = io('http://localhost:9633/api/chat');
 
@@ -13,6 +16,8 @@ interface CreateRoomResponse {
 const WaitingRoom = () => {
 	const [rooms, setRooms] = useState<string[]>([]);
 	const navigate = useNavigate();
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<UserProps>('me', getLoginUserData);
+	const [name, setNickname] = useState<string>('');
 
 	useEffect(() => {
 		const roomListHandler = (rooms: string[]) => {
@@ -21,8 +26,8 @@ const WaitingRoom = () => {
 		const createRoomHandler = (newRoom: string) => {
 			setRooms((prevRooms) => [...prevRooms, newRoom]);
 		};
-		const deleteRoomHandler = (roomId: string) => {
-			setRooms((prevRooms) => prevRooms.filter((room) => room !== roomId));
+		const deleteRoomHandler = (roomName: string) => {
+			setRooms((prevRooms) => prevRooms.filter((room) => room !== roomName));
 		};
 
 		socket.emit('room-list', roomListHandler);
@@ -37,11 +42,11 @@ const WaitingRoom = () => {
 	}, []);
 
 	const onCreateRoom = useCallback(() => {
-		const roomId = prompt('방 이름을 입력해 주세요.');
-		if (!roomId)
+		const roomName = prompt('방 이름을 입력해 주세요.');
+		if (!roomName)
 			return alert('방 이름은 반드시 입력해야 합니다.');
 
-		socket.emit('create-room', roomId, (response: CreateRoomResponse) => {
+		socket.emit('create-room', roomName, (response: CreateRoomResponse) => {
 			if (!response.success)
 				return alert(response.payload);
 			navigate(`/room/${response.payload}`);
@@ -49,9 +54,11 @@ const WaitingRoom = () => {
 	}, [navigate]);
 
 	const onJoinRoom = useCallback(
-		(roomId: string) => () => {
-			socket.emit('join-room', roomId, () => {
-				navigate(`/room/${roomId}`);
+		(roomName: string) => () => {
+			if (Mydata?.nickname) setNickname(Mydata.nickname);
+
+			socket.emit('join-room', { roomName, name }, () => {
+				navigate(`/room/${roomName}`);
 			});
 		}, [navigate]
 	);
