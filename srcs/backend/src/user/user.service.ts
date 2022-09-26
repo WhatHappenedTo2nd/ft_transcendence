@@ -1,11 +1,13 @@
 import { join } from 'path';
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User } from './user.entity'
 import { ConflictException } from '@nestjs/common';
 import { UserDefaultDto } from './dto/user-default.dto';
+import { MailerService } from '@nestjs-modules/mailer';
 import { Multer } from 'multer';
+import { randomString } from '../profile/tfaCodeMaker';
 
 @Injectable()
 export class UserService {
@@ -14,6 +16,7 @@ export class UserService {
 	constructor(
 		@InjectRepository(UserRepository)
 		private userRepository: UserRepository,
+		private mailerService: MailerService,
 	) {}
 
 	async getUserList(): Promise<User[]> {
@@ -76,6 +79,32 @@ export class UserService {
 			user.nickname = nickname;
 		}
 		await this.userRepository.save(user);
+		return user;
+	}
+
+	async sendEmail(id: number, email: string): Promise<User> {
+		const user = await this.getUserById(id);
+		if (!user)
+			throw new BadRequestException('존재하지 않는 유저입니다.');
+
+			user.email = email;
+			const randomNumber: string = randomString(4, '#');
+			user.tfaCode = randomNumber;
+			console.log(user.tfaCode);
+
+			this.mailerService
+				.sendMail({
+					to: user.email,
+					from: 'whathappenedto2nd@gmail.com',
+					subject: '[2기무슨일이고] 2차 인증 코드입니다.',
+					html: `당신의 코드는 <b>${randomNumber}</b> 입니다.`,
+				})
+				.then(async (e) => {
+					await this.userRepository.save(user)
+				})
+				.catch((e) => {
+					throw new InternalServerErrorException(`Internal Server error in sending tfa code email`);
+				});
 		return user;
 	}
 

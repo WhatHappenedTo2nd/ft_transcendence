@@ -17,4 +17,8 @@ export class UserDefaultDto {
 	now_playing: boolean;
 
 	email: string;
+
+	tfaCode: string;
+
+	tfaAuthorized: boolean;
 }
