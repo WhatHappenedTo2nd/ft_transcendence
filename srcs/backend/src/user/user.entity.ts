@@ -37,9 +37,11 @@ export class User extends BaseEntity {
 	@Column({ nullable : true })
 	email: string ;
 
+	// 2차 인증을 위해 입력한 메일주소로 발송된 4자리 난수
 	@Column({nullable: true})
 	tfaCode: string;
 
+	// 2차인증 코드와 유저가 입력한 코드가 같으면 true
 	@Column({ default: false })
 	tfaAuthorized: boolean;
 }

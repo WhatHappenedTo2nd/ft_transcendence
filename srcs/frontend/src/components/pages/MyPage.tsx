@@ -35,8 +35,7 @@ function MyPage() {
 			/>
 			<Text fontSize='30px' color='#53B7BA' as='b'>{Mydata?.nickname}</Text>
 			<MyPageModal />
-			<CheckTFA />
-			<CheckTFACode />
+			{(!Mydata?.email) ? <CheckTFA /> : <CheckTFACode />}
 		</Main>
 	);
 }
