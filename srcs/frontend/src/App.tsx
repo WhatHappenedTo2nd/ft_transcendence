@@ -5,7 +5,11 @@ import MainPage from './components/pages/MainPage';
 import ChoicePage from './components/pages/ChoicePage';
 import ChattingRoomPage from './components/pages/ChattingRoomPage';
 import GamePage from './components/pages/GamePage';
+import WaitingRoom from './components/chatting/WaitingRoom';
 import MyPage from './components/pages/MyProfilePage';
+import { io } from 'socket.io-client';
+
+export const socket = io('http://localhost:9633/api/chat');
 
 function App() {
   return (
@@ -17,6 +21,8 @@ function App() {
             <Route path="mypage" element={<MyPage />} />
             <Route path="chattingroom" element={<ChattingRoomPage />} />
             <Route path="game" element={<GamePage />} />
+            <Route path="room/:roomName" element={<GamePage />} />
+            <Route path="waiting" element={<WaitingRoom />} />
           </Routes>
       </BrowserRouter>
     </ChakraProvider>
