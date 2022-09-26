@@ -32,10 +32,10 @@ export interface IKey {
 export interface IUser {
 	id: number;
 	nickname: string;
+	avatar: string;
 	wins: number;
 	losses: number;
 	ratio: number;
-	photo: string;
 }
 
 /**
@@ -43,7 +43,7 @@ export interface IUser {
  * 왼쪽/오른쪽 두 개의 패들이 생성되며, 이는 두 명의 유저(플레이어)를 의미한다.
  */
 export interface IPlayer {
-	user: IUser;
+	gameuser: IUser;
 	x: number;
 	y: number;
 	width: number;

@@ -76,31 +76,31 @@ function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
 		<PlayerInfoDivStyleC>
 			<PlayerInfoStyleC>
 				<PlayerPhotoDivStyleC>
-					<Link to={`/main/another/${leftPlayer.user.nickname}`}>
-						<PlayerPhotoStyleC src={leftPlayer.user.photo} alt={leftPlayer.user.nickname} />
+					<Link to={`/main/another/${leftPlayer.gameuser.nickname}`}>
+						<PlayerPhotoStyleC src={leftPlayer.gameuser.avatar} alt={leftPlayer.gameuser.nickname} />
 					</Link>
 				</PlayerPhotoDivStyleC>
 				<PlayerDataDivStyleC>
 					<PlayerDataPStyleC>
-						<Link to={`/main/another/${leftPlayer.user.nickname}`}>{leftPlayer.user.nickname}</Link>
+						<Link to={`/main/another/${leftPlayer.gameuser.nickname}`}>{leftPlayer.gameuser.nickname}</Link>
 					</PlayerDataPStyleC>
 					<PlayerDataPStyleC>
-						{leftPlayer.user.wins}W {leftPlayer.user.losses}L {leftPlayer.user.ratio}pts
+						{leftPlayer.gameuser.wins}W {leftPlayer.gameuser.losses}L {leftPlayer.gameuser.ratio}pts
 					</PlayerDataPStyleC>
 				</PlayerDataDivStyleC>
 			</PlayerInfoStyleC>
 			<PlayerInfoStyleC>
 				<PlayerPhotoDivStyleC>
-					<Link to={`/main/another/${rightPlayer.user.nickname}`}>
-						<PlayerPhotoStyleC src={rightPlayer.user.photo} alt={rightPlayer.user.nickname} />
+					<Link to={`/main/another/${rightPlayer.gameuser.nickname}`}>
+						<PlayerPhotoStyleC src={rightPlayer.gameuser.avatar} alt={rightPlayer.gameuser.nickname} />
 					</Link>
 				</PlayerPhotoDivStyleC>
 				<PlayerDataDivStyleC>
 					<PlayerDataPStyleC>
-						<Link to={`/main/another/${rightPlayer.user.nickname}`}>{rightPlayer.user.nickname}</Link>
+						<Link to={`/main/another/${rightPlayer.gameuser.nickname}`}>{rightPlayer.gameuser.nickname}</Link>
 					</PlayerDataPStyleC>
 					<PlayerDataPStyleC>
-						{rightPlayer.user.wins}W {rightPlayer.user.losses}L {rightPlayer.user.ratio}pts
+						{rightPlayer.gameuser.wins}W {rightPlayer.gameuser.losses}L {rightPlayer.gameuser.ratio}pts
 					</PlayerDataPStyleC>
 				</PlayerDataDivStyleC>
 			</PlayerInfoStyleC>

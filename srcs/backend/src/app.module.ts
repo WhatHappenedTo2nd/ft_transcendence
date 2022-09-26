@@ -10,6 +10,7 @@ import { FriendModule } from './friend/friend.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ProfileModule } from './profile/profile.module';
 import { ChatModule } from './chat/chat.module';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ChatModule } from './chat/chat.module';
     FriendModule,
     ChatModule,
     ProfileModule,
+    GamesModule,
   ],
 
   controllers: [AppController],
