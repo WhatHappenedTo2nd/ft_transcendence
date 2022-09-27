@@ -46,7 +46,7 @@ export class UserService {
 		return user;
 	}
 
-	/* 
+	/*
 	* 유저 닉네임, 아바타 변경
 	* @param id
 	* @param file
@@ -115,4 +115,77 @@ export class UserService {
 		return this.userRepository.infoUser(user);
 	}
 
+	// 	/**
+	//  * 유저 조회
+	//  * @param id
+	//  * @returns
+	//  */
+	 async getUserFriends(id: number): Promise<User> {
+		const user = await this.userRepository.findOneBy({ id });
+		if (!user) {
+		  throw new BadRequestException(`${id}: 유저가 없습니다.`);
+		}
+		return user;
+	}
+
+
+	// 	/**
+	// 	 * 유저 조회
+	// 	 * @param id
+	// 	 * @returns
+	// 	 */
+	// async getUserWithFriends(id: number): Promise<User> {
+	// 	const user = await this.userRepository.findOne(
+	// 	{ id },
+	// 	{
+	// 		relations: ['friendsRequest', 'friends', 'blockedUsers'],
+	// 	},
+	// 	);
+	// 	if (!user) {
+	// 	throw new BadRequestException('유저가 없습니다.');
+	// 	}
+	// 	return user;
+	// }
+
+	/**
+	 * setIsPlaying
+	 * getUserWithoutFriends(id)를 통해 유저 정보를 가지고 오고 유저 상태를 게임 중으로 바꿈
+	 */
+	async setIsPlaying(id: number, status: boolean): Promise<void> {
+		const user = await this.getUserFriends(id);
+		user.now_playing = status;
+		await this.userRepository.save(user);
+	}
+
+	/**
+	 * setRoomId
+	 * getUserFriends(id)를 통해 유저 정보를 가지고 오고 유저 정보에 게임중인 방 번호를 저장한다.
+	 */
+	async setRoomId(id: number, roomId: string): Promise<void> {
+		const user = await this.getUserFriends(id);
+		user.roomId = roomId;
+		await this.userRepository.save(user);
+	}
+
+	/**
+	 * 게임 결과 업데이트
+	 * 승리 횟수
+	 * 진 횟수
+	 * 승리 비율
+	 * @param user
+	 * @param isWinner
+	 * @returns
+	 */
+	async updateStatus(user: User, isWinner: boolean) {
+		if (isWinner) {
+			user.wins += 1;
+		}
+		else {
+			user.losses += 1;
+		}
+		user.ratio = (user.wins / (user.wins + user.losses)) * 100;
+		const updatedUser = await this.userRepository.save(user);
+		return updatedUser;
+	}
 }
+

@@ -20,6 +20,7 @@ import { IRoom, IUser, IKey, GameState } from './GameInterface';
 interface IGameScreenProps {
 	socketProps: Socket;
 	roomDataProps: any;
+	userDataProps: any;
 }
 
 const LeaveRoomStyleC = styled.button`
@@ -38,14 +39,17 @@ const LeaveRoomStyleC = styled.button`
 const Canvas = styled.canvas`
 	width: 75%
 	box-size: border-box;
-	border: 3px solid white;
+	border: 3px solid black;
 `;
 
 /**
  * @function GameScreen
  */
-function GameScreen({ socketProps, roomDataProps }: IGameScreenProps) {
+function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenProps) {
 	const socket: Socket = socketProps;
+	const userData: IUser = userDataProps;
+
+	console.log("==========GameScreen 생성 함수 입니다!===========");
 	/**
 	 * JSON.parse
 	 *  JSON을 객체로 바꿔준다.
@@ -60,9 +64,20 @@ function GameScreen({ socketProps, roomDataProps }: IGameScreenProps) {
 	 *
 	 * !!우리가 UserData 저장이 어떻게 되어있는지 확인하고 어떻게 가져올 것인지 수정이 필요하다.
 	 */
-	const userData: IUser = JSON.parse(localStorage.getItem('user') || '{}');
+	// const userData: IUser = JSON.parse(localStorage.getItem('user') || '{}');
+	console.log("=================================");
+	console.log("GameScreen getUserData 가져오기 확인")
+	console.log("GameScreen getUserData id : %d", userData?.id);
+	console.log("GameScreen getUserData nickname : %s", userData?.nickname);
+	console.log("GameScreen getUserData photo : %s", userData?.avatar);
+	console.log("GameScreen getUserData wins : %d", userData?.wins);
+	console.log("GameScreen getUserData losses : %d", userData?.losses);
+	console.log("GameScreen getUserData ratio : %d", userData?.ratio);
 	let room: IRoom = roomDataProps;
-	const isPlayer: boolean = userData.id === room.paddleOne.user.id || userData.id === room.paddleTwo.user.id;
+	console.log(room);
+
+	const isPlayer: boolean = (userData.id === room.paddleOne.gameuser.id || userData.id === room.paddleTwo.gameuser.id);
+
 	let animationFrameId: number;
 
 	//Key Arrow UP Event
@@ -142,8 +157,32 @@ function GameScreen({ socketProps, roomDataProps }: IGameScreenProps) {
 		 * socket.emit: send a message to the server
 		 */
 		socket.on('updateRoom', (updatedRoom: string) => {
+			console.log("!! Game UpdateRoom socket connection check");
+			console.log("JSON.parse(updatedRoom)전의 updateRoom의 값은: %s", updatedRoom);
 			const roomData: IRoom = JSON.parse(updatedRoom);
+			if (!roomData)
+			{
+				console.log("JSON.parse(updateRoom)을 실행하지 못했습니다.")
+			}
+			if (!roomData.paddleOne.gameuser.id)
+				console.log("!! Error: roomData.paddleOne.gameuser.id가 없습니다");
+			else if (!roomData.paddleOne.gameuser.id)
+				console.log("!! Error: roomData.paddleOne.gameuser.id가 없습니다");
+			else
+			{
+				console.log("!! roomData.paddleOne.gameuser.id는 %d,", roomData.paddleOne.gameuser.id);
+				console.log("!! roomData.paddleOne.gameuser.id는 %d,", roomData.paddleOne.gameuser.id);
+			}
 			room = roomData;
+			if (!room.paddleOne.gameuser.id)
+				console.log("!! Error: roomD.paddleOne.gameuser.id가 없습니다");
+			else if (!room.paddleOne.gameuser.id)
+				console.log("!! Error: room.paddleOne.gameuser.id가 없습니다");
+			else
+			{
+				console.log("!! room.paddleOne.gameuser.id는 %d,", room.paddleOne.gameuser.id);
+				console.log("!! room.paddleOne.gameuser.id는 %d,", room.paddleOne.gameuser.id);
+			}
 		});
 
 		/**
@@ -162,7 +201,7 @@ function GameScreen({ socketProps, roomDataProps }: IGameScreenProps) {
 			else if (room.gameState === GameState.RESUMED)
 				gameData.drawStartCountDown('READY');
 			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN) {
-				gameEnd(room.roomId, room.paddleOne.user.nickname, room.paddleTwo.user.nickname, room.gameState, gameData);
+				gameEnd(room.roomId, room.paddleOne.gameuser.nickname, room.paddleOne.gameuser.nickname, room.gameState, gameData);
 			}
 			animationFrameId = window.requestAnimationFrame(gameLoop);
 		}
@@ -187,15 +226,20 @@ function GameScreen({ socketProps, roomDataProps }: IGameScreenProps) {
 	const leaveRoom = () => {
 		socket.emit('leaveRoom', room.roomId);
 	};
+
 	return (
 		<div>
 			<LeaveRoomStyleC onClick={leaveRoom} type="button">
 				LEAVE ROOM
 			</LeaveRoomStyleC>
 			<Canvas id="pong-canvas" width="1920" height="1080" />
-			<PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} />
+			{/* <PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} /> */}
 		</div>
 	);
 }
 
 export default GameScreen;
+
+/**
+ * Player Info 주석처리 -> 게임 화면 위에 유저 정보표시
+ */

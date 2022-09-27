@@ -14,12 +14,10 @@ import { Socket, io } from 'socket.io-client';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
-import { GameState, IRoom } from './GameInterface';
+import { GameState, IRoom, IUser } from './GameInterface';
 import GameScreen from './GameScreen';
 import GameRooms from './GameRoom';
-import { IMyData } from './modules/Interface/chatInterface';
-import { getUserData } from './modules/api';
-
+import { getLoginUserData } from '../../api/api'
 /**
  * Game Start
  * Socket: 실시간 통신을 위해 사용
@@ -51,18 +49,24 @@ function Game() {
 	 *  loading : 데이터 fetch 중인 상태
 	 *  error : 데이터 fetch에 실패한 상태
 	 */
-	const { isLoading, data: userData, error } = useQuery<IMyData>('me', getUserData);
+	const { isLoading, data: userData, error } = useQuery<IUser>('me', getLoginUserData);
+
+	console.log("=================================");
 	console.log("getUserData 가져오기 확인")
-	if (isLoading)
-		console.log("Game useQuery isLoading 확인");
-	if (error)
-		console.log("Game useQuery error 확인");
+	console.log("getUserData id : %d", userData?.id);
+	console.log("getUserData nickname : %s", userData?.nickname);
+	console.log("getUserData photo : %s", userData?.avatar);
+	console.log("getUserData wins : %d", userData?.wins);
+	console.log("getUserData losses : %d", userData?.losses);
+	console.log("getUserData ratio : %d", userData?.ratio);
 
 	const joinQueue = (event: React.MouseEvent<HTMLButtonElement>) => {
+		console.log("Game joinQueue를 서버에 요청했습니다.");
 		socket.emit('joinQueue', event.currentTarget.value);
 	};
 
 	const leaveQueue = () => {
+		console.log("Game leaveQueue를 서버에 요청했습니다.");
 		socket.emit('leaveQueue');
 	};
 
@@ -89,17 +93,25 @@ function Game() {
 		 * 연결할 서버를 설정
 		 * on/emit : 서버와 연결된 이벤트 처리, 서버에게 메세지 전송
 		 */
-		socket = io('http://localhost:3000/api/games');
+		socket = io('http://localhost:9633/api/games');
+		if (socket)
+		{
+			console.log("server socket good");
+		}
 		socket = socket.on('connect', () => {
+			console.log("Game socket connect success!!!!!!!!!!!!");
 			socket.emit('handleUserConnect', userData);
 			socket.emit('getCurrentGames');
 		});
 		//서버로부터 updateCurrentGames 데이터를 받아서 이벤트 처리
 		socket.on('updateCurrentGames', (currentGamesData: IRoom[]) => {
+			console.log("Game socket update current games!!!!!!!!!!");
 			updateCurrentGames(currentGamesData);
 		});
 		socket.on('newRoom', (newRoomData: IRoom) => {
-			if (newRoomData.gameState === GameState.WAITING && userData.nickname !== newRoomData.paddleOne.user.nickname){
+			console.log("!! Game create new room");
+			if (newRoomData.gameState === GameState.WAITING && userData.nickname !== newRoomData.paddleOne.gameuser.nickname){
+				console.log("!! Game error create new room");
 				return ;
 			}
 			socket.emit('joinRoom', newRoomData.roomId);
@@ -107,16 +119,20 @@ function Game() {
 			setQueue(false);
 		});
 		socket.on('joinedQueue', () => {
+			console.log("!! Game JoinedQueue check JoinedQueue: 유저가 큐에 들어왔습니다.");
 			setQueue(true);
 		});
 		socket.on('leavedQueue', () => {
+			console.log("!! Game LeavedQueue check LeavedQueue: 유저가 큐에서 나갔습니다.");
 			setQueue(false);
 			setRoom(null);
 		});
 		socket.on('joinedRoom', () => {
+			console.log("!! Game JoinedRoom check JoinedRoom: 유저가 방에 들어왔습니다.");
 			setIsDisplayGame(true);
 		});
 		socket.on('leavedRoom', () => {
+			console.log("!! Game LeavedRoom check LeavedRoom: 유저가 방에서 나갔습니다.");
 			setIsDisplayGame(false);
 		});
 		return () => {
@@ -136,24 +152,38 @@ function Game() {
 	 * 서버와 연동 전이라 데이터를 가져올 수 없음.
 	 * return NULL에서 걸림
 	 */
-	// if (isLoading || error)
-	// 	return null;
+	if (isLoading || error)
+	{
+		if (isLoading)
+			console.log("Game useQuery isLoading 확인");
+		if (error)
+			console.log("Game useQuery error 확인");
+		return null;
+	}
 
+	console.log("isDisplayGame의 값은 ", isDisplayGame);
 	/**
 	 * @qna
 	 * 	return문 안에서 console.log를 이용해서 확인하는 것처럼 할 수 없는지?
 	 */
 	return (
 		<div>
-			{isDisplayGame ? (
-				<GameScreen socketProps={socket} roomDataProps={room} />
-			) : (
-				<>
-					{queue ? (
+			{isDisplayGame ?
+				(
+					<>
+						GAME SCREEN
+						<GameScreen socketProps={socket} roomDataProps={room} userDataProps={userData} />
+					</>
+				) :
+				(
+					<>
+						{queue ?
+						(
 							<QueueButtonStyleC type="button" onClick={leaveQueue}>
 								LEAVE QUEUE
 							</QueueButtonStyleC>
-						): (
+						) :
+						(
 							<div>
 								<QueueButtonStyleC type="button" onClick={joinQueue} value="BIG">
 									ACTIVE MODE
@@ -163,11 +193,16 @@ function Game() {
 								</QueueButtonStyleC>
 							</div>
 						)}
-						<GameRooms gameRooms={gameRooms} socket={socket} />
-				</>
-			)}
+						{/* <GameRooms gameRooms={gameRooms} socket={socket} /> */}
+					</>
+				)}
 		</div>
 	);
 }
 
 export default Game;
+
+/**
+ * GameRooms 주석처리 및 주석추가
+ * GameRooms 테스트 필요
+ */
