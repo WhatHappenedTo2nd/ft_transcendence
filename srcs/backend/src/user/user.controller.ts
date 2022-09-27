@@ -52,7 +52,8 @@ export class UserController {
 	@Get('/profile/:nickname')
 	async getOtherByNickname(@Param('nickname') nickname: string): Promise<User> {
 		return this.userService.getUserByNickname(nickname);
-
+	}
+	
 	@Post('/me/tfa')
 	async tfaCheck(@Req() req) {
 		const email = req.body.email;
