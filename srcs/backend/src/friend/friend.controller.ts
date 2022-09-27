@@ -1,4 +1,4 @@
-import { UseGuards, Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { UseGuards, Body, Controller, Get, Logger, Post, Param } from '@nestjs/common';
 import { GetUser } from 'src/user/get.user.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from 'src/user/user.entity';
@@ -23,5 +23,11 @@ export class FriendController {
 		return await this.friendService.getBlockList(user);
 	}
 
-	@Post()
+	@Post('/request/:nickname')
+	createFriend(
+		@Param('nickname') nickname: string,
+		@GetUser() user: User,
+	): Promise<void> {
+		return this.friendService.createFriend(user, nickname);
+	}
 }

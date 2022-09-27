@@ -29,6 +29,6 @@ export class FriendService {
 		}
 		const requester = await this.userService.getUserByNickname(nickname);
 		await this.friendRepository.createFriend(user, requester);
-		// 상대한테 알려주는 서비스...
+		// 상대한테 알려주는 서비스가 필요하다!!!
 	}
 }
