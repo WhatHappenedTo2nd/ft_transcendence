@@ -1,4 +1,4 @@
-import { UseGuards, Body, Controller, Get, Logger } from '@nestjs/common';
+import { UseGuards, Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { GetUser } from 'src/user/get.user.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from 'src/user/user.entity';
@@ -22,4 +22,6 @@ export class FriendController {
 	async getBlockList(@GetUser() user: User): Promise<FriendDto[]> {
 		return await this.friendService.getBlockList(user);
 	}
+
+	@Post()
 }
