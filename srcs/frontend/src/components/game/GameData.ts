@@ -127,4 +127,5 @@ export default class GameData {
 
 /**
  * GameData!!
+ * 게임화면을 그릴 때 필요한 함수
  */

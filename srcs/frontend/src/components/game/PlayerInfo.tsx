@@ -112,4 +112,5 @@ export default PlayerInfo;
 
 /**
  * 프로필에서 게임 유저 정보 가져오기 수정 필요
+ * link to로 가져와야함
  */

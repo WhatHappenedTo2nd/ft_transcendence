@@ -96,5 +96,5 @@ export interface IRoom {
 
 /**
  * IPlayer의 user를 gameuser로 변경
- * 백엔드의 변수명과 동일해야한다!!!
+ * 백엔드의 변수명과 동일해야한다!!! -> 변수 명 변경 후 데이터 넘어가는 거 확인!
  */

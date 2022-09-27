@@ -241,5 +241,5 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 export default GameScreen;
 
 /**
- * Player Info 주석처리
+ * Player Info 주석처리 -> 게임 화면 위에 유저 정보표시
  */

@@ -10,12 +10,26 @@ import { FriendModule } from './friend/friend.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ProfileModule } from './profile/profile.module';
 import { ChatModule } from './chat/chat.module';
-import { GamesModule } from './games/games.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter'
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '/profilePicture'),
+    }),
+    MailerModule.forRoot({
+      transport: 'smtps://whathappenedto2nd@gmail.com:oybpqqnyvcwhgbkw@smtp.gmail.com',
+      defaults: {
+        from: '"2nd-Pong" <noreply@what2nd.com>'
+      },
+      template: {
+        dir: join(__dirname, 'templates'),
+        adapter: new EjsAdapter(),
+        options: {
+          strict: true,
+        }
+      }
     }),
     TypeOrmModule.forRoot(typeORMConfig),
     AuthModule,

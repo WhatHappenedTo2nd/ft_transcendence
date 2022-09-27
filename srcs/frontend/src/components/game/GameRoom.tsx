@@ -58,5 +58,5 @@ function GameRooms({ gameRooms, socket }: IGameRoomProps) {
 export default GameRooms;
 
 /**
- * Player Info 주석처리
+ * Player Info 주석처리 -> 게임방에 유저 정보 표시
  */
