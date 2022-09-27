@@ -37,6 +37,8 @@ function GameRooms({ gameRooms, socket }: IGameRoomProps) {
     const onEnterGameRoom = ( event: React.MouseEvent<HTMLButtonElement>) => {
         socket.emit('spectateRoom', event.currentTarget.value);
     };
+    console.log("===========GameRoom 생성 함수 입니다!============");
+    console.log("GameRoom의 데이터는 ")
     return (
         <GameRoomListStyledC>
             {gameRooms.map((gameRoom) => {
@@ -45,7 +47,7 @@ function GameRooms({ gameRooms, socket }: IGameRoomProps) {
                         <SpectateButtonSyteldC onClick={onEnterGameRoom}
                         type='button' value={gameRoom.roomId}>
                         </SpectateButtonSyteldC>
-                        <PlayerInfo leftPlayer={gameRoom.paddleOne} rightPlayer={gameRoom.paddleTwo} />
+                        {/* <PlayerInfo leftPlayer={gameRoom.paddleOne} rightPlayer={gameRoom.paddleTwo} /> */}
                     </GameRoomliStyleC>
                 );
             })}
@@ -54,3 +56,7 @@ function GameRooms({ gameRooms, socket }: IGameRoomProps) {
 }
 
 export default GameRooms;
+
+/**
+ * Player Info 주석처리 -> 게임방에 유저 정보 표시
+ */

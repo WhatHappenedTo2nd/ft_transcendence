@@ -37,6 +37,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter'
     FriendModule,
     ChatModule,
     ProfileModule,
+    GamesModule,
   ],
 
   controllers: [AppController],
