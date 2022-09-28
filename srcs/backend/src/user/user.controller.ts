@@ -48,17 +48,17 @@ export class UserController {
 		return this.userService.updateUserProfile(user.id, file, nickname);
 	}
 	
+	/* 
+	*  파라미터로 받은 닉네임과 일치하는 유저 정보 리턴
+	*/
 	@Get('/profile/:nickname')
 	async getOtherByNickname(@Param('nickname') nickname: string): Promise<User> {
 		return this.userService.getUserByNickname(nickname);
 	}
 	
-<<<<<<< HEAD
-		/*
-		** 유저에게 2차인증용 메일 발송
-		*/
-=======
->>>>>>> cec313dca7e65fa55b957ebf7a567d5fc6d5c953
+	/*
+	** 유저에게 2차인증용 메일 발송
+	*/
 	@Post('/me/tfa')
 	async sendEmail(@Req() req) {
 		const email = req.body.email;
