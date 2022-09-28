@@ -11,6 +11,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getLoginUserData } from '../../api/api';
 import { useQuery } from 'react-query';
 import { socket } from '../../App';
+import IUserProps from '../interface/IUserProps';
+import IChat from '../interface/IChatProps';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -18,25 +20,9 @@ import { socket } from '../../App';
  * /api/chat은 namespace로, 일종의 통신 채널이다. 서로 다른 namespace에 있는 소켓들은 서로 다른 통신 채널에 있게 된다.
 **/
 
-interface IChat {
-	name: string;
-	message: string;
-	socket_id: string;
-}
-
-interface UserProps {
-	id: number;
-	intra_id: string;
-	nickname: string;
-	avatar: string;
-	is_online: boolean;
-	now_playing: boolean;
-	email: string;
-}
-
 function Chatting(props: any) {
 	const [chats, setChats] = useState<IChat[]>([]);
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<UserProps>('me', getLoginUserData);
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
 	const [message, setMessage] = useState<string>('');
 	const [name, setNickname] = useState<string>('');
 	const chatContainerEl = useRef<HTMLDivElement>(null);
