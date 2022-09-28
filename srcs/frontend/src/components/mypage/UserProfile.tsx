@@ -11,6 +11,11 @@ type Props = {
 	data: IUserProps;
 };
 
+/**
+ * 다른 유저 정보 리턴
+ * 내 닉네임이 들어갈 경우 마이페이지로 리디렉션
+ */
+
 function UserProfile() {
 	const params = useParams();
 	const {isLoading: amILoading, data: Userdata, error: amIError} = useQuery<IUserProps>(['usernick', params.nickname], () => getUserByNickname(params.nickname));
