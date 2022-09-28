@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import styled from 'styled-components';
 
-import PlayerInfo from './PlayerInfo';
+import PlayerInfo from './GamePlayerInfo';
 import GameData from './GameData';
 import { IRoom, IUser, IKey, GameState } from './GameInterface';
 
@@ -31,7 +31,7 @@ const LeaveRoomStyleC = styled.button`
 	/* background-color: black; */
 	/* color: white; */
 	&:hover {
-		background-color: rgba(255, 255, 255, 0.1);
+		background-color: rgba(0, 0, 0, 0.1);
 		color: white;
 	}
 `;
@@ -130,7 +130,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				gameData.screenWidth / 2,
 				gameData.screenHeight / 2,
 				45,
-				'white'
+				'black'
 			);
 		}
 		else if (gameState === GameState.PLAYER_TWO_WIN) {
@@ -139,7 +139,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				gameData.screenWidth / 2,
 				gameData.screenHeight / 2,
 				45,
-				'white'
+				'black'
 			);
 		}
 	};
@@ -160,29 +160,13 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			console.log("!! Game UpdateRoom socket connection check");
 			console.log("JSON.parse(updatedRoom)전의 updateRoom의 값은: %s", updatedRoom);
 			const roomData: IRoom = JSON.parse(updatedRoom);
-			if (!roomData)
+			room = roomData;
+			if (!room)
 			{
 				console.log("JSON.parse(updateRoom)을 실행하지 못했습니다.")
 			}
-			if (!roomData.paddleOne.gameuser.id)
-				console.log("!! Error: roomData.paddleOne.gameuser.id가 없습니다");
-			else if (!roomData.paddleOne.gameuser.id)
-				console.log("!! Error: roomData.paddleOne.gameuser.id가 없습니다");
-			else
-			{
-				console.log("!! roomData.paddleOne.gameuser.id는 %d,", roomData.paddleOne.gameuser.id);
-				console.log("!! roomData.paddleOne.gameuser.id는 %d,", roomData.paddleOne.gameuser.id);
-			}
-			room = roomData;
-			if (!room.paddleOne.gameuser.id)
-				console.log("!! Error: roomD.paddleOne.gameuser.id가 없습니다");
-			else if (!room.paddleOne.gameuser.id)
-				console.log("!! Error: room.paddleOne.gameuser.id가 없습니다");
-			else
-			{
-				console.log("!! room.paddleOne.gameuser.id는 %d,", room.paddleOne.gameuser.id);
-				console.log("!! room.paddleOne.gameuser.id는 %d,", room.paddleOne.gameuser.id);
-			}
+			console.log("JSON.parse(updateRoom)을 실행 후 받아온 room의 데이터는 ", room);
+
 		});
 
 		/**
@@ -193,13 +177,25 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				socket.emit('requestUpdate', room.roomId);
 			drawGame(gameData, room);
 			if (room.gameState === GameState.WAITING)
+			{
+				console.log("현재 게임 상태는 WAITING 이며 게임 대기 화면을 그리는 중입니다.")
 				gameData.drawWaiting();
+			}
 			else if (room.gameState === GameState.STARTING)
+			{
+				console.log("현재 게임 상태는 STARTING 이며 게임이 시작되기 전 화면을 그리는 중입니다.")
 				gameData.drawStartCountDown('READY');
+			}
 			else if (room.gameState === GameState.PAUSED)
+			{
+				console.log("현재 게임 상태는 PAUSED 이며 게임이 중단된 화면을 그리는 중입니다.")
 				gameData.drawPasuesState();
+			}
 			else if (room.gameState === GameState.RESUMED)
+			{
+				console.log("현재 게임 상태는 RESUMED 게임이 재시작되기 전 화면을 그리는 중입니다.")
 				gameData.drawStartCountDown('READY');
+			}
 			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN) {
 				gameEnd(room.roomId, room.paddleOne.gameuser.nickname, room.paddleOne.gameuser.nickname, room.gameState, gameData);
 			}
@@ -233,7 +229,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				LEAVE ROOM
 			</LeaveRoomStyleC>
 			<Canvas id="pong-canvas" width="1920" height="1080" />
-			{/* <PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} /> */}
+			<PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} />
 		</div>
 	);
 }

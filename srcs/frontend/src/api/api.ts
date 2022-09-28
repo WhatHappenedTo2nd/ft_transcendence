@@ -51,3 +51,13 @@ export const getChatList = async () => {
 	});
 	return chat;
 }
+
+export const getGameHistory = async (id: number) => {
+	const { data: gameHistory } = await axios.get(`/api/games/${id}`);
+	return gameHistory;
+}
+
+/**
+ * 2022/09/28
+ * hkwon - 게임 히스토리 api작성
+ */

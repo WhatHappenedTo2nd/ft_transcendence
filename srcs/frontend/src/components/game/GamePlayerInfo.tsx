@@ -68,21 +68,23 @@ interface IPlayerInfo {
  * @function PlayerInfo
  * @param leftPlayer
  * @param rightPlayer
- *
- * Link to={`url`} 확인해서 수정 필요!
  */
 function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
+	console.log("왼쪽 플레이어의 이긴 횟수 : ", leftPlayer.gameuser.wins);
+	console.log("왼쪽 플레이어의 진 횟수 : ", leftPlayer.gameuser.wins);
+	console.log("왼쪽 플레이어의 이긴 횟수 : ", rightPlayer.gameuser.wins);
+	console.log("왼쪽 플레이어의 진 횟수 : ", rightPlayer.gameuser.wins);
 	return (
 		<PlayerInfoDivStyleC>
 			<PlayerInfoStyleC>
 				<PlayerPhotoDivStyleC>
-					<Link to={`/main/another/${leftPlayer.gameuser.nickname}`}>
+					<Link to={`/profile/${leftPlayer.gameuser.nickname}`}>
 						<PlayerPhotoStyleC src={leftPlayer.gameuser.avatar} alt={leftPlayer.gameuser.nickname} />
 					</Link>
 				</PlayerPhotoDivStyleC>
 				<PlayerDataDivStyleC>
 					<PlayerDataPStyleC>
-						<Link to={`/main/another/${leftPlayer.gameuser.nickname}`}>{leftPlayer.gameuser.nickname}</Link>
+						<Link to={`/profile/${leftPlayer.gameuser.nickname}`}>{leftPlayer.gameuser.nickname}</Link>
 					</PlayerDataPStyleC>
 					<PlayerDataPStyleC>
 						{leftPlayer.gameuser.wins}W {leftPlayer.gameuser.losses}L {leftPlayer.gameuser.ratio}pts
@@ -91,13 +93,13 @@ function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
 			</PlayerInfoStyleC>
 			<PlayerInfoStyleC>
 				<PlayerPhotoDivStyleC>
-					<Link to={`/main/another/${rightPlayer.gameuser.nickname}`}>
+					<Link to={`/profile/${rightPlayer.gameuser.nickname}`}>
 						<PlayerPhotoStyleC src={rightPlayer.gameuser.avatar} alt={rightPlayer.gameuser.nickname} />
 					</Link>
 				</PlayerPhotoDivStyleC>
 				<PlayerDataDivStyleC>
 					<PlayerDataPStyleC>
-						<Link to={`/main/another/${rightPlayer.gameuser.nickname}`}>{rightPlayer.gameuser.nickname}</Link>
+						<Link to={`/profile/${rightPlayer.gameuser.nickname}`}>{rightPlayer.gameuser.nickname}</Link>
 					</PlayerDataPStyleC>
 					<PlayerDataPStyleC>
 						{rightPlayer.gameuser.wins}W {rightPlayer.gameuser.losses}L {rightPlayer.gameuser.ratio}pts
