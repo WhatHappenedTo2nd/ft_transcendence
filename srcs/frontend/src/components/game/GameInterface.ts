@@ -1,3 +1,5 @@
+import IUserProps from "../interface/IUserProps";
+
 /**
  * Game 화면크기(해상도)
  * 1920 * 1080
@@ -74,9 +76,9 @@ export interface IBall {
  * pauseTime: 퍼즈 시간
  * winner: 승자
  * loser: 패자
- * mode
- * timer
- * gameDuration
+ * mode : 게임 모드
+ * timer : 타이머
+ * gameDuration: 게임 지속시간
  */
 export interface IRoom {
 	roomId: string;
@@ -94,7 +96,20 @@ export interface IRoom {
 	gameDuration: number;
 }
 
+export interface IMatch
+{
+	id: number;
+	winner: IUserProps;
+	loser: IUserProps;
+	win_score: number;
+	lose_score: number;
+}
+
 /**
  * IPlayer의 user를 gameuser로 변경
  * 백엔드의 변수명과 동일해야한다!!! -> 변수 명 변경 후 데이터 넘어가는 거 확인!
+ *
+ * 2022/09/28
+ * IMatch interface 추가 -> 승자/패자/승리점수/패배점수
+ * gamesController에서 넘겨준 데이터를 저장할 인터페이스
  */
