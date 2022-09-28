@@ -1,36 +1,40 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, Button, Container, Box, useDisclosure, Text } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
-import { getLoginUserData } from '../../api/api';
-import MyPageModal from '../mypage/MyPageModal';
+import { getUserByNickname, getLoginUserData } from '../../api/api';
 import styled from 'styled-components';
-import CheckTFA from '../mypage/tfa';
-import CheckTFACode from '../mypage/tfaCodeCheck';
-import UserProps from '../interface/IUserProps';
+import IUserProps from '../interface/IUserProps'
+import { useParams } from 'react-router';
+import MyProfile from './MyProfile';
 
-function MyProfile(){
-  const [buttonState, setButtonState] = useState(false);
+type Props = {
+	data: IUserProps;
+};
 
-  const changeButton = () => {
-    setButtonState((check: boolean) => check);
-  }
-  
-  const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
+/**
+ * 다른 유저 정보 리턴
+ * 내 닉네임이 들어갈 경우 마이페이지로 리디렉션
+ */
+
+function UserProfile() {
+	const params = useParams();
+	const {isLoading: amILoading, data: Userdata, error: amIError} = useQuery<IUserProps>(['usernick', params.nickname], () => getUserByNickname(params.nickname));
+	const {data:Mydata} = useQuery<IUserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
   
+	if (Userdata?.nickname == Mydata?.nickname)
+		return <MyProfile />;
+
 	return (
     <Main>
 			<Image
 				borderRadius='full'
 				boxSize='200px'
-				src={Mydata?.avatar}
+				src={Userdata?.avatar}
 				alt='intra profile avatar'
         />
-			<Text fontSize='30px' color='#53B7BA' as='b'>{Mydata?.nickname}</Text>
-			<MyPageModal />
-			<CheckTFA />
-      <CheckTFACode />
+			<Text fontSize='30px' color='#53B7BA' as='b'>{Userdata?.nickname}</Text>
 		</Main>
 	);
 }
@@ -64,4 +68,4 @@ const DialogButton = styled.button`
   }
 `;
 
-export default MyProfile;
+export default UserProfile;
