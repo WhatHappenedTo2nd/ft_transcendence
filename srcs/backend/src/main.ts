@@ -13,8 +13,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  app.setBaseViewsDir(join(__dirname, '..', 'src', 'views'));
-  app.setViewEngine("ejs");
   app.enableCors({
     origin: 'http://localhost:3000',
     methods: ['GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'DELETE'],

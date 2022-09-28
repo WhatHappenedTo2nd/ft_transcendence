@@ -53,9 +53,12 @@ export class UserController {
 		return this.userService.getUserByNickname(nickname);
 	}
 	
+<<<<<<< HEAD
 		/*
 		** 유저에게 2차인증용 메일 발송
 		*/
+=======
+>>>>>>> cec313dca7e65fa55b957ebf7a567d5fc6d5c953
 	@Post('/me/tfa')
 	async sendEmail(@Req() req) {
 		const email = req.body.email;

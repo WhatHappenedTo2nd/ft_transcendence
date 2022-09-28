@@ -2,20 +2,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Head, Table } from '../../styles/waiting.styles';
 import { useQuery } from 'react-query';
-import UserProps from '../interface/IUserProps';
 import { getLoginUserData } from '../../api/api';
 import { socket } from '../../App';
-
-
-interface CreateRoomResponse {
-	success: boolean;
-	payload: string;
-}
+import IUserProps from '../interface/IUserProps';
+import ICreateRoomResponse from '../interface/IChatProps';
 
 const WaitingRoom = () => {
 	const [rooms, setRooms] = useState<string[]>([]);
 	const navigate = useNavigate();
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<UserProps>('me', getLoginUserData);
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
 	const [name, setNickname] = useState<string>('');
 
 	useEffect(() => {
@@ -45,7 +40,7 @@ const WaitingRoom = () => {
 		if (!roomName)
 			return alert('방 이름은 반드시 입력해야 합니다.');
 
-		socket.emit('create-room', roomName, (response: CreateRoomResponse) => {
+		socket.emit('create-room', roomName, (response: ICreateRoomResponse) => {
 			if (!response.success)
 				return alert(response.payload);
 			navigate(`/room/${response.payload}`);

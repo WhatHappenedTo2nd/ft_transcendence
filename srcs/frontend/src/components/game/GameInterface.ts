@@ -32,10 +32,10 @@ export interface IKey {
 export interface IUser {
 	id: number;
 	nickname: string;
+	avatar: string;
 	wins: number;
 	losses: number;
 	ratio: number;
-	photo: string;
 }
 
 /**
@@ -43,7 +43,7 @@ export interface IUser {
  * 왼쪽/오른쪽 두 개의 패들이 생성되며, 이는 두 명의 유저(플레이어)를 의미한다.
  */
 export interface IPlayer {
-	user: IUser;
+	gameuser: IUser;
 	x: number;
 	y: number;
 	width: number;
@@ -93,3 +93,8 @@ export interface IRoom {
 	timer: number;
 	gameDuration: number;
 }
+
+/**
+ * IPlayer의 user를 gameuser로 변경
+ * 백엔드의 변수명과 동일해야한다!!! -> 변수 명 변경 후 데이터 넘어가는 거 확인!
+ */

@@ -44,27 +44,52 @@ export class User extends BaseEntity {
 	// 2차인증 코드와 유저가 입력한 코드가 같으면 true
 	@Column({ default: false })
 	tfaAuthorized: boolean;
+
+	/** games */
+	@Column({
+		nullable: true,
+		default: 0,
+	})
+	wins: number;
+
+	@Column({
+		nullable: true,
+		default: 0,
+	})
+	losses: number;
+
+	@Column({
+		nullable: true,
+		default: 0,
+	})
+	ratio: number;
+
+	@Column({
+		nullable: true,
+		default: '',
+	})
+	roomId: string;
 }
 
 /**
  * 차단한 사람과 차단 당한 사람 테이블
  */
-@Entity()
-export class History extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
+// @Entity()
+// export class History extends BaseEntity {
+// 	@PrimaryGeneratedColumn()
+// 	id: number;
 
-	@ManyToOne(() => User, (user) => user.id)
-	user_a: User;
+// 	@ManyToOne(() => User, (user) => user.id)
+// 	user_a: User;
 
-	@ManyToOne(() => User, (user) => user.id)
-	user_b: User;
+// 	@ManyToOne(() => User, (user) => user.id)
+// 	user_b: User;
 
-	// 이긴 유저의 점수
-	@Column({ default: 0 })
-	score_a: number;
+// 	// 이긴 유저의 점수
+// 	@Column({ default: 0 })
+// 	score_a: number;
 
-	// 진 유저의 점수
-	@Column({ default: 0 })
-	score_b: number;
-}
+// 	// 진 유저의 점수
+// 	@Column({ default: 0 })
+// 	score_b: number;
+// }

@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
@@ -7,9 +7,8 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('login')
-  @Render('login')
-  login() {
-    return { title: "login" }
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
   }
 }
