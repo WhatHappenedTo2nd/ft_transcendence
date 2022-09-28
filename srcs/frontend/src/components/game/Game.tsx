@@ -193,7 +193,7 @@ function Game() {
 								</QueueButtonStyleC>
 							</div>
 						)}
-						{/* <GameRooms gameRooms={gameRooms} socket={socket} /> */}
+						<GameRooms gameRooms={gameRooms} socket={socket} />
 					</>
 				)}
 		</div>
