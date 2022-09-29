@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import PlayerInfo from './GamePlayerInfo';
 import GameData from './GameData';
-import { IRoom, IUser, IKey, GameState } from './GameInterface';
+import { IRoom, IUser, IKey, GameState } from '../interface/IGameProps';
 
 /**
  * 게임화면에 대한 Props
@@ -37,9 +37,10 @@ const LeaveRoomStyleC = styled.button`
 `;
 
 const Canvas = styled.canvas`
-	width: 75%
+	width: 100%;
 	box-size: border-box;
-	border: 3px solid black;
+	border: 3px solid white;
+	background-color: black;
 `;
 
 /**
@@ -65,38 +66,32 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	 * !!우리가 UserData 저장이 어떻게 되어있는지 확인하고 어떻게 가져올 것인지 수정이 필요하다.
 	 */
 	// const userData: IUser = JSON.parse(localStorage.getItem('user') || '{}');
-	console.log("=================================");
-	console.log("GameScreen getUserData 가져오기 확인")
-	console.log("GameScreen getUserData id : %d", userData?.id);
-	console.log("GameScreen getUserData nickname : %s", userData?.nickname);
-	console.log("GameScreen getUserData photo : %s", userData?.avatar);
-	console.log("GameScreen getUserData wins : %d", userData?.wins);
-	console.log("GameScreen getUserData losses : %d", userData?.losses);
-	console.log("GameScreen getUserData ratio : %d", userData?.ratio);
 	let room: IRoom = roomDataProps;
-	console.log(room);
-
 	const isPlayer: boolean = (userData.id === room.paddleOne.gameuser.id || userData.id === room.paddleTwo.gameuser.id);
 
 	let animationFrameId: number;
 
 	//Key Arrow UP Event
 	const keyUpEvent = (event: KeyboardEvent) => {
+		console.log("keyup event 입니다.");
 		const keyData: IKey = {
 			roomId: room.roomId,
 			key: event.key,
 			id: userData.id,
 		};
+		console.log("key에 대한 값은 ", keyData);
 		socket.emit('keyUp', keyData);
 	};
 
 	//Key Arrow Down Event
 	const keyDownEvent = (event: KeyboardEvent) => {
+		console.log("keyDown event 입니다.");
 		const keyData: IKey = {
 			roomId: room.roomId,
 			key: event.key,
 			id: userData.id,
 		};
+		console.log("key에 대한 값은 ", keyData);
 		socket.emit('keyDown', keyData);
 	};
 
@@ -106,9 +101,15 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	 */
 	const drawGame = (gameData: GameData, roomData: IRoom) => {
 		gameData.clear();
+		console.log("플레이어 one의 패들의 데이터는 ", roomData.paddleOne);
+		console.log("플레이어 two의 패들의 데이터는 ", roomData.paddleTwo);
+		// gameData.drawPaddle(roomData.paddleOne);
+		// gameData.drawPaddle(roomData.paddleTwo);
+		gameData.drawRectangle(roomData.paddleOne.x, roomData.paddleOne.y, roomData.paddleOne.width, roomData.paddleOne.height, 'white');
+		gameData.drawRectangle(roomData.paddleTwo.x, roomData.paddleTwo.y, roomData.paddleTwo.width, roomData.paddleTwo.height, 'white');
+
 		gameData.drawNet();
-		gameData.drawPaddle(roomData.paddleOne);
-		gameData.drawPaddle(roomData.paddleTwo);
+		console.log("공의 데이터는 ", roomData.paddleTwo);
 		gameData.drawBall(roomData.ball);
 		gameData.drawScore(roomData.paddleOne, roomData.paddleTwo);
 	};
@@ -130,7 +131,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				gameData.screenWidth / 2,
 				gameData.screenHeight / 2,
 				45,
-				'black'
+				'white'
 			);
 		}
 		else if (gameState === GameState.PLAYER_TWO_WIN) {
@@ -139,7 +140,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				gameData.screenWidth / 2,
 				gameData.screenHeight / 2,
 				45,
-				'black'
+				'white'
 			);
 		}
 	};
@@ -176,24 +177,16 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			if (room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN && isPlayer)
 				socket.emit('requestUpdate', room.roomId);
 			drawGame(gameData, room);
-			if (room.gameState === GameState.WAITING)
-			{
-				console.log("현재 게임 상태는 WAITING 이며 게임 대기 화면을 그리는 중입니다.")
+			if (room.gameState === GameState.WAITING) {
 				gameData.drawWaiting();
 			}
-			else if (room.gameState === GameState.STARTING)
-			{
-				console.log("현재 게임 상태는 STARTING 이며 게임이 시작되기 전 화면을 그리는 중입니다.")
+			else if (room.gameState === GameState.STARTING) {
 				gameData.drawStartCountDown('READY');
 			}
-			else if (room.gameState === GameState.PAUSED)
-			{
-				console.log("현재 게임 상태는 PAUSED 이며 게임이 중단된 화면을 그리는 중입니다.")
+			else if (room.gameState === GameState.PAUSED) {
 				gameData.drawPasuesState();
 			}
-			else if (room.gameState === GameState.RESUMED)
-			{
-				console.log("현재 게임 상태는 RESUMED 게임이 재시작되기 전 화면을 그리는 중입니다.")
+			else if (room.gameState === GameState.RESUMED) {
 				gameData.drawStartCountDown('READY');
 			}
 			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN) {

@@ -96,8 +96,8 @@ export default class Room implements IRoom {
 		this.gameState = GameState.STARTING;
 		this.players = [];
 		this.spectators = [];
-		this.paddleOne = new Paddle(gameusers[0], 30 , customisation.mode);
-		this.paddleTwo = new Paddle(gameusers[1], CANVAS_WIDTH - 50, customisation.mode);
+		this.paddleOne = new Paddle(gameusers[0],  CANVAS_WIDTH/2 - 300, customisation.mode);
+		this.paddleTwo = new Paddle(gameusers[1], CANVAS_WIDTH/2 + 300, customisation.mode);
 		this.ball = new Ball(customisation.mode);
 		this.timestampStart = Date.now();
 		this.lastUpdate = Date.now();

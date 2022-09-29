@@ -10,9 +10,6 @@ function GamePage() {
 	return (
 		<Container>
 			<div>
-				<Chatting />
-			</div>
-			<div>
 				<Game />
 			</div>
 		</Container>

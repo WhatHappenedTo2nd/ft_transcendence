@@ -8,6 +8,7 @@ import {
 	TIMING,
 } from '../constant/games.constant';
 import { GameMode } from "../enum/games.enum";
+import { Logger } from '@nestjs/common';
 
 export interface IPaddle {
 	gameuser: GameUser;
@@ -22,6 +23,7 @@ export interface IPaddle {
 }
 
 export class Paddle implements IPaddle {
+	private logger: Logger = new Logger('Paddle');
 	gameuser: GameUser;
 	x: number;
 	default_x: number;
@@ -52,7 +54,7 @@ export class Paddle implements IPaddle {
 		this.down = false;
 		this.left = false;
 		this.right = false;
-		this.color = 'rgba(0, 0, 0, 1)';
+		this.color = 'white';
 		this.mode = mode;
 	}
 
@@ -65,21 +67,23 @@ export class Paddle implements IPaddle {
 		const falsh_distance = 0.5;
 
 		// if (this.color !== 'rgba(0, 0, 0, 0.8)' && this.step <= TIMING)
-		if (this.color !== 'rgba(0, 0, 0, 1)' && this.step <= TIMING)
-		{
-			// this.color = ('rgb' + (127 + (this.step / TIMING) * 128) +
-			// ', ' + (this.step / TIMING) * 255 +
-			// ', ' + (this.step / TIMING)* 255 +
-			// ', 0.8');
-			// this.color = 'rgba(0, 0, 0, 1)';
-			this.color = 'blue';
-			this.step++;
-		}
-		else {
-			this.step = 0;
-			// this.color = 'rgba(0, 0, 0, 1)';
-			this.color = 'red';
-		}
+		// if (this.color !== 'white' && this.step <= TIMING)
+		// {
+		// 	// this.color = ('rgb' + (127 + (this.step / TIMING) * 128) +
+		// 	// ', ' + (this.step / TIMING) * 255 +
+		// 	// ', ' + (this.step / TIMING)* 255 +
+		// 	// ', 0.8');
+		// 	this.logger.log(`this.color의 값은 첫번째? ${this.color}`);
+		// 	// this.color = 'rgba(255, 255, 255, 1)';
+		// 	this.color = 'blue';
+		// 	this.step++;
+		// }
+		// else {
+		// 	this.logger.log(`this.color의 값은 두번째? ${this.color}`);
+		// 	this.step = 0;
+		// 	// this.color = 'rgba(255, 255, 255, 1)';
+		// 	this.color = 'red';
+		// }
 
 		if (this.up && !this.down) {
 			if (this.y <= 0) {
@@ -119,6 +123,7 @@ export class Paddle implements IPaddle {
 				this.x -= this.speed * secondPassed;
 			}
 		}
+
 		if (this.mode === GameMode.BIG && this.right && !this.left) {
 			if (this.x > CANVAS_WIDTH / 4 && this.x < (CANVAS_WIDTH / 4) * 2) {
 				this.x = CANVAS_WIDTH / 4;

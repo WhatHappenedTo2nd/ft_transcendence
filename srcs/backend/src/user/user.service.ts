@@ -115,20 +115,6 @@ export class UserService {
 	}
 
 	// 	/**
-	//  * 유저 조회
-	//  * @param id
-	//  * @returns
-	//  */
-	 async getUserFriends(id: number): Promise<User> {
-		const user = await this.userRepository.findOneBy({ id });
-		if (!user) {
-		  throw new BadRequestException(`${id}: 유저가 없습니다.`);
-		}
-		return user;
-	}
-
-
-	// 	/**
 	// 	 * 유저 조회
 	// 	 * @param id
 	// 	 * @returns
@@ -151,7 +137,7 @@ export class UserService {
 	 * getUserWithoutFriends(id)를 통해 유저 정보를 가지고 오고 유저 상태를 게임 중으로 바꿈
 	 */
 	async setIsPlaying(id: number, status: boolean): Promise<void> {
-		const user = await this.getUserFriends(id);
+		const user = await this.getUserById(id);
 		user.now_playing = status;
 		await this.userRepository.save(user);
 	}
@@ -161,7 +147,7 @@ export class UserService {
 	 * getUserFriends(id)를 통해 유저 정보를 가지고 오고 유저 정보에 게임중인 방 번호를 저장한다.
 	 */
 	async setRoomId(id: number, roomId: string): Promise<void> {
-		const user = await this.getUserFriends(id);
+		const user = await this.getUserById(id);
 		user.roomId = roomId;
 		await this.userRepository.save(user);
 	}
