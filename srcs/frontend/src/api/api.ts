@@ -21,6 +21,16 @@ export const getLoginUserData = async() => {
 	return me;
 }
 
+export const getJustOnlineUser = async() => {
+	const { data: online } = await axios.get('/user/online', {
+		method: "GET",
+		headers: {
+			Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
+	return online;
+}
+
 export const getLoginUserFriendList = async() => {
 	const { data: friend } = await axios.get('/friend/friendlist', {
 		method: "GET",
