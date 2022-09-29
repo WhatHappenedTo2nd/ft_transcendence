@@ -1,10 +1,15 @@
-import { Box, Avatar, AvatarBadge, Container } from '@chakra-ui/react'
+import { Box, Avatar, AvatarBadge, HStack } from '@chakra-ui/react'
+import UserContextMenu from './contextmenu/UserContextmenu';
 
 function UserItem(props: any) {
 	const { user } = props;
 
 	return (
-		<Container key={user?.id} display='flex'>
+		<UserContextMenu
+		userId={user.id}
+		name={user.nickname}
+		mode='chat'>
+			<HStack>
 			<Box boxSize='10' justifyContent='center'>
 				<Avatar size='sm' src={user?.avatar}>
 					{user.now_playing 
@@ -15,7 +20,8 @@ function UserItem(props: any) {
 			<Box justifyContent='flex-end'>
 				<span>{user?.nickname}</span>
 			</Box>
-		</Container>
+		</HStack>
+		</UserContextMenu>
 	);
 }
 

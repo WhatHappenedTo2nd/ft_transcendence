@@ -15,14 +15,14 @@ export class GameUser {
 	losses?: number;
 	ratio?: number;
 
-	constructor( id: number, nickname: string, avatar: string, socketId?: string, wins?: number, losses?: number, ratio?: number) {
-	    this.id = id;
-	    this.nickname = nickname;
-	    this.avatar = avatar;
-	    this.socketId = socketId;
-	    // this.wins = wins;
-	    // this.losses = losses;
-	    // this.ratio = ratio;
+	constructor( id: number, nickname: string, avatar: string,  wins?: number, losses?: number, ratio?: number, socketId?: string ) {
+		this.id = id;
+		this.nickname = nickname;
+		this.avatar = avatar;
+		this.socketId = socketId;
+		this.wins = wins;
+		this.losses = losses;
+		this.ratio = ratio;
 	}
 
 	/**

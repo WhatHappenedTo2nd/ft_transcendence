@@ -6,7 +6,6 @@ import { User } from './user.entity'
 import { ConflictException } from '@nestjs/common';
 import { UserDefaultDto } from './dto/user-default.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Multer } from 'multer';
 import { randomString } from '../profile/tfaCodeMaker';
 
 @Injectable()
@@ -82,11 +81,6 @@ export class UserService {
 		return user;
 	}
 
-	/* 
-	* 유저가 입력한 이메일로 2차인증 코드 발송
-	* @param id
-	* @param email
-	*/
 	async sendEmail(id: number, email: string): Promise<User> {
 		const user = await this.getUserById(id);
 		if (!user)
@@ -95,6 +89,7 @@ export class UserService {
 			user.email = email;
 			const randomNumber: string = randomString(4, '#');
 			user.tfaCode = randomNumber;
+			console.log(user.tfaCode);
 
 			this.mailerService
 				.sendMail({
@@ -109,24 +104,6 @@ export class UserService {
 				.catch((e) => {
 					throw new InternalServerErrorException(`Internal Server error in sending tfa code email`);
 				});
-		return user;
-	}
-
-	/* 
-	* 유저가 입력한 2차인증 코드 확인
-	* 맞으면 tfaAuthorized 테이블이 true로 변함
-	* @param id
-	* @param tfaCode
-	*/
-	async checkTFACode(id: number, tfaCode: string): Promise<User> {
-		const user = await this.getUserById(id);
-		console.log(tfaCode);
-		console.log(user.tfaCode);
-		if (tfaCode != user.tfaCode)
-			throw new ConflictException('인증 코드를 다시 확인해주세요.')
-		if (tfaCode == user.tfaCode)
-			user.tfaAuthorized = true;
-		await this.userRepository.save(user);
 		return user;
 	}
 

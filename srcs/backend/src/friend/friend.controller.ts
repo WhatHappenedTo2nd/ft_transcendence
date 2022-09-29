@@ -1,4 +1,4 @@
-import { UseGuards, Body, Controller, Get, Logger } from '@nestjs/common';
+import { UseGuards, Controller, Get, Logger, Post, Param, Patch } from '@nestjs/common';
 import { GetUser } from 'src/user/get.user.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from 'src/user/user.entity';
@@ -21,5 +21,29 @@ export class FriendController {
 	@Get('/blocklist')
 	async getBlockList(@GetUser() user: User): Promise<FriendDto[]> {
 		return await this.friendService.getBlockList(user);
+	}
+
+	@Post('/request/:nickname')
+	createFriend(
+		@Param('nickname') nickname: string,
+		@GetUser() user: User,
+	): Promise<void> {
+		return this.friendService.createFriend(user, nickname);
+	}
+
+	@Patch('/block/:nickname')
+	blockUser(
+		@Param('nickname') nickname: string,
+		@GetUser() user: User,
+	): Promise<void> {
+		return this.friendService.blockUser(user, nickname);
+	}
+
+	@Patch('/unblock/:nickname')
+	unblockUser(
+		@Param('nickname') nickname: string,
+		@GetUser() user: User,
+	): Promise<void> {
+		return this.friendService.unblockUser(user, nickname);
 	}
 }

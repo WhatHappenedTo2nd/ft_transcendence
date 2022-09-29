@@ -15,9 +15,9 @@ export interface IPaddle {
 	y: number;
 	width: number;
 	height: number;
-	speed: number;
 	goal: number;
 	color: string;
+	speed: number;
 	mode: GameMode;
 }
 
@@ -52,7 +52,7 @@ export class Paddle implements IPaddle {
 		this.down = false;
 		this.left = false;
 		this.right = false;
-		this.color = 'rgba(255, 255, 255, 0.8)';
+		this.color = 'rgba(0, 0, 0, 1)';
 		this.mode = mode;
 	}
 
@@ -64,16 +64,21 @@ export class Paddle implements IPaddle {
 	update(secondPassed: number): void {
 		const falsh_distance = 0.5;
 
-		if (this.color !== 'rgba(255, 255, 255, 0.8)' && this.step <= TIMING) {
-			this.color = ('rgb' + (127 + (this.step / TIMING) * 128) +
-			', ' + (this.step / TIMING) * 255 +
-			', ' + (this.step / TIMING)* 255 +
-			', 0.8');
+		// if (this.color !== 'rgba(0, 0, 0, 0.8)' && this.step <= TIMING)
+		if (this.color !== 'rgba(0, 0, 0, 1)' && this.step <= TIMING)
+		{
+			// this.color = ('rgb' + (127 + (this.step / TIMING) * 128) +
+			// ', ' + (this.step / TIMING) * 255 +
+			// ', ' + (this.step / TIMING)* 255 +
+			// ', 0.8');
+			// this.color = 'rgba(0, 0, 0, 1)';
+			this.color = 'blue';
 			this.step++;
 		}
 		else {
 			this.step = 0;
-			this.color = 'rgba(255, 255, 255, 0.8)';
+			// this.color = 'rgba(0, 0, 0, 1)';
+			this.color = 'red';
 		}
 
 		if (this.up && !this.down) {

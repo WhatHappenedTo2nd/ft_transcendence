@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param} from '@nestjs/common';
 import { GamesService } from './games.service';
 import { Games } from './games.entity';
 
@@ -26,7 +26,7 @@ export class GamesController {
 		return gameusers;
 	}
 
-	@Get(':id')
+	@Get('/:id')
 	async findByGameUser(@Param('id') id: number): Promise<Games[]> {
 		const games = await this.gameService.find(id);
 
@@ -37,15 +37,18 @@ export class GamesController {
 			const loserId = games[i].loser_id;
 			const winner = games[i].players.find((value) => value.id === winnerId);
 			const loser = games[i].players.find((value) => value.id === loserId);
+			const win_score = games[i].win_score;
+			const lose_score = games[i].lose_score;
 
 			response.push({
 				id:games[i].id,
 				me: id,
 				winner: winner,
 				loser: loser,
+				win_score: win_score,
+				lose_score: lose_score,
 			});
 		}
-
 		return response;
 	}
 }
