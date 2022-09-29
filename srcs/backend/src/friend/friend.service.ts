@@ -29,6 +29,20 @@ export class FriendService {
 		}
 		const requester = await this.userService.getUserByNickname(nickname);
 		await this.friendRepository.createFriend(user, requester);
-		// 상대한테 알려주는 서비스가 필요하다!!!
+	}
+
+	async blockUser(user: User, targetName: string): Promise<void> {
+		if (user.nickname === targetName) {
+			throw new BadRequestException(
+				'자신을 차단할 수 없습니다.'
+			);
+		}
+		const blocked = await this.userService.getUserByNickname(targetName);
+		await this.friendRepository.blockUser(user, blocked);
+	}
+
+	async unblockUser(user: User, targetName: string): Promise<void> {
+		const unblocked = await this.userService.getUserByNickname(targetName);
+		await this.friendRepository.unBlockUser(user, unblocked);
 	}
 }
