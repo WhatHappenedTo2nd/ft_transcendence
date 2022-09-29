@@ -8,7 +8,6 @@ import GamePage from './components/pages/GamePage';
 import WaitingRoom from './components/chatting/WaitingRoom';
 import MyPage from './components/pages/MyProfilePage';
 import { io } from 'socket.io-client';
-import UserProfile from './components/mypage/UserProfile';
 
 export const socket = io('http://localhost:9633/api/chat');
 
@@ -24,7 +23,6 @@ function App() {
             <Route path="game" element={<GamePage />} />
             <Route path="room/:roomName" element={<GamePage />} />
             <Route path="waiting" element={<WaitingRoom />} />
-            <Route path="profile/:nickname" element={<UserProfile />} />
           </Routes>
       </BrowserRouter>
     </ChakraProvider>

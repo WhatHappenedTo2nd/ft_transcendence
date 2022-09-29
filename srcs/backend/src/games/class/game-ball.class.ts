@@ -93,20 +93,25 @@ export class Ball implements IBall {
 		let nextPosX: number = this.x + this.velocity.dx * secondPassed;
 
 		if (this.x < CANVAS_WIDTH / 2) {
-			if (nextPosX - this.r < p1.x + p1.width) {
-				if ((this.y + this.r >= p1.y && this.y + this.r <= p1.y + p1.height) || (this.y - this.r >= p1.y && this.y - this.r <= p1.y + p1.height)) {
+			if (nextPosX - this.r < p1.x + p1.width)
+			{
+				if ((this.y + this.r >= p1.y && this.y + this.r <= p1.y + p1.height) ||
+				(this.y - this.r >= p1.y && this.y - this.r <= p1.y + p1.height))
+				{
 					this.x = p1.x + p1.width + this.r;
 					this.r -= 5;
-					p1.color = 'rgba(127, 0, 0, 0.8)';
+					p1.color = 'rgba(0, 0, 0, 1)';
 					return true;
 				}
 			}
 		} else {
-			if (nextPosX + this.r > p2.x) {
-				if ((this.y + this.r >= p2.y && this.y + this.r <= p2.y + p2.height) || (this.y - this.r >= p2.y && this.y - this.r <= p2.y + p2.height)) {
+			if (nextPosX + this.r > p2.x)
+			{
+				if ((this.y + this.r >= p2.y && this.y + this.r <= p2.y + p2.height) ||
+				(this.y - this.r >= p2.y && this.y - this.r <= p2.y + p2.height)) {
 					this.x = p2.x + p2.width + this.r;
 					this.r -= 5;
-					p2.color = 'rgba(127, 0, 0, 0.8)';
+					p2.color = 'rgba(0, 0, 0, 1)';
 					return true;
 				}
 			}

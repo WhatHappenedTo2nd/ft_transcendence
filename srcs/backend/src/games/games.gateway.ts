@@ -42,8 +42,6 @@ import { GameUser } from './class/game-user.class';
 import { GameMode, GameState, UserStatus } from './enum/games.enum';
 import { SET_INTERVAL_MILISECONDS } from './constant/games.constant';
 import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/user.entity';
-import { Paddle } from './class/game-paddle.class';
 
 /**
  * websocket은 프로토콜 server.io는 라이브러리
@@ -106,6 +104,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		const roomId: string = `${players[0].nickname}&${players[1].nickname}`;
 		const room: Room = new Room(roomId, players, { mode: players[0].mode } );
 
+		this.logger.log(`room 데이터는 ${room} 입니다.`);
 		this.server.to(players[0].socketId).emit('newRoom', room);
 		this.server.to(players[1].socketId).emit('newRoom', room);
 		this.rooms.set(roomId, room);
@@ -150,7 +149,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	 */
 	async handleDisconnect(@ConnectedSocket() client: Socket): Promise<void> {
 		const gameuser: GameUser = this.gameconnetedUsers.getUserBySocketId(client.id);
-		this.logger.log(`handleDisconnection: 소켓과 연결이 끊겼습니다. 접속이 해제된 유저의 socket id는 ${client.id}, 유저의 id와 nickname은 ${gameuser.id}:${gameuser.nickname}  입니다.`);
 		if (!gameuser) {
 			this.returnMessage('handleUserConnect', 400, '유저 데이터가 없습니다.');
 			return ;
@@ -225,8 +223,9 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		 */
 		if (!newGameUser) {
 			this.logger.log(`게임에 연결된 유저 배열에 유저가 없을 때 실행됩니다.`);
-			const dbUser = await this.usersService.getUserFriends(gameuser.id);
-			newGameUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar, client.id);
+			const dbUser = await this.usersService.getUserById(gameuser.id);
+			// newGameUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar, client.id);
+			newGameUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar, dbUser.wins, dbUser.losses, dbUser.ratio, client.id);
 			// const dbUser = await this.usersService.getUserWithoutFriends(gameuser.id);
 			// newGameUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.photo, dbUser.wins, dbUser.losses, dbUser.ratio, client.id);
 		}
@@ -545,8 +544,10 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		 * ? -> 유저 개인이 승리횟수와 패배횟수를 들고다녀야 하지않을까?
 		 * ? -> GameEntity에 들고다니면 게임마다 winner_id와 loser_id를 탐색하면서 나의 승리횟수와 패배횟수를 wins/losses 변수를 만들어 ++로 저장해야하는가?
 		 */
-		const winner = await this.usersService.getUserFriends(winner_id);
-		const loser = await this.usersService.getUserFriends(loser_id);
+		const winner = await this.usersService.getUserById(winner_id);
+		const loser = await this.usersService.getUserById(loser_id);
+		// const winner = await this.usersService.getUserWithFriends(winnerId);
+		// const loser = await this.usersService.getUserWithFriends(loserId);
 		await this.usersService.updateStatus(winner, true);
 		await this.usersService.updateStatus(loser, false);
 
@@ -660,9 +661,13 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		/** paddle one 조작 */
 		if (room && room.paddleOne.gameuser.id === data.id) {
 			if (data.key === 'ArrowUp') {
+				this.logger.log(`paddleOne의 화살표 위 실행을 진행합니다.`);
+				this.logger.log(`paddleOne의 id는 ${data.id}이고 nickname은 ${room.paddleOne.gameuser.nickname}이고 패들의 색상은 ${room.paddleOne.color}, 위치는 default_x: ${room.paddleOne.default_x} x:${room.paddleOne.x} y:${room.paddleOne.y} 입니다.`);
 				room.paddleOne.up = true;
 			}
 			if (data.key === 'ArrowDown') {
+				this.logger.log('paddleOne의 화살표 아래 실행를 진행합니다.');
+				this.logger.log(`paddleOne의 id는 ${data.id}이고 nickname은 ${room.paddleOne.gameuser.nickname}이고 패들의 색상은 ${room.paddleOne.color}, 위치는 default_x: ${room.paddleOne.default_x} x:${room.paddleOne.x} y:${room.paddleOne.y} 입니다.`);
 				room.paddleOne.down = true;
 			}
 			if (room.paddleOne.mode === GameMode.BIG && data.key === 'Arrowleft') {
@@ -679,9 +684,13 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		} /** paddle two 조작 */
 		else if (room && room.paddleTwo.gameuser.id === data.id) {
 			if (data.key === 'ArrowUp') {
+				this.logger.log('paddleTwo의 화살표 위 실행을 진행합니다.');
+				this.logger.log(`paddleTwo의 id는 ${data.id}이고 nickname은 ${room.paddleTwo.gameuser.nickname}이고 패들의 색상은 ${room.paddleTwo.color}, 위치는 default_x: ${room.paddleTwo.default_x} x:${room.paddleTwo.x} y:${room.paddleTwo.y} 입니다.`);
 				room.paddleTwo.up = true;
 			}
 			if (data.key === 'ArrowDown') {
+				this.logger.log('paddleTwo의 화살표 아래 실행을 진행합니다.');
+				this.logger.log(`paddleTwo의 id는 ${data.id}이고 nickname은 ${room.paddleTwo.gameuser.nickname}이고 패들의 색상은 ${room.paddleTwo.color}, 위치는 default_x: ${room.paddleTwo.default_x} x:${room.paddleTwo.x} y:${room.paddleTwo.y} 입니다.`);
 				room.paddleTwo.down = true;
 			}
 			if (room.paddleTwo.mode === GameMode.BIG && data.key === 'Arrowleft') {
@@ -718,9 +727,13 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
 		if (room && room.paddleOne.gameuser.id === data.id) {
 			if (data.key === 'ArrowUp') {
+				this.logger.log(`paddleOne의 화살표 위 실행을 해제합니다.`);
+				this.logger.log(`paddleOne의 id는 ${data.id}이고 nickname은 ${room.paddleOne.gameuser.nickname}이고 패들의 색상은 ${room.paddleOne.color}, 위치는 default_x: ${room.paddleOne.default_x} x:${room.paddleOne.x} y:${room.paddleOne.y} 입니다.`);
 				room.paddleOne.up = false;
 			}
 			if (data.key === 'ArrowDown') {
+				this.logger.log(`paddleOne의 화살표 아래 실행을 해제합니다.`);
+				this.logger.log(`paddleOne의 id는 ${data.id}이고 nickname은 ${room.paddleOne.gameuser.nickname}이고 패들의 색상은 ${room.paddleOne.color}, 위치는 default_x: ${room.paddleOne.default_x} x:${room.paddleOne.x} y:${room.paddleOne.y} 입니다.`);
 				room.paddleOne.down = false;
 			}
 			/** Game BIG mode */
@@ -737,9 +750,13 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 			}
 		} else if (room && room.paddleTwo.gameuser.id === data.id) {
 			if (data.key === 'ArrowUp') {
+				this.logger.log(`paddleTwo의 화살표 위 실행을 해제합니다.`);
+				this.logger.log(`paddleTwo의 id는 ${data.id}이고 nickname은 ${room.paddleTwo.gameuser.nickname}이고 패들의 색상은 ${room.paddleTwo.color}, 위치는 default_x: ${room.paddleTwo.default_x} x:${room.paddleTwo.x} y:${room.paddleTwo.y} 입니다.`);
 				room.paddleTwo.up = false;
 			}
 			if (data.key === 'ArrowDown') {
+				this.logger.log(`paddleTwo의 화살표 아래 실행을 해제합니다.`);
+				this.logger.log(`paddleTwo의 id는 ${data.id}이고 nickname은 ${room.paddleTwo.gameuser.nickname}이고 패들의 색상은 ${room.paddleTwo.color}, default_x: ${room.paddleTwo.default_x} x:${room.paddleTwo.x} y:${room.paddleTwo.y} 입니다.`);
 				room.paddleTwo.down = false;
 			}
 			if (room.paddleTwo.mode === GameMode.BIG && data.key === 'Arrowleft') {
@@ -818,8 +835,8 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		let newUser: GameUser = this.gameconnetedUsers.getUserById(id);
 		if (!newUser) {
 			this.gameconnetedUsers.addUser(newUser);
-			const dbUser = await this.usersService.getUserFriends(id);
-			newUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar);
+			const dbUser = await this.usersService.getUserById(id);
+			newUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar, dbUser.wins, dbUser.losses, dbUser.ratio);
 			// const dbUser = await this.usersService.getUserWithoutFriends(id);
 			// newUser = new User(id, dbUser.nickname, dbUser.photo, dbUser.wins, dbUser.losses, dbUser.ratio);
 		}
@@ -879,7 +896,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		if (!newUser) {
 			// const dbUser = await this.usersService.getUserWithoutFriends(id);
 			// newUser = new User(id, dbUser.nickname, dbUser.photo, dbUser.wins, dbUser.losses, dbUser.ratio);
-			const dbUser = await this.usersService.getUserFriends(id);
+			const dbUser = await this.usersService.getUserById(id);
 			newUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar);
 			this.gameconnetedUsers.addUser(newUser);
 		}
@@ -915,7 +932,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	async createInviteRoom(sender: GameUser, receiverId: number) {
 		/** 유저관리 */
 		// const receiverData = await this.usersService.getUserWithoutFriends(receiverId);
-		const receiverData = await this.usersService.getUserFriends(receiverId);
+		const receiverData = await this.usersService.getUserById(receiverId);
 		const firstPlayer: GameUser = await this.createInvitedUser(sender.id, sender.nickname);
 		const secondPlayer: GameUser = await this.createInvitedUser(receiverData.id, receiverData.nickname);
 

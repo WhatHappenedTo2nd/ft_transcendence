@@ -98,6 +98,7 @@ function MyPageModal() {
 						accept="image/*"
 						onChange={(e) => {
 							handleFile(e);
+							
 						}} />
 					<FormLabel>닉네임 변경</FormLabel>
 					<div>현재 닉네임 : {Mydata?.nickname} </div>

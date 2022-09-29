@@ -48,14 +48,14 @@ export class Games extends BaseEntity {
 	mode: number;
 
 	/** 추가로 필요한가 */
-	@Column()
-	wins: number;
+	// @Column()
+	// wins: number;
 
-	@Column()
-	losses: number;
+	// @Column()
+	// losses: number;
 
-	@Column()
-	ratio: number;
+	// @Column()
+	// ratio: number;
 }
 
 /**

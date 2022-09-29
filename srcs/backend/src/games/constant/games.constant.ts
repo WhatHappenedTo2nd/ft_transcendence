@@ -35,7 +35,7 @@ export const BALL_ACCELERATION = 200;
 
 export const DEFAULT_MAX_USER = 100;
 export const SET_INTERVAL_MILISECONDS = 3000;
-export const MAX_GOAL = 2;
+export const MAX_GOAL = 10;
 export const MAX_QUEUE = 100;
 
 /**

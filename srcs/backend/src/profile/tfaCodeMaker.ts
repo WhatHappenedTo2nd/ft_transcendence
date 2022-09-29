@@ -1,4 +1,3 @@
-// 2차 인증을 위해 전송되는 4자리 난수 메이커
 export function randomString(length: number, chars) {
 	let mask = '';
   

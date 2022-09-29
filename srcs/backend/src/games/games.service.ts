@@ -7,7 +7,6 @@ import { GameUpdateDto } from './dto/game-update.dto';
 import { Games } from './games.entity';
 import { GamesRepository } from './games.repository';
 
-import { UserRepository } from 'src/user/user.repository';
 @Injectable()
 export class GamesService {
 	/**
@@ -16,8 +15,6 @@ export class GamesService {
 	 constructor(
 		@InjectRepository(GamesRepository)
 		private gamesRepository: GamesRepository,
-		@InjectRepository(GamesRepository)
-		private userRepository: UserRepository,
 	) {}
 
 	/**
@@ -73,28 +70,6 @@ export class GamesService {
 	async remove(id: number): Promise<Games> {
 		const game = await this.findOne(id);
 		return this.gamesRepository.remove(game);
-	}
-
-	/**
-	 * 게임 결과 업데이트
-	 * 승리 횟수
-	 * 진 횟수
-	 * 승리 비율
-	 * @param user
-	 * @param isWinner
-	 * @returns
-	 */
-	async updateStatus(user: Games, isWinner: boolean) {
-		if (isWinner) {
-			user.wins += 1;
-		}
-		else {
-			user.losses += 1;
-		}
-		user.ratio = (user.wins / (user.wins + user.losses)) * 100;
-
-		const updatedUser = await this.gamesRepository.save(user);
-		return updatedUser;
 	}
 }
 

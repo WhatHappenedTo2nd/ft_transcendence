@@ -1,4 +1,4 @@
-import { Button, PinInput, PinInputField, Show, Hide, Modal, ModalOverlay, ModalBody, ModalContent, ModalCloseButton, FormControl, FormLabel, Input, ModalHeader, useDisclosure, ModalFooter } from '@chakra-ui/react';
+import { Button, IconButton, Icon, Modal, ModalOverlay, ModalBody, ModalContent, ModalCloseButton, FormControl, FormLabel, Input, ModalHeader, useDisclosure, ModalFooter } from '@chakra-ui/react';
 import { Text } from '@chakra-ui/layout';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -54,7 +54,7 @@ export default function CheckTFA() {
 
 	return (
 		<>
-		{(!Mydata?.email) ? <Button variant='outline' colorScheme='teal' onClick={onOpen}>{<EmailIcon />}</Button> : <Button variant='outline' colorScheme='teal'>{<CheckIcon />}</Button>}
+		{Mydata?.tfaAuthorized ? <CheckIcon color="green.300" w={6} h={6}/> : <Button variant='outline' colorScheme='teal' onClick={onOpen}>{<EmailIcon />}</Button>}
 		
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -65,7 +65,7 @@ export default function CheckTFA() {
 					<FormControl onSubmit={handleSubmit}>
 						<FormLabel></FormLabel>
 						<Input 
-							type='email'
+							type='text'
 							placeholder='2차인증을 진행할 메일주소를 입력해주세요.'
 							onChange={(e) => setInputValue(e.target.value)}
 						/>
@@ -78,8 +78,9 @@ export default function CheckTFA() {
 					mr={3}
 					onClick={() => {
 						handleSubmit();
-						onClose();}
-					}>
+						onClose();
+						// <CheckTFACode />
+						}}>
 						메일 전송
 					</Button>
 					<Button variant='ghost' onClick={onClose}>취소</Button>
