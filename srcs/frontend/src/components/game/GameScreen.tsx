@@ -101,12 +101,25 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	 */
 	const drawGame = (gameData: GameData, roomData: IRoom) => {
 		gameData.clear();
-		console.log("플레이어 one의 패들의 데이터는 ", roomData.paddleOne);
-		console.log("플레이어 two의 패들의 데이터는 ", roomData.paddleTwo);
+		console.log("roomData : ", roomData);
+
+
+		console.log("플레이어 one의 데이터는 ", roomData.paddleOne);
+		console.log("플레이어 one의 패들의 x 데이터는 ", roomData.paddleOne.x);
+		console.log("플레이어 one의 패들의 y 데이터는 ", roomData.paddleOne.y);
+		console.log("플레이어 one의 패들의 width 데이터는 ", roomData.paddleOne.width);
+		console.log("플레이어 one의 패들의 height 데이터는 ", roomData.paddleOne.height);
+		console.log("플레이어 one의 패들의 color 데이터는 ", roomData.paddleOne.color);
+
+		console.log("플레이어 two의 데이터는 ", roomData.paddleTwo);
+		console.log("플레이어 two의 패들의 x 데이터는 ", roomData.paddleTwo.x);
+		console.log("플레이어 two의 패들의 y 데이터는 ", roomData.paddleTwo.y);
+		console.log("플레이어 two의 패들의 width 데이터는 ", roomData.paddleTwo.width);
+		console.log("플레이어 two의 패들의 height 데이터는 ", roomData.paddleTwo.height);
+		console.log("플레이어 two의 패들의 color 데이터는 ", roomData.paddleTwo.color);
+
 		gameData.drawPaddle(roomData.paddleOne);
 		gameData.drawPaddle(roomData.paddleTwo);
-		// gameData.drawRectangle(roomData.paddleOne.x, roomData.paddleOne.y, roomData.paddleOne.width, roomData.paddleOne.height, 'white');
-		// gameData.drawRectangle(roomData.paddleTwo.x, roomData.paddleTwo.y, roomData.paddleTwo.width, roomData.paddleTwo.height, 'white');
 		gameData.drawNet();
 		gameData.drawBall(roomData.ball);
 		gameData.drawScore(roomData.paddleOne, roomData.paddleTwo);
@@ -156,16 +169,8 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		 * socket.emit: send a message to the server
 		 */
 		socket.on('updateRoom', (updatedRoom: string) => {
-			console.log("!! Game UpdateRoom socket connection check");
-			console.log("JSON.parse(updatedRoom)전의 updateRoom의 값은: %s", updatedRoom);
 			const roomData: IRoom = JSON.parse(updatedRoom);
 			room = roomData;
-			if (!room)
-			{
-				console.log("JSON.parse(updateRoom)을 실행하지 못했습니다.")
-			}
-			console.log("JSON.parse(updateRoom)을 실행 후 받아온 room의 데이터는 ", room);
-
 		});
 
 		/**

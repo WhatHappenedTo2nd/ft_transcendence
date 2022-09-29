@@ -140,22 +140,12 @@ function Game() {
 	}, [userData]);
 	/**
 	 * 서버와 연동 전이라 데이터를 가져올 수 없음.
-	 * return NULL에서 걸림
+	 * return NULL에서 걸림 -> 해결
 	 */
-	if (isLoading || error)
-	{
-		if (isLoading)
-			console.log("Game useQuery isLoading 확인");
-		if (error)
-			console.log("Game useQuery error 확인");
+	if (isLoading || error) {
 		return null;
 	}
 
-	console.log("isDisplayGame의 값은 ", isDisplayGame);
-	/**
-	 * @qna
-	 * 	return문 안에서 console.log를 이용해서 확인하는 것처럼 할 수 없는지?
-	 */
 	return (
 		<div>
 			{isDisplayGame ?
