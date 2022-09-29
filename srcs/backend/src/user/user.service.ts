@@ -6,7 +6,6 @@ import { User } from './user.entity'
 import { ConflictException } from '@nestjs/common';
 import { UserDefaultDto } from './dto/user-default.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { Multer } from 'multer';
 import { randomString } from '../profile/tfaCodeMaker';
 
 @Injectable()

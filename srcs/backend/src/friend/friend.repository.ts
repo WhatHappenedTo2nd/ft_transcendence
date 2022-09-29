@@ -1,6 +1,5 @@
-import { BadRequestException, ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { Equal, Repository } from "typeorm";
-import { FriendStatus } from "./friendStatus";
 import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { User } from "../user/user.entity";
 import { Friend } from "./friend.entity";
@@ -19,10 +18,6 @@ export class FriendRepository extends Repository<Friend> {
 			if (check.block === true) {
 				throw new BadRequestException(['친구 요청이 실패하였습니다.']);
 			}
-			// reciver가 이미 requester에게 친구 신청을 보낸 경우
-			if (check.status === FriendStatus.WAITING) { 
-				throw new ConflictException(['상대방이 이미 친구 요청을 보냈습니다.'])
-			}
 		}
 		const result = await this.findRow(requester, reciver);
 		if (result !== null) {
@@ -31,64 +26,19 @@ export class FriendRepository extends Repository<Friend> {
 				throw new BadRequestException(['차단한 유저에게는 친구요청을 할 수 없습니다.'])
 			}
 			// requester와 reciver가 이미 친구인 경우
-			if (result.status === FriendStatus.FRIEND) {
+			if (result.status === true) {
 				throw new BadRequestException(['이미 친구입니다.'])
-			}
-			// requester가 reciver에게 이미 친구 신청을 보낸 경우 
-			else if (result.status === FriendStatus.WAITING) {
-				throw new ConflictException(['이미 친구 요청을 보냈습니다.'])
 			}
 		}
 		const friend: Friend = this.create({
 			user_id: requester,
 			another_id: reciver,
-			status: FriendStatus.WAITING,
+			status: true,
 		});
 		try {
 			await this.save(friend);
 		} catch (error) {
 			throw new InternalServerErrorException();
-		}
-	}
-
-	// 친구 요청을 수락할 때
-	async acceptFriend(requester: User, reciver: User): Promise<void> {
-		const update = await this.findRow(requester, reciver);
-		const create = await this.findRow(reciver, requester);
-
-		if (update.status !== FriendStatus.WAITING) {
-			throw new BadRequestException(['요청이 오지 않았습니다.'])
-		}
-		if (create !== null && create.block === true) {
-			throw new BadRequestException(['차단한 유저의 친구 요청을 수락하셨습니다.'])
-		}
-		update.status = FriendStatus.FRIEND;
-		try {
-			await this.save(update);
-		} catch (error) {
-			throw new InternalServerErrorException();
-		}
-		const friend: Friend = this.create({
-			user_id: reciver,
-			another_id: requester,
-			status: FriendStatus.FRIEND,
-		});
-		try {
-			await this.save(friend);
-		} catch (error) {
-			throw new InternalServerErrorException();
-		}
-	}
-
-	// 친구 요청을 거부할 때
-	async rejectFriend(requerster: User, reciver: User): Promise<void> {
-		const reject = await this.delete({
-			user_id: {id : Equal(requerster.id)},
-			another_id: {id : Equal(reciver.id)},
-			status: FriendStatus.WAITING,
-		});
-		if (reject.affected === 0) {
-			throw new BadRequestException(['유효한 요청이 아닙니다.'])
 		}
 	}
 
@@ -130,9 +80,8 @@ export class FriendRepository extends Repository<Friend> {
 		if (result !== null) {
 			if (result.block === false) {
 				throw new BadRequestException(['차단하지 않은 유저입니다.']);
-			} else if ( // 친구이거나 친구신청을 하는 중에 차단했거나 해서 데이터가 남아있어야하는 경우
-				result.status === FriendStatus.FRIEND ||
-				result.status === FriendStatus.WAITING
+			} else if ( // 친구라서 테이블에 데이터가 남아있어야하는 경우
+				result.status === true
 			){
 				result.block = false;
 				try {
@@ -146,7 +95,7 @@ export class FriendRepository extends Repository<Friend> {
 					await this.delete({
 						user_id: {id: Equal(requerster.id)},
 						another_id: {id: Equal(reciver.id)},
-						status: FriendStatus.NONE,
+						status: false,
 						block: true,
 					});
 				} catch (error) {
@@ -180,7 +129,7 @@ export class FriendRepository extends Repository<Friend> {
 			},
 			where: {
 				user_id: {id: Equal(user.id)},
-				status: FriendStatus.FRIEND,
+				status: true,
 			},
 		});
 		const friendList: FriendDto[] = [];

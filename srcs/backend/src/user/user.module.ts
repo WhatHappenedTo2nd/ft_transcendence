@@ -9,7 +9,7 @@ import { UserService } from './user.service';
   imports: [
     TypeOrmExModule.forCustomRepository([
       UserRepository,
-      FriendRepository
+      FriendRepository,
     ])
   ],
   controllers: [UserController],

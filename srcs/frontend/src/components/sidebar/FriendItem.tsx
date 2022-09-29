@@ -1,4 +1,6 @@
-import { Box, Avatar, AvatarBadge, Container } from '@chakra-ui/react'
+import { Box, Avatar, AvatarBadge, HStack } from '@chakra-ui/react'
+import UserContextMenu from './contextmenu/UserContextmenu';
+
 
 export enum Status {
 	PLAYING = 'PLAYING',
@@ -10,7 +12,11 @@ function FriendItem(props: any) {
 	const { user } = props;
 
 	return (
-		<Container key={user?.id} display='flex'>
+		<UserContextMenu
+		userId={user.id}
+		name={user.nickname}
+		mode='friend'>
+		<HStack>
 			<Box boxSize='10' justifyContent='center'>
 				<Avatar size='sm' src={user?.avatar}>
 					{user.status === Status.PLAYING ? <AvatarBadge boxSize='1em' bg='yellow.500' /> : null}
@@ -21,7 +27,8 @@ function FriendItem(props: any) {
 			<Box justifyContent='flex-end'>
 				<span>{user.nickname}</span>
 			</Box>
-		</Container>
+		</HStack>
+		</UserContextMenu>
 	)
 };
 
