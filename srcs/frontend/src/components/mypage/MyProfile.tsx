@@ -9,32 +9,25 @@ import CheckTFACode from '../mypage/tfaCodeCheck';
 import UserProps from '../interface/IUserProps';
 
 function MyProfile(){
-  const [buttonState, setButtonState] = useState(false);
-
-  const changeButton = () => {
-    setButtonState((check: boolean) => check);
-  }
-  
-  const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
+	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
-  
+
 	return (
-    <Main>
+		<Main>
 			<Image
 				borderRadius='full'
 				boxSize='200px'
 				src={Mydata?.avatar}
 				alt='intra profile avatar'
-        />
+			/>
 			<Text fontSize='30px' color='#53B7BA' as='b'>{Mydata?.nickname}</Text>
 			<MyPageModal />
 			<CheckTFA />
-      <CheckTFACode />
+			<CheckTFACode />
 		</Main>
 	);
 }
-
 
 const Main = styled.main`
   width: 100%;

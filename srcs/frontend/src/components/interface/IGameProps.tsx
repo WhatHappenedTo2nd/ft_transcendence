@@ -1,4 +1,4 @@
-import IUserProps from "../interface/IUserProps";
+import IUserProps from "./IUserProps";
 
 /**
  * Game 화면크기(해상도)
