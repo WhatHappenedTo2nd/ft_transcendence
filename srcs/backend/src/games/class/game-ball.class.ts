@@ -100,7 +100,7 @@ export class Ball implements IBall {
 				{
 					this.x = p1.x + p1.width + this.r;
 					this.r -= 5;
-					p1.color = 'rgba(0, 0, 0, 1)';
+					p1.color = 'white';
 					return true;
 				}
 			}
@@ -109,9 +109,9 @@ export class Ball implements IBall {
 			{
 				if ((this.y + this.r >= p2.y && this.y + this.r <= p2.y + p2.height) ||
 				(this.y - this.r >= p2.y && this.y - this.r <= p2.y + p2.height)) {
-					this.x = p2.x + p2.width + this.r;
+					this.x = p2.x - this.r;
 					this.r -= 5;
-					p2.color = 'rgba(0, 0, 0, 1)';
+					p2.color = 'white';
 					return true;
 				}
 			}

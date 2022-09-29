@@ -14,7 +14,7 @@ import { Socket, io } from 'socket.io-client';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
-import { GameState, IRoom, IUser } from './GameInterface';
+import { GameState, IRoom, IUser } from '../interface/IGameProps';
 import GameScreen from './GameScreen';
 import GameRooms from './GameRoom';
 import { getLoginUserData } from '../../api/api'
@@ -51,22 +51,20 @@ function Game() {
 	 */
 	const { isLoading, data: userData, error } = useQuery<IUser>('me', getLoginUserData);
 
-	console.log("=================================");
-	console.log("getUserData 가져오기 확인")
-	console.log("getUserData id : %d", userData?.id);
-	console.log("getUserData nickname : %s", userData?.nickname);
-	console.log("getUserData photo : %s", userData?.avatar);
-	console.log("getUserData wins : %d", userData?.wins);
-	console.log("getUserData losses : %d", userData?.losses);
-	console.log("getUserData ratio : %d", userData?.ratio);
+	// console.log("=================================");
+	// console.log("getUserData 가져오기 확인")
+	// console.log("getUserData id : %d", userData?.id);
+	// console.log("getUserData nickname : %s", userData?.nickname);
+	// console.log("getUserData photo : %s", userData?.avatar);
+	// console.log("getUserData wins : %d", userData?.wins);
+	// console.log("getUserData losses : %d", userData?.losses);
+	// console.log("getUserData ratio : %d", userData?.ratio);
 
 	const joinQueue = (event: React.MouseEvent<HTMLButtonElement>) => {
-		console.log("Game joinQueue를 서버에 요청했습니다.");
 		socket.emit('joinQueue', event.currentTarget.value);
 	};
 
 	const leaveQueue = () => {
-		console.log("Game leaveQueue를 서버에 요청했습니다.");
 		socket.emit('leaveQueue');
 	};
 
@@ -99,19 +97,15 @@ function Game() {
 			console.log("server socket good");
 		}
 		socket = socket.on('connect', () => {
-			console.log("Game socket connect success!!!!!!!!!!!!");
 			socket.emit('handleUserConnect', userData);
 			socket.emit('getCurrentGames');
 		});
 		//서버로부터 updateCurrentGames 데이터를 받아서 이벤트 처리
 		socket.on('updateCurrentGames', (currentGamesData: IRoom[]) => {
-			console.log("Game socket update current games!!!!!!!!!!");
 			updateCurrentGames(currentGamesData);
 		});
 		socket.on('newRoom', (newRoomData: IRoom) => {
-			console.log("!! Game create new room");
 			if (newRoomData.gameState === GameState.WAITING && userData.nickname !== newRoomData.paddleOne.gameuser.nickname){
-				console.log("!! Game error create new room");
 				return ;
 			}
 			socket.emit('joinRoom', newRoomData.roomId);
@@ -119,20 +113,16 @@ function Game() {
 			setQueue(false);
 		});
 		socket.on('joinedQueue', () => {
-			console.log("!! Game JoinedQueue check JoinedQueue: 유저가 큐에 들어왔습니다.");
 			setQueue(true);
 		});
 		socket.on('leavedQueue', () => {
-			console.log("!! Game LeavedQueue check LeavedQueue: 유저가 큐에서 나갔습니다.");
 			setQueue(false);
 			setRoom(null);
 		});
 		socket.on('joinedRoom', () => {
-			console.log("!! Game JoinedRoom check JoinedRoom: 유저가 방에 들어왔습니다.");
 			setIsDisplayGame(true);
 		});
 		socket.on('leavedRoom', () => {
-			console.log("!! Game LeavedRoom check LeavedRoom: 유저가 방에서 나갔습니다.");
 			setIsDisplayGame(false);
 		});
 		return () => {

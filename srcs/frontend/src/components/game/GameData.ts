@@ -1,4 +1,4 @@
-import { canvasWidth, canvasHeigth, IBall, IPlayer, IRoom } from './GameInterface';
+import { canvasWidth, canvasHeigth, IBall, IPlayer, IRoom } from '../interface/IGameProps';
 
 type Net = {
 	x: number;
@@ -45,7 +45,6 @@ export default class GameData {
 
 	drawRectangle(x: number, y: number, width: number, hegiht: number, color: string)
 	{
-		console.log("drawRectangle: Net를 체우는 함수입니다");
 		if (this.context) {
 			this.context.save();
 			this.context.fillStyle = color;
@@ -56,7 +55,6 @@ export default class GameData {
 
 	drawPaddle(paddleData: IPlayer)
 	{
-		console.log("drawPaddle: 패들을 그리는 함수입니다");
 		if (this.context) {
 			this.context.save();
 			this.context.fillStyle = paddleData.color;
@@ -67,7 +65,6 @@ export default class GameData {
 
 	drawBall(ballData: IBall)
 	{
-		console.log("drawBall: 공을 그리는 함수입니다");
 		if (this.context) {
 			this.context.save();
 			this.context.beginPath();
@@ -81,7 +78,6 @@ export default class GameData {
 
 	drawTexture(text:string, x:number, y:number, size: number, color: string)
 	{
-		console.log("drawTexture: Texture를 그리는 함수입니다");
 		if (this.context) {
 			this.context.save();
 			this.context.fillStyle = color;
@@ -93,7 +89,6 @@ export default class GameData {
 
 	drawCenteredTexture(text: string, x: number, y: number, size:number, color: string)
 	{
-		console.log("drawTexture: Texture를 중앙에 그리는 함수입니다");
 		if (this.context) {
 			this.context.save();
 			this.context.fillStyle = color;
@@ -106,35 +101,33 @@ export default class GameData {
 
 	drawNet()
 	{
-		console.log("drawNet: Net를 그리는 함수입니다");
 		for (let i = 0; i <= canvasHeigth / 2 - this.net.hegiht; i += this.net.hegiht) {
 			this.net.y = i;
-			this.drawRectangle(this.net.x, this.net.y, this.net.width, this.net.hegiht, 'black');
-			this.drawRectangle(this.net.x, canvasHeigth - (this.net.hegiht + this.net.y), this.net.width, this.net.hegiht, 'black');
+			this.drawRectangle(this.net.x, this.net.y, this.net.width, this.net.hegiht, 'white');
+			this.drawRectangle(this.net.x, canvasHeigth - (this.net.hegiht + this.net.y), this.net.width, this.net.hegiht, 'white');
 			i += 19;
 		}
 	}
 
 	drawScore(playerOne: IPlayer, playerTwo: IPlayer)
 	{
-		console.log("drawScore: 점수를 나타내는 함수입니다");
-		this.drawTexture(`${playerOne.goal}`, canvasWidth / 4, canvasHeigth / 10, 45, 'black');
-		this.drawTexture(`${playerTwo.goal}`, 3 * (canvasWidth / 4), canvasHeigth / 10, 45, 'black');
+		this.drawTexture(`${playerOne.goal}`, canvasWidth / 4, canvasHeigth / 10, 45, 'white');
+		this.drawTexture(`${playerTwo.goal}`, 3 * (canvasWidth / 4), canvasHeigth / 10, 45, 'white');
 	}
 
 	drawStartCountDown(countDown: string)
 	{
-		this.drawCenteredTexture(`${countDown}`, this.screenWidth / 2, this.screenHeight / 2, 90, 'black');
+		this.drawCenteredTexture(`${countDown}`, this.screenWidth / 2, this.screenHeight / 2, 90, 'white');
 	}
 
 	drawWaiting()
 	{
-		this.drawCenteredTexture(`WATING`, this.screenWidth / 2, this.screenHeight / 2, 90, 'black');
+		this.drawCenteredTexture(`WATING`, this.screenWidth / 2, this.screenHeight / 2, 90, 'white');
 	}
 
 	drawPasuesState()
 	{
-		this.drawCenteredTexture(`PAUSED`, this.screenWidth / 2, this.screenHeight / 2, 90, 'black');
+		this.drawCenteredTexture(`PAUSED`, this.screenWidth / 2, this.screenHeight / 2, 90, 'white');
 	}
 
 	clear () {
