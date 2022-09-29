@@ -21,4 +21,10 @@ export class UserDefaultDto {
 	tfaCode: string;
 
 	tfaAuthorized: boolean;
+
+	wins: number;
+
+	losses: number;
+
+	ratio: number;
 }

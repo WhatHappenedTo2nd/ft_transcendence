@@ -31,6 +31,16 @@ export const getLoginUserFriendList = async() => {
 	return friend;
 }
 
+export const getUserByNickname = async (nickname: string | undefined) => {
+	const { data: usernick } = await axios.get(`/user/profile/${nickname}`, {
+	method: "GET",
+	headers: {
+		Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
+	return usernick;
+}
+
 export const getBlockList = async() => {
 	const { data: block } = await axios.get('/friend/blocklist', {
 		method: "GET",
