@@ -103,13 +103,11 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		gameData.clear();
 		console.log("플레이어 one의 패들의 데이터는 ", roomData.paddleOne);
 		console.log("플레이어 two의 패들의 데이터는 ", roomData.paddleTwo);
-		// gameData.drawPaddle(roomData.paddleOne);
-		// gameData.drawPaddle(roomData.paddleTwo);
-		gameData.drawRectangle(roomData.paddleOne.x, roomData.paddleOne.y, roomData.paddleOne.width, roomData.paddleOne.height, 'white');
-		gameData.drawRectangle(roomData.paddleTwo.x, roomData.paddleTwo.y, roomData.paddleTwo.width, roomData.paddleTwo.height, 'white');
-
+		gameData.drawPaddle(roomData.paddleOne);
+		gameData.drawPaddle(roomData.paddleTwo);
+		// gameData.drawRectangle(roomData.paddleOne.x, roomData.paddleOne.y, roomData.paddleOne.width, roomData.paddleOne.height, 'white');
+		// gameData.drawRectangle(roomData.paddleTwo.x, roomData.paddleTwo.y, roomData.paddleTwo.width, roomData.paddleTwo.height, 'white');
 		gameData.drawNet();
-		console.log("공의 데이터는 ", roomData.paddleTwo);
 		gameData.drawBall(roomData.ball);
 		gameData.drawScore(roomData.paddleOne, roomData.paddleTwo);
 	};
