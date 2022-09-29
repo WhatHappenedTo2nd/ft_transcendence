@@ -58,7 +58,10 @@ export class UserRepository extends Repository<User> {
 			now_playing: user.now_playing,
 			email: user.email,
 			tfaCode: user.tfaCode,
-			tfaAuthorized: user.tfaAuthorized
+			tfaAuthorized: user.tfaAuthorized,
+			wins: user.wins,
+			losses: user.losses,
+			ratio: user.ratio
 		};
 		return result;
 	}

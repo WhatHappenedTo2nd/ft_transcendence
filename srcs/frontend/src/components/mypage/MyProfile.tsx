@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, Button, Container, Box, useDisclosure, Text } from '@chakra-ui/react';
+import { Image, Progress, Badge, Button, Container, Box, useDisclosure, Text } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import MyPageModal from '../mypage/MyPageModal';
@@ -28,7 +28,9 @@ function MyProfile(){
 				alt='intra profile avatar'
         />
 			<Text fontSize='30px' color='#53B7BA' as='b'>{Mydata?.nickname}</Text>
-			<MyPageModal />
+      <Text fontSize='20px' color='#53B7BA' as='mark'>{Mydata?.ratio}% {Mydata?.wins}승 {Mydata?.losses}패</Text>
+      <Badge>default</Badge>
+      <MyPageModal />
 			<CheckTFA />
       <CheckTFACode />
 		</Main>
