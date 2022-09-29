@@ -34,10 +34,10 @@ export type SerializeRoom = {
 			id: number;
 			nickname: string;
 		};
-		width: number;
-		hegiht: number;
 		x: number;
 		y: number;
+		width: number;
+		height: number;
 		color: string;
 		goal: number;
 	};
@@ -46,10 +46,10 @@ export type SerializeRoom = {
 			id: number;
 			nickname: string;
 		};
-		width: number;
-		hegiht: number;
 		x: number;
 		y: number;
+		width: number;
+		height: number;
 		color: string;
 		goal: number;
 	};
@@ -96,8 +96,8 @@ export default class Room implements IRoom {
 		this.gameState = GameState.STARTING;
 		this.players = [];
 		this.spectators = [];
-		this.paddleOne = new Paddle(gameusers[0],  CANVAS_WIDTH/2 - 300, customisation.mode);
-		this.paddleTwo = new Paddle(gameusers[1], CANVAS_WIDTH/2 + 300, customisation.mode);
+		this.paddleOne = new Paddle(gameusers[0], 10, customisation.mode);
+		this.paddleTwo = new Paddle(gameusers[1], CANVAS_WIDTH - 40, customisation.mode);
 		this.ball = new Ball(customisation.mode);
 		this.timestampStart = Date.now();
 		this.lastUpdate = Date.now();
@@ -348,7 +348,7 @@ export default class Room implements IRoom {
 					nickname: this.paddleOne.gameuser.nickname,
 				},
 				width: this.paddleOne.width,
-				hegiht: this.paddleOne.height,
+				height: this.paddleOne.height,
 				x: this.paddleOne.x,
 				y: this.paddleOne.y,
 				color: this.paddleOne.color,
@@ -360,7 +360,7 @@ export default class Room implements IRoom {
 					nickname: this.paddleTwo.gameuser.nickname,
 				},
 				width: this.paddleTwo.width,
-				hegiht: this.paddleTwo.height,
+				height: this.paddleTwo.height,
 				x: this.paddleTwo.x,
 				y: this.paddleTwo.y,
 				color: this.paddleTwo.color,

@@ -104,12 +104,13 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		const roomId: string = `${players[0].nickname}&${players[1].nickname}`;
 		const room: Room = new Room(roomId, players, { mode: players[0].mode } );
 
-		this.logger.log(`room 데이터는 ${room} 입니다.`);
 		this.server.to(players[0].socketId).emit('newRoom', room);
 		this.server.to(players[1].socketId).emit('newRoom', room);
 		this.rooms.set(roomId, room);
 		this.currentGames.push(room);
 
+		this.logger.log(`room.paddleOne.height 데이터는 ${room.paddleOne.height} 입니다.`);
+		this.logger.log(`room.paddleTwo.height 데이터는 ${room.paddleTwo.height} 입니다.`);
 		this.server.emit('updateCurrentGames', this.currentGames);
 	}
 
