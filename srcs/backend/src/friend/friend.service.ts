@@ -45,4 +45,14 @@ export class FriendService {
 		const unblocked = await this.userService.getUserByNickname(targetName);
 		await this.friendRepository.unBlockUser(user, unblocked);
 	}
+
+	async getFriendId(user: User): Promise<number[]> {
+		const friend = await this.getFriendList(user);
+		const ret: number[] = [];
+
+		friend.map((f) => {
+			ret.push(f.id);
+		})
+		return ret;
+	}
 }
