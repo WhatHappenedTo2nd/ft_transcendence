@@ -7,7 +7,7 @@ import styled from 'styled-components';
  * IRoom: GameInterface안에 있는 Room interface
  */
 import PlayerInfo from './GamePlayerInfo';
-import { IRoom } from './GameInterface';
+import { IRoom } from '../interface/IGameProps';
 
 const GameRoomliStyleC = styled.li`
 	margin: 30px;

@@ -15,7 +15,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import { IPlayer } from './GameInterface';
+import { IPlayer } from '../interface/IGameProps';
 
 const PlayerInfoDivStyleC = styled.div`
 	margin: 5px;

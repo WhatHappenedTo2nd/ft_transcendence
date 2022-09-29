@@ -14,7 +14,7 @@ import { Socket, io } from 'socket.io-client';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 
-import { GameState, IRoom, IUser } from './GameInterface';
+import { GameState, IRoom, IUser } from '../interface/IGameProps';
 import GameScreen from './GameScreen';
 import GameRooms from './GameRoom';
 import { getLoginUserData } from '../../api/api'

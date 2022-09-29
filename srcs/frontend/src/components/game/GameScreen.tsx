@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import PlayerInfo from './GamePlayerInfo';
 import GameData from './GameData';
-import { IRoom, IUser, IKey, GameState } from './GameInterface';
+import { IRoom, IUser, IKey, GameState } from '../interface/IGameProps';
 
 /**
  * 게임화면에 대한 Props

@@ -1,4 +1,4 @@
-import { canvasWidth, canvasHeigth, IBall, IPlayer, IRoom } from './GameInterface';
+import { canvasWidth, canvasHeigth, IBall, IPlayer, IRoom } from '../interface/IGameProps';
 
 type Net = {
 	x: number;
