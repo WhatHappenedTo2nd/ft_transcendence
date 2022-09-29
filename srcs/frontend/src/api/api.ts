@@ -21,6 +21,16 @@ export const getLoginUserData = async() => {
 	return me;
 }
 
+export const getUserByNickname = async (nickname: string | undefined) => {
+	const { data: usernick } = await axios.get(`/user/profile/${nickname}`, {
+	method: "GET",
+	headers: {
+		Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
+	return usernick;
+}
+
 export const getLoginUserFriendList = async() => {
 	const { data: friend } = await axios.get('/friend/friendlist', {
 		method: "GET",
@@ -51,3 +61,13 @@ export const getChatList = async () => {
 	});
 	return chat;
 }
+
+export const getGameHistory = async (id: number) => {
+	const { data: gameHistory } = await axios.get(`/api/games/${id}`);
+	return gameHistory;
+}
+
+/**
+ * 2022/09/28
+ * hkwon - 게임 히스토리 api작성
+ */

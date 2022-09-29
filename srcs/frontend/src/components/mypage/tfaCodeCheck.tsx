@@ -16,6 +16,7 @@ interface UserProps {
 	now_playing: boolean;
 	email: string;
 	tfaCode: string;
+	tfaAuthorized: boolean;
 }
 
 export default function CheckTFACode() {
@@ -24,47 +25,49 @@ export default function CheckTFACode() {
 
 	const {data: Mydata} = useQuery<UserProps>('me', getLoginUserData);
 
-	// const handleSubmit = async() => {
-	// 	if (inputValue)
-	// 		await axios({
-	// 			method: 'post',
-	// 			headers: {
-	// 				'content-type': 'application/json',
-	// 				Authorization: 'Bearer ' + getCookie("accessToken")
-	// 			},
-	// 			url: '/user/me/tfa',
-	// 			data: {
-	// 				"email" : inputValue
-	// 			}
-	// 		})
-	// 		.then((res) => {
-	// 			alert(`메일이 발송되었습니다. 2차인증을 진행해주세요.`);
-	// 			setInputValue('');
-	// 			return (res);
-	// 		})
-	// 		.catch((err) => {
-	// 			const errMsg = err.response.data.message;
-	// 			alert(errMsg);
-	// 		});
-	// 	else alert('빈칸으로 제출할 수 없습니다.')
-	// };
+	const handleSubmit = async() => {
+		if (inputValue)
+			await axios({
+				method: 'post',
+				headers: {
+					'content-type': 'application/json',
+					Authorization: 'Bearer ' + getCookie("accessToken")
+				},
+				url: '/user/me/tfa:code',
+				data: {
+					"tfaCode" : inputValue
+				}
+			})
+			.then((res) => {
+				alert(`2차인증이 완료되었습니다.`);
+				setInputValue('');
+				return (res);
+			})
+			.catch((err) => {
+				const errMsg = err.response.data.message;
+				alert(errMsg);
+			});
+		else alert('빈칸으로 제출할 수 없습니다.')
+	};
 
 	return (
-		<>		
+		<>			
+		{Mydata?.tfaAuthorized ? <CheckIcon color="green.300" w={6} h={6}/> : <Button variant='outline' colorScheme='teal' onClick={onOpen}>{<CheckIcon />}</Button>}
+
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>2차 인증</ModalHeader>
+				<ModalHeader>인증 코드 입력</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
-					{/* <FormControl onSubmit={handleSubmit}> */}
+					<FormControl onSubmit={handleSubmit}>
 						<FormLabel></FormLabel>
 						<Input 
 							type='text'
-							placeholder='2차인증을 진행할 메일주소를 입력해주세요.'
+							placeholder='메일로 전달받은 2차인증 코드를 입력해주세요.'
 							onChange={(e) => setInputValue(e.target.value)}
 						/>
-					{/* </FormControl> */}
+					</FormControl>
 				</ModalBody>
 
 				<ModalFooter>
@@ -72,9 +75,9 @@ export default function CheckTFACode() {
 					colorScheme='blue'
 					mr={3}
 					onClick={() => {
-						// handleSubmit();
+						handleSubmit();
 						onClose()}}>
-						메일 전송
+						인증 확인
 					</Button>
 					<Button variant='ghost' onClick={onClose}>취소</Button>
 				</ModalFooter>

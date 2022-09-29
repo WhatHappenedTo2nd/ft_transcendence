@@ -34,9 +34,9 @@ export class UserController {
 	}
 
 	/* 
-	*  프로필 사진 저장, 닉네임 저장
-	*  multer를 이용해 multipart/form-data 로 넘어온 파일 관리
-	*  사진 한 장이므로 uploadedfile() 사용
+	** 프로필 사진 저장, 닉네임 저장
+	** multer를 이용해 multipart/form-data 로 넘어온 파일 관리
+	** 사진 한 장이므로 uploadedfile() 사용
 	*/
 	@Post('/me')
 	@UseInterceptors(FileInterceptor('file', multerOptions))
@@ -47,16 +47,32 @@ export class UserController {
 		const user = await this.getMe(req.user);
 		return this.userService.updateUserProfile(user.id, file, nickname);
 	}
-
+	
+	/* 
+	*  파라미터로 받은 닉네임과 일치하는 유저 정보 리턴
+	*/
 	@Get('/profile/:nickname')
 	async getOtherByNickname(@Param('nickname') nickname: string): Promise<User> {
 		return this.userService.getUserByNickname(nickname);
 	}
-
+	
+	/*
+	** 유저에게 2차인증용 메일 발송
+	*/
 	@Post('/me/tfa')
-	async tfaCheck(@Req() req) {
+	async sendEmail(@Req() req) {
 		const email = req.body.email;
 		const user = await this.getMe(req.user);
 		return this.userService.sendEmail(user.id, email);
+	}
+
+	/*
+	** 유저가 올바른 코드를 입력했는지 확인
+	*/
+	@Post('/me/tfa:code')
+	async checkTFACode(@Req() req) {
+		const tfaCode = req.body.tfaCode;
+		const user = await this.getMe(req.user);
+		return this.userService.checkTFACode(user.id, tfaCode);
 	}
 }
