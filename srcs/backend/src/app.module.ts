@@ -16,7 +16,7 @@ import { GamesModule } from './games/games.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '/profilePicture'),
+      rootPath: join(__dirname, '..', '/dist'),
     }),
     MailerModule.forRoot({
       transport: 'smtps://whathappenedto2nd@gmail.com:oybpqqnyvcwhgbkw@smtp.gmail.com',

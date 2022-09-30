@@ -83,10 +83,23 @@ export class UserController {
 		return this.userService.getUserByNickname(nickname);
 	}
 	
+	/* 
+	*  파라미터로 받은 닉네임과 일치하는 유저 정보 리턴
+	*/
 	@Post('/me/tfa')
 	async tfaCheck(@Req() req) {
 		const email = req.body.email;
 		const user = await this.getMe(req.user);
 		return this.userService.sendEmail(user.id, email);
+	}
+
+	/*
+	** 유저가 올바른 코드를 입력했는지 확인
+	*/
+	@Post('/me/tfa:code')
+	async checkTFACode(@Req() req) {
+		const tfaCode = req.body.tfaCode;
+		const user = await this.getMe(req.user);
+		return this.userService.checkTFACode(user.id, tfaCode);
 	}
 }

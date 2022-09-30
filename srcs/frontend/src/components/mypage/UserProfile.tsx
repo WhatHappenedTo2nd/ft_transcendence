@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Image, Button, Container, Box, useDisclosure, Text } from '@chakra-ui/react';
+import { Image, Container, SimpleGrid, Flex, Stack, Text } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { getUserByNickname, getLoginUserData } from '../../api/api';
 import styled from 'styled-components';
 import IUserProps from '../interface/IUserProps'
 import { useParams } from 'react-router';
 import MyProfile from './MyProfile';
+import AchieveBadge from './Badge';
 
 type Props = {
 	data: IUserProps;
@@ -27,16 +28,45 @@ function UserProfile() {
 		return <MyProfile />;
 
 	return (
-    <Main>
-			<Image
-				borderRadius='full'
-				boxSize='200px'
-				src={Userdata?.avatar}
-				alt='intra profile avatar'
-        />
-			<Text fontSize='30px' color='#53B7BA' as='b'>{Userdata?.nickname}</Text>
-		</Main>
-	);
+		<Container maxW={'5xl'} py={12} alignContent={'center'}>
+			<SimpleGrid columns={{ base: 1, md: 2 }}>
+				<Flex>
+					<Image
+					borderRadius={'full'}
+					alt={'profile Picture'}
+					src={Userdata?.avatar}
+					boxSize={'250'}
+					marginLeft={'150'}
+					/>
+				</Flex>
+				<Stack spacing={4} marginTop={5}>
+					<Text fontSize='50px' color='#53B7BA' as='b'>{Userdata?.nickname}</Text>
+					<Flex>
+					<Text
+						color={'blue.400'}
+						fontWeight={600}
+						fontSize={'35px'}
+						bg={'blue.50'}
+						p={2}
+						alignSelf={'flex-start'}
+						rounded={'md'}>
+						{Userdata?.ratio}%
+					</Text>
+					<Text
+						color={'gray.500'}
+						fontWeight={600}
+						fontSize={'30px'}
+						p={2}
+						alignSelf={'flex-start'}
+						marginLeft={'4'}>
+						{Userdata?.wins}승 {Userdata?.losses}패
+					</Text>
+					</Flex>
+					<AchieveBadge />
+				</Stack>
+			</SimpleGrid>
+		</Container>
+  );
 }
 
 
