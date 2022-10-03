@@ -13,12 +13,12 @@ export default function HomePage() {
 		<SideBar />
 		<Routes>
 		<Route path="/home" element={<ChoicePage />} />
-			<Route path="profile" element={<MyPage />} />
-				<Route path=":nickname" element={<UserProfile />} />
-			<Route path="chattingroom" element={<ChattingRoomPage />} />
-			<Route path="room/:roomName" element={<GamePage />} />
-			<Route path="game" element={<GamePage />} />
-			<Route path="waiting" element={<WaitingRoom />} />
+			<Route path="/profile" element={<MyPage />} />
+			<Route path="/profile/:nickname" element={<UserProfile />} />
+			<Route path="/chattingroom" element={<ChattingRoomPage />} />
+			<Route path="/room/:roomName" element={<GamePage />} />
+			<Route path="/game" element={<GamePage />} />
+			<Route path="/waiting" element={<WaitingRoom />} />
 		</Routes>
 		</>
 	);
