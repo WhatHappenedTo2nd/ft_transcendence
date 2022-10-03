@@ -31,6 +31,14 @@ export class FriendController {
 		return this.friendService.createFriend(user, nickname);
 	}
 
+	@Patch('/remove/:nickname')
+	removeFriend(
+		@Param('nickname') nickname: string,
+		@GetUser() user: User,
+	): Promise<void> {
+		return this.friendService.removeFriend(user, nickname);
+	}
+
 	@Patch('/block/:nickname')
 	blockUser(
 		@Param('nickname') nickname: string,

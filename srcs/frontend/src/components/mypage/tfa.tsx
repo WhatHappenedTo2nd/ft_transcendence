@@ -1,7 +1,7 @@
 import { Button, Flex, Modal, ModalOverlay, ModalBody, ModalContent, ModalCloseButton, FormControl, FormLabel, Input, ModalHeader, useDisclosure, ModalFooter } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import { CheckIcon, EmailIcon } from '@chakra-ui/icons';
 import { getCookie } from '../../api/cookieFunc';
@@ -11,6 +11,7 @@ import UserProps from '../interface/IUserProps';
 export default function CheckTFA() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [inputValue, setInputValue] = useState('');
+	const queryClient = useQueryClient();
 
 	const {data: Mydata} = useQuery<UserProps>('me', getLoginUserData);
 
@@ -28,6 +29,7 @@ export default function CheckTFA() {
 				}
 			})
 			.then((res) => {
+				queryClient.invalidateQueries('me');
 				alert(`메일이 발송되었습니다. 2차인증을 진행해주세요.`);
 				setInputValue('');
 				return (res);

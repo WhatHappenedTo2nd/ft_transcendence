@@ -1,4 +1,3 @@
-import React from "react";
 import { MenuItem, Text, useToast } from '@chakra-ui/react';
 import useWarningAlert from "../../../../hooks/useWarnigAlert";
 import { useQueryClient } from "react-query";
@@ -16,8 +15,8 @@ function BlockMenu({label, target}: {label: string; target: string;}) {
 		: `/friend/unblock/${target}`; // 차단 해제하기
 		axios.patch(url)
 		.then(() => {
-			queryClient.invalidateQueries('friend');
-			queryClient.invalidateQueries('block');
+			queryClient.invalidateQueries('Friend');
+			queryClient.invalidateQueries('online');
 			toast({
 				title: `${label}`,
 				description: `${target}님을 ${label}에 성공했습니다.`,

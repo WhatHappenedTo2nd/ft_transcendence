@@ -1,5 +1,5 @@
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
-import { Equal, Repository } from "typeorm";
+import { Equal, In, Repository } from "typeorm";
 import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { User } from "../user/user.entity";
 import { Friend } from "./friend.entity";
@@ -39,6 +39,30 @@ export class FriendRepository extends Repository<Friend> {
 			await this.save(friend);
 		} catch (error) {
 			throw new InternalServerErrorException();
+		}
+	}
+
+	async removeFriend(requerster: User, reciver: User): Promise<void> {
+		const result = await this.findRow(requerster, reciver);
+
+		if (result.block) {
+			result.status = false;
+			try {
+				this.save(result);
+			} catch (error) {
+				throw new InternalServerErrorException();
+			}
+		} else {
+			try {
+				await this.delete({
+					user_id: {id: Equal(requerster.id)},
+					another_id: {id: Equal(reciver.id)},
+					status: true,
+					block: false,
+				});
+			} catch (error) {
+				throw new InternalServerErrorException();
+			}
 		}
 	}
 
