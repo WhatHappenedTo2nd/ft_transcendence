@@ -1,4 +1,3 @@
-import React from "react";
 import { MenuItem, Text } from '@chakra-ui/react';
 import useAddFriend from "../../../../hooks/useAddFriend";
 
