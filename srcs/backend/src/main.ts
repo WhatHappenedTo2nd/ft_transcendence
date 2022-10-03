@@ -21,9 +21,9 @@ async function bootstrap() {
   await app.listen(9633);
 
   //
-  app.useStaticAssets(join(__dirname, '..', '/profilePicture'), {
+  app.useStaticAssets(join(__dirname, '..', '/dist'), {
     index: false,
-    prefix: '/profilePicture'
+    // prefix: '/profilePicture'
   });
 }
 bootstrap();

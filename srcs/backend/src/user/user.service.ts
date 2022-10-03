@@ -107,6 +107,24 @@ export class UserService {
 		return user;
 	}
 
+	/* 
+	* 유저가 입력한 2차인증 코드 확인
+	* 맞으면 tfaAuthorized 테이블이 true로 변함
+	* @param id
+	* @param tfaCode
+	*/
+	async checkTFACode(id: number, tfaCode: string): Promise<User> {
+		const user = await this.getUserById(id);
+		console.log(tfaCode);
+		console.log(user.tfaCode);
+		if (tfaCode != user.tfaCode)
+			throw new ConflictException('인증 코드를 다시 확인해주세요.')
+		if (tfaCode == user.tfaCode)
+			user.tfaAuthorized = true;
+		await this.userRepository.save(user);
+		return user;
+	}
+
 	async infoUser(user: User, nickname?: string): Promise<UserDefaultDto> {
 		if (nickname) {
 			user = await (await this.userRepository.findByNickname(nickname));

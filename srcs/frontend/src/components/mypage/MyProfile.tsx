@@ -1,41 +1,69 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Image, Progress, Badge, Button, Container, Box, useDisclosure, Text } from '@chakra-ui/react';
+import React from 'react';
+import { Image, Container, Text, Flex, SimpleGrid, Stack } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import MyPageModal from '../mypage/MyPageModal';
 import styled from 'styled-components';
 import CheckTFA from '../mypage/tfa';
-import CheckTFACode from '../mypage/tfaCodeCheck';
 import UserProps from '../interface/IUserProps';
 
-function MyProfile(){
-  const [buttonState, setButtonState] = useState(false);
-
-  const changeButton = () => {
-    setButtonState((check: boolean) => check);
+interface FeatureProps {
+	text: number | undefined;
   }
-  
-  const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
+
+function MyProfile(){
+
+	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
   
 	return (
-    <Main>
-			<Image
-				borderRadius='full'
-				boxSize='200px'
-				src={Mydata?.avatar}
-				alt='intra profile avatar'
-        />
-			<Text fontSize='30px' color='#53B7BA' as='b'>{Mydata?.nickname}</Text>
-      <Text fontSize='20px' color='#53B7BA' as='mark'>{Mydata?.ratio}% {Mydata?.wins}승 {Mydata?.losses}패</Text>
-      <Badge>default</Badge>
-      <MyPageModal />
-			<CheckTFA />
-      <CheckTFACode />
-		</Main>
+
+	<Container maxW={'5xl'} py={12} alignContent={'center'}>
+		<SimpleGrid columns={{ base: 1, md: 2 }}>
+				<Flex>
+					<Image
+						borderRadius={'full'}
+						alt={'profile Picture'}
+						src={Mydata?.avatar}
+						boxSize={'250'}
+						marginLeft={'150'}
+					/>
+				</Flex>
+				<Stack spacing={4} marginTop={5}>
+					<Text fontSize='50px' color='#53B7BA' as='b'>{Mydata?.nickname}</Text>
+					<Flex>
+						<Text
+							color={'blue.400'}
+							fontWeight={600}
+							fontSize={'35px'}
+							bg={'blue.50'}
+							p={2}
+							alignSelf={'flex-start'}
+							rounded={'md'}>
+							{Mydata?.ratio}%
+						</Text>
+						<Text
+							color={'gray.500'}
+							fontWeight={600}
+							fontSize={'30px'}
+							p={2}
+							alignSelf={'flex-start'}
+							marginLeft={'4'}>
+							{Mydata?.wins}승 {Mydata?.losses}패
+						</Text>
+					</Flex>
+					<Flex>
+						<MyPageModal />
+						<CheckTFA />
+					</Flex>
+				</Stack>
+		</SimpleGrid>
+	</Container>
+
 	);
 }
+
 
 
 const Main = styled.main`
