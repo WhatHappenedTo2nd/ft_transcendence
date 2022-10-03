@@ -22,14 +22,11 @@ function ChoicePage() {
 			md: `'nav main'`
 		  }}
 		  gap={4}>
-			<GridItem area={'nav'} className="test">
-				<SideBar />
-			</GridItem>
 			<GridItem area={'main'}>
 				<ChoiceBox
 					title="Profile"
 					onClick={() => {
-						navigate("/mypage");
+						navigate("/profile");
 						console.log("프로필 선택");
 					}}
 					/>

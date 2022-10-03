@@ -12,9 +12,6 @@ function MyProfilePage (){
 				md: `'nav main'`
 			}}
 			gap={4}>
-			<GridItem area={'nav'}>
-				<SideBar />
-			</GridItem>
 			<GridItem area={'main'}>
 				<Grid gridTemplateRows={{
 					md: "1fr 1fr"
