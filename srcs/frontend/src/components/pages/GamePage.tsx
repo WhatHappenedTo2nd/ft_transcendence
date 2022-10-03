@@ -11,6 +11,7 @@ function GamePage() {
 		<Container>
 			<div>
 				<Game />
+				<Chatting />
 			</div>
 		</Container>
 	)
