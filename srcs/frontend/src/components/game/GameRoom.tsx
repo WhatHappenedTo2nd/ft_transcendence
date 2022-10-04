@@ -37,8 +37,8 @@ function GameRooms({ gameRooms, socket }: IGameRoomProps) {
 	const onEnterGameRoom = ( event: React.MouseEvent<HTMLButtonElement>) => {
 		socket.emit('spectateRoom', event.currentTarget.value);
 	};
-	console.log("===========GameRoom 생성 함수 입니다!============");
-	console.log("GameRoom의 데이터는 ", gameRooms);
+	// console.log("===========GameRoom 생성 함수 입니다!============");
+	// console.log("GameRoom의 데이터는 ", gameRooms);
 	return (
 		<GameRoomListStyledC>
 			{

@@ -70,10 +70,10 @@ interface IPlayerInfo {
  * @param rightPlayer
  */
 function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
-	console.log("왼쪽 플레이어의 이긴 횟수 : ", leftPlayer.gameuser.wins);
-	console.log("왼쪽 플레이어의 진 횟수 : ", leftPlayer.gameuser.wins);
-	console.log("왼쪽 플레이어의 이긴 횟수 : ", rightPlayer.gameuser.wins);
-	console.log("왼쪽 플레이어의 진 횟수 : ", rightPlayer.gameuser.wins);
+	// console.log("왼쪽 플레이어의 이긴 횟수 : ", leftPlayer.gameuser.wins);
+	// console.log("왼쪽 플레이어의 진 횟수 : ", leftPlayer.gameuser.wins);
+	// console.log("왼쪽 플레이어의 이긴 횟수 : ", rightPlayer.gameuser.wins);
+	// console.log("왼쪽 플레이어의 진 횟수 : ", rightPlayer.gameuser.wins);
 	return (
 		<PlayerInfoDivStyleC>
 			<PlayerInfoStyleC>

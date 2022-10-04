@@ -9,9 +9,3 @@ export class ChatDto {
 
 	now_playing: boolean;
 }
-
-export class ChatUserDto {
-	id: number;
-
-	is_muted:boolean;
-}

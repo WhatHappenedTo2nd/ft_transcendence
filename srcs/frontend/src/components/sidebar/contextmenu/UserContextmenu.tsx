@@ -10,7 +10,7 @@ import AddFriendMenu from "./UI/AddFriendMenu";
 import BlockMenu from "./UI/BlockMenu";
 import RemoveFriendMenu from "./UI/RemoveFriendMenu";
 
-export type UserContextMenuType = 'friend' | 'chat';
+export type UserContextMenuType = 'friend' | 'chat' | 'online';
 
 const ChildView = styled.div`
   width: 100%;
@@ -42,7 +42,7 @@ enum UserContextMenuFlag {
 	ADMIN_APPROVE = 1 << 9, // 관리자 추가
 	ADMIN_UNAPPROVE = 1 << 10, // 관리자 해제
   
-	FRIEND = FRIEND_ADD | BLOCK_ADD | BLOCK_REMOVE,
+	FRIEND = FRIEND_ADD | FRIEND_REMOVE | BLOCK_ADD | BLOCK_REMOVE,
 	GAME = GAME_INVITE,
 	CHAT = CHAT_KICK |
 	  CHAT_MUTE |
@@ -76,11 +76,10 @@ export default function UserContextMenu({
 		const isBlocked = blocks?.filter((b) => b.id === userId).length;
 		if (mode === 'friend') {
 			flag |= UserContextMenuFlag.FRIEND_REMOVE;
-			return flag;
 		}
-		// if (mode === 'chat') {
-		// 	if (me?)
-		// }
+		if (mode === 'chat') {
+			flag ^= UserContextMenuFlag.GAME_INVITE;
+		}
 		if (!isFriend) {
 			flag |= UserContextMenuFlag.FRIEND_ADD;
 		} else {

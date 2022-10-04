@@ -50,7 +50,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	const socket: Socket = socketProps;
 	const userData: IUser = userDataProps;
 
-	console.log("==========GameScreen 생성 함수 입니다!===========");
+	// console.log("==========GameScreen 생성 함수 입니다!===========");
 	/**
 	 * JSON.parse
 	 *  JSON을 객체로 바꿔준다.
@@ -73,25 +73,25 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 
 	//Key Arrow UP Event
 	const keyUpEvent = (event: KeyboardEvent) => {
-		console.log("keyup event 입니다.");
+		// console.log("keyup event 입니다.");
 		const keyData: IKey = {
 			roomId: room.roomId,
 			key: event.key,
 			id: userData.id,
 		};
-		console.log("key에 대한 값은 ", keyData);
+		// console.log("key에 대한 값은 ", keyData);
 		socket.emit('keyUp', keyData);
 	};
 
 	//Key Arrow Down Event
 	const keyDownEvent = (event: KeyboardEvent) => {
-		console.log("keyDown event 입니다.");
+		// console.log("keyDown event 입니다.");
 		const keyData: IKey = {
 			roomId: room.roomId,
 			key: event.key,
 			id: userData.id,
 		};
-		console.log("key에 대한 값은 ", keyData);
+		// console.log("key에 대한 값은 ", keyData);
 		socket.emit('keyDown', keyData);
 	};
 
@@ -101,8 +101,8 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	 */
 	const drawGame = (gameData: GameData, roomData: IRoom) => {
 		gameData.clear();
-		console.log("플레이어 one의 패들의 데이터는 ", roomData.paddleOne);
-		console.log("플레이어 two의 패들의 데이터는 ", roomData.paddleTwo);
+		// console.log("플레이어 one의 패들의 데이터는 ", roomData.paddleOne);
+		// console.log("플레이어 two의 패들의 데이터는 ", roomData.paddleTwo);
 		gameData.drawPaddle(roomData.paddleOne);
 		gameData.drawPaddle(roomData.paddleTwo);
 		// gameData.drawRectangle(roomData.paddleOne.x, roomData.paddleOne.y, roomData.paddleOne.width, roomData.paddleOne.height, 'white');
@@ -156,15 +156,15 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		 * socket.emit: send a message to the server
 		 */
 		socket.on('updateRoom', (updatedRoom: string) => {
-			console.log("!! Game UpdateRoom socket connection check");
-			console.log("JSON.parse(updatedRoom)전의 updateRoom의 값은: %s", updatedRoom);
+			// console.log("!! Game UpdateRoom socket connection check");
+			// console.log("JSON.parse(updatedRoom)전의 updateRoom의 값은: %s", updatedRoom);
 			const roomData: IRoom = JSON.parse(updatedRoom);
 			room = roomData;
 			if (!room)
 			{
-				console.log("JSON.parse(updateRoom)을 실행하지 못했습니다.")
+				// console.log("JSON.parse(updateRoom)을 실행하지 못했습니다.")
 			}
-			console.log("JSON.parse(updateRoom)을 실행 후 받아온 room의 데이터는 ", room);
+			// console.log("JSON.parse(updateRoom)을 실행 후 받아온 room의 데이터는 ", room);
 
 		});
 
