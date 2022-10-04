@@ -1,6 +1,7 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import MyProfile from '../mypage/MyProfile';
 import SideBar from "../sidebar/SideBar";
+import History from "../mypage/History";
 
 function MyProfilePage (){
 	return (
@@ -30,7 +31,7 @@ function MyProfilePage (){
 					</GridItem>
 					<GridItem area={'history'}
 					style={{border: '1px solid black',borderRadius: '5px'}}>
-						<MyProfile/>
+						<History/>
 					</GridItem>
 				</Grid>
 			</GridItem>
