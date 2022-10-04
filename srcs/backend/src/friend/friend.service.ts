@@ -31,6 +31,16 @@ export class FriendService {
 		await this.friendRepository.createFriend(user, requester);
 	}
 
+	async removeFriend(user: User, nickname: string): Promise<void> {
+		if (user.nickname === nickname) {
+			throw new BadRequestException(
+				'자기 자신을 친구리스트에서 삭제할 수 없습니다.',
+			);
+		}
+		const requester = await this.userService.getUserByNickname(nickname);
+		await this.friendRepository.removeFriend(user, requester);
+	}
+
 	async blockUser(user: User, targetName: string): Promise<void> {
 		if (user.nickname === targetName) {
 			throw new BadRequestException(

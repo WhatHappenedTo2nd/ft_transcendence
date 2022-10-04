@@ -15,6 +15,7 @@ function OnlineUserList() {
 				if (Mydata?.id !== user.id && user.is_online) {
 					return (<UserItem key={user.id} user={user} />);
 				}
+				else { return null; }
 			})}
 		</div>
 	);

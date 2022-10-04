@@ -47,7 +47,7 @@ export function ContextMenu<T extends HTMLElement = HTMLElement>(props: ContextM
   const onCloseHandler = useCallback(() => {
     props.menuProps?.onClose?.();
     setIsOpen(false);
-  }, [props.menuProps?.onClose, setIsOpen]);
+  }, [props.menuProps, setIsOpen]);
 
   return (
     <>

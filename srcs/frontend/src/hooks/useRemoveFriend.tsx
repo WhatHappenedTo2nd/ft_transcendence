@@ -5,23 +5,23 @@ import useWarningAlert from "./useWarnigAlert";
 import { getCookie } from "../api/cookieFunc";
 import { useQueryClient } from "react-query";
 
-export default function useAddFriend(nickname: string) {
-	const queryClient = useQueryClient();
+export default function useRemoveFriend(nickname: string) {
 	const toast = useToast();
+	const queryClient = useQueryClient();
 	const { setError, WarningDialogComponent } = useWarningAlert();
-	const onAddFriend = React.useCallback(() => {
+	const onRemoveFriend = React.useCallback(() => {
 		axios({
-			method: "POST",
+			method: "PATCH",
 			headers: {
 				Authorization: 'Bearer ' + getCookie("accessToken")
 			},
-			url: `/friend/request/${nickname}`
-		}) // axios로 요청할 작업 (친구추가 신청)
+			url: `/friend/remove/${nickname}`
+		})
 		.then(() => {
 			queryClient.invalidateQueries('Friend');
 			queryClient.invalidateQueries('online');
 			toast({
-				title: `${nickname}님에게 친구 요청을 보냈습니다.`,
+				title: `${nickname}님을 친구목록에서 제거했습니다.`,
 				status: 'success',
 				isClosable: true,
 				position: 'top-right',
@@ -30,16 +30,16 @@ export default function useAddFriend(nickname: string) {
 		.catch((err) => {
 			if (err.response) {
 				setError({
-					headerMessage: '친구 추가 실패',
+					headerMessage: '친구 해제 실패',
 					bodyMessage: err.response.data.message,
 				});
 			} else {
 				setError({
-					headerMessage: '친구 추가 실패',
+					headerMessage: '친구 해제 실패',
 					bodyMessage: err.message,
 				});
 			}
 		});
 	}, [nickname, toast, setError]);
-	return { onAddFriend, WarningDialogComponent };
+	return { onRemoveFriend, WarningDialogComponent };
 }

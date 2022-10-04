@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import {
 	Modal,
@@ -39,6 +39,7 @@ function MyPageModal() {
 	const [inputValue, setInputValue] = useState('');
 	const [previewPhoto, setPreviewPhoto] = useState('');
 	const [inputPhoto, setInputPhoto] = useState('');
+	const queryClient = useQueryClient();
 
 	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<UserProps>('me', getLoginUserData);
 
@@ -67,6 +68,7 @@ function MyPageModal() {
 				}
 			})
 			.then((res) => {
+				queryClient.invalidateQueries('me');
 				alert(`성공적으로 업데이트 되었습니다.`);
 				setInputValue('');
 				setInputPhoto('');

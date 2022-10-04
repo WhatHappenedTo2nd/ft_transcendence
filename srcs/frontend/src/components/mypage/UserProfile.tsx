@@ -62,7 +62,6 @@ function UserProfile() {
 						{Userdata?.wins}승 {Userdata?.losses}패
 					</Text>
 					</Flex>
-					<AchieveBadge />
 				</Stack>
 			</SimpleGrid>
 		</Container>

@@ -8,6 +8,7 @@ import { ContextMenu } from "./ContextMenu";
 import styled from "styled-components";
 import AddFriendMenu from "./UI/AddFriendMenu";
 import BlockMenu from "./UI/BlockMenu";
+import RemoveFriendMenu from "./UI/RemoveFriendMenu";
 
 export type UserContextMenuType = 'friend' | 'chat';
 
@@ -31,14 +32,15 @@ const flagContext = React.createContext<UserContextMenuFlag>(0);
 enum UserContextMenuFlag {
 	PROFILE = 1 << 0, // 프로필
 	FRIEND_ADD = 1 << 1, // 친구 추가
-	BLOCK_ADD = 1 << 2, // 블락
-	BLOCK_REMOVE = 1 << 3, // 블락 해제
-	GAME_INVITE = 1 << 4, //게임초대
-	CHAT_KICK = 1 << 5, // 채팅에서 내쫒기, mode가 host일 때
-	CHAT_MUTE = 1 << 6, // 채팅에서 뮤트 시키기
-	CHAT_UNMUTE = 1 << 7, // 채팅에서 뮤트 해제
-	ADMIN_APPROVE = 1 << 8, // 관리자 추가
-	ADMIN_UNAPPROVE = 1 << 9, // 관리자 해제
+	FRIEND_REMOVE = 1 << 2, // 친구 해제
+	BLOCK_ADD = 1 << 3, // 블락
+	BLOCK_REMOVE = 1 << 4, // 블락 해제
+	GAME_INVITE = 1 << 5, // 게임초대(채팅초대)
+	CHAT_KICK = 1 << 6, // 채팅에서 내쫒기, mode가 host일 때
+	CHAT_MUTE = 1 << 7, // 채팅에서 뮤트 시키기
+	CHAT_UNMUTE = 1 << 8, // 채팅에서 뮤트 해제
+	ADMIN_APPROVE = 1 << 9, // 관리자 추가
+	ADMIN_UNAPPROVE = 1 << 10, // 관리자 해제
   
 	FRIEND = FRIEND_ADD | BLOCK_ADD | BLOCK_REMOVE,
 	GAME = GAME_INVITE,
@@ -70,14 +72,19 @@ export default function UserContextMenu({
 	const blocks = useBlocked();
 	const menuFlag = React.useMemo(() => {
 		let flag = UserContextMenuFlag.PROFILE;
-		const isFriend = friends?.filter((f) => f.id === userId);
-		const isBlocked = blocks?.filter((b) => b.id === userId);
-		if (mode === 'friend') return flag;
+		const isFriend = friends?.filter((f) => f.id === userId).length;
+		const isBlocked = blocks?.filter((b) => b.id === userId).length;
+		if (mode === 'friend') {
+			flag |= UserContextMenuFlag.FRIEND_REMOVE;
+			return flag;
+		}
 		// if (mode === 'chat') {
 		// 	if (me?)
 		// }
 		if (!isFriend) {
 			flag |= UserContextMenuFlag.FRIEND_ADD;
+		} else {
+			flag |= UserContextMenuFlag.FRIEND_REMOVE;
 		}
 		if (isBlocked) {
 			flag |= UserContextMenuFlag.BLOCK_REMOVE;
@@ -86,7 +93,7 @@ export default function UserContextMenu({
 		}
 		//친구 상태에 따라 게임 초대와 관전 코드 넣어줘야함
 		return flag;
-	}, [friends, blocks])
+	}, [friends, blocks, mode, userId])
 
 	return (
 		<flagContext.Provider value={menuFlag}>
@@ -105,6 +112,11 @@ export default function UserContextMenu({
 						<UserContextMenuItem flag={UserContextMenuFlag.FRIEND_ADD}>
 							<AddFriendMenu 
 							label="친구추가"
+							target={name}/>
+						</UserContextMenuItem>
+						<UserContextMenuItem flag={UserContextMenuFlag.FRIEND_REMOVE}>
+							<RemoveFriendMenu 
+							label="친구해제"
 							target={name}/>
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.BLOCK_ADD}>

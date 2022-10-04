@@ -50,7 +50,7 @@ export class AuthController {
 		res.cookie('accessToken', accessToken);
 		res.cookie('intra_id', intra_id);
 		// 후에 프론트 choice 페이지로 redirect
-		res.status(302).redirect('http://localhost:3000/choice');
+		res.status(302).redirect('http://localhost:3000/home');
 	}
 
 }

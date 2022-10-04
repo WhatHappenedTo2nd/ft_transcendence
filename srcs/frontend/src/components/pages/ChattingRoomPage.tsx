@@ -20,9 +20,6 @@ function ChattingRoomPage() {
 				md: `'nav main'`
 			}}
 			gap={4}>
-			<GridItem area={'nav'}>
-				<SideBar />
-			</GridItem>
 			<GridItem area={'main'}>
 				<Grid gridTemplateRows={{
 					md: "150px auto"
