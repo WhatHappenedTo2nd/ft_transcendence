@@ -8,7 +8,7 @@ function UserItem(props: any) {
 		<UserContextMenu
 		userId={user.id}
 		name={user.nickname}
-		mode='chat'>
+		mode='online'>
 			<HStack>
 			<Box boxSize='10' justifyContent='center'>
 				<Avatar size='sm' src={user?.avatar}>

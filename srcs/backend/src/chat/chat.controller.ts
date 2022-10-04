@@ -1,10 +1,9 @@
-import { UseGuards, Body, Controller, Get, Logger } from '@nestjs/common';
-import { GetUser } from 'src/user/get.user.decorator';
+import { UseGuards, Controller, Get, Logger, Param } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { User } from 'src/user/user.entity';
 import { ChatDto } from './dto/chat.dto';
 import { ChatService } from './chat.service';
 import { ApiTags } from '@nestjs/swagger';
+import { UserDefaultDto } from 'src/user/dto/user-default.dto';
 
 @ApiTags('chat')
 @Controller('chat')
@@ -17,5 +16,11 @@ export class ChatController {
 	async getChatList(): Promise<ChatDto[]> {
 		const chatroom = await this.chatService.getChatList();
 		return chatroom;
+	}
+
+	@Get(':path')
+	async getRoomUserList(@Param('path') path: string): Promise<UserDefaultDto[]> {
+		const roomuser = await this.chatService.getRoomUserList(path);
+		return roomuser;
 	}
 }

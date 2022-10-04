@@ -94,7 +94,7 @@ function Game() {
 		socket = io('http://localhost:9633/api/games');
 		if (socket)
 		{
-			console.log("server socket good");
+			// console.log("server socket good");
 		}
 		socket = socket.on('connect', () => {
 			socket.emit('handleUserConnect', userData);
@@ -145,13 +145,13 @@ function Game() {
 	if (isLoading || error)
 	{
 		if (isLoading)
-			console.log("Game useQuery isLoading 확인");
+			// console.log("Game useQuery isLoading 확인");
 		if (error)
-			console.log("Game useQuery error 확인");
+			// console.log("Game useQuery error 확인");
 		return null;
 	}
 
-	console.log("isDisplayGame의 값은 ", isDisplayGame);
+	// console.log("isDisplayGame의 값은 ", isDisplayGame);
 	/**
 	 * @qna
 	 * 	return문 안에서 console.log를 이용해서 확인하는 것처럼 할 수 없는지?
