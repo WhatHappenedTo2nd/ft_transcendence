@@ -2,6 +2,7 @@ import { MenuItem, Text, useToast } from '@chakra-ui/react';
 import useWarningAlert from "../../../../hooks/useWarnigAlert";
 import { useQueryClient } from "react-query";
 import axios from "axios";
+import { getCookie } from '../../../../api/cookieFunc';
 
 
 function BlockMenu({label, target}: {label: string; target: string;}) {
@@ -13,10 +14,16 @@ function BlockMenu({label, target}: {label: string; target: string;}) {
 		label === '차단하기'
 		? `/friend/block/${target}` // 차단하기
 		: `/friend/unblock/${target}`; // 차단 해제하기
-		axios.patch(url)
+		axios({
+			method: "PATCH",
+			headers: {
+				Authorization: 'Bearer ' + getCookie("accessToken")
+			},
+			url: url
+		})
 		.then(() => {
 			queryClient.invalidateQueries('Friend');
-			queryClient.invalidateQueries('online');
+			queryClient.invalidateQueries('block');
 			toast({
 				title: `${label}`,
 				description: `${target}님을 ${label}에 성공했습니다.`,

@@ -21,7 +21,7 @@ export default function useAddFriend(nickname: string) {
 			queryClient.invalidateQueries('Friend');
 			queryClient.invalidateQueries('online');
 			toast({
-				title: `${nickname}님에게 친구 요청을 보냈습니다.`,
+				title: `${nickname}님을 친구 추가 했습니다.`,
 				status: 'success',
 				isClosable: true,
 				position: 'top-right',

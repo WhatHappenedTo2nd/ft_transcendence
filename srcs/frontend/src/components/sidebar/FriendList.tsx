@@ -10,7 +10,7 @@ function FriendList() {
 	return (
 		<div>
 			{FriendList?.map((user) => {
-				return (<FriendItem key={user.id} user={user}/>);
+				return (<FriendItem key={user.id} user={user} />);
 		})}
 		</div>
 	);

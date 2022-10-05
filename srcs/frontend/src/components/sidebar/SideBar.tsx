@@ -1,30 +1,33 @@
-import * as React from "react"
 import { Box, Flex, Text, Divider } from "@chakra-ui/react"
+import { useQuery } from "react-query";
 import OnlineUserList from "./UserList";
+import { useLocation, useNavigate } from "react-router-dom";
+import RoomUserList from "./RoomUserList";
+import { getLoginUserFriendList } from "../../api/api";
+import IFriendProps from "../interface/IFriendProps";
 import FriendList from "./FriendList";
 
-type userProps = {
-	children?: React.ReactNode;
-}
+export default function SideBar(){
+	const navigate = useNavigate();
+	const location = useLocation();
+	const { data } = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList);
 
-export default function SideBar({ children }: userProps){
 	return (
 		<Box
 			borderRight= "1px"
 			pos="fixed"
 			w="15% || 700px"
-			h="100%">
-		<Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+			h="100%"
+			>
+		<Flex h="20" alignItems="center" mx="8" justifyContent="space-between" onClick={() => {navigate("/home")}}>
 			<Text fontSize="2xl" fontFamily="Establish">
 				2기무슨일이고
 			</Text>
 		</Flex>
-		<Divider borderColor="black" />
-		<div>friend</div>
+		{data?.length ? <Divider borderColor="black" /> : null}
 			<FriendList />
 		<Divider borderColor="black" />
-		<div>online</div>
-			<OnlineUserList />
+			{location.pathname.includes(`room`) ? <RoomUserList /> : <OnlineUserList />}
 		</Box>
 	)
 }

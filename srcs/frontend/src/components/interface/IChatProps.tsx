@@ -1,4 +1,5 @@
 export default interface IChat {
+	id: number;
 	name: string;
 	message: string;
 	socket_id: string;

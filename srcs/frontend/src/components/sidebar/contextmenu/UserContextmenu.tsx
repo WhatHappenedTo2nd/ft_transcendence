@@ -10,7 +10,7 @@ import AddFriendMenu from "./UI/AddFriendMenu";
 import BlockMenu from "./UI/BlockMenu";
 import RemoveFriendMenu from "./UI/RemoveFriendMenu";
 
-export type UserContextMenuType = 'friend' | 'chat';
+export type UserContextMenuType = 'friend' | 'chat' | 'online';
 
 const ChildView = styled.div`
   width: 100%;
@@ -35,35 +35,30 @@ enum UserContextMenuFlag {
 	FRIEND_REMOVE = 1 << 2, // 친구 해제
 	BLOCK_ADD = 1 << 3, // 블락
 	BLOCK_REMOVE = 1 << 4, // 블락 해제
-	GAME_INVITE = 1 << 5, // 게임초대(채팅초대)
+	GAME_INVITE = 1 << 5, // 게임초대
 	CHAT_KICK = 1 << 6, // 채팅에서 내쫒기, mode가 host일 때
 	CHAT_MUTE = 1 << 7, // 채팅에서 뮤트 시키기
 	CHAT_UNMUTE = 1 << 8, // 채팅에서 뮤트 해제
-	ADMIN_APPROVE = 1 << 9, // 관리자 추가
-	ADMIN_UNAPPROVE = 1 << 10, // 관리자 해제
+	ADMIN_APPROVE = 1 << 9, // 관리자 이전
   
-	FRIEND = FRIEND_ADD | BLOCK_ADD | BLOCK_REMOVE,
+	FRIEND = FRIEND_ADD | FRIEND_REMOVE | BLOCK_ADD | BLOCK_REMOVE,
 	GAME = GAME_INVITE,
 	CHAT = CHAT_KICK |
 	  CHAT_MUTE |
 	  CHAT_UNMUTE |
-	  ADMIN_APPROVE |
-	  ADMIN_UNAPPROVE,
+	  ADMIN_APPROVE,
   }
 
 export default function UserContextMenu({
 	userId, // target User
-	name,
-	// role,
-	muted,
+	name, // target User name
 	mode,
 	children,
 	// me,
 }: {
 	userId: number; // target user의 id
 	name: string; // target의 nickname
-	// role?: ChatMemberRole // 채팅방 들어갔을 때 유저의 모드
-	muted?: boolean;
+	muted?: boolean; // target의 mute 상태
 	mode: UserContextMenuType;
 	children: React.ReactNode;
 	// me?: ChatMemberProps | undefined;
@@ -74,13 +69,10 @@ export default function UserContextMenu({
 		let flag = UserContextMenuFlag.PROFILE;
 		const isFriend = friends?.filter((f) => f.id === userId).length;
 		const isBlocked = blocks?.filter((b) => b.id === userId).length;
-		if (mode === 'friend') {
-			flag |= UserContextMenuFlag.FRIEND_REMOVE;
-			return flag;
+		if (mode === 'chat') {
+			flag ^= UserContextMenuFlag.GAME_INVITE;
+			// me를 통해 내가 host면 -> chat의 기능들을 추가해주어야한다.
 		}
-		// if (mode === 'chat') {
-		// 	if (me?)
-		// }
 		if (!isFriend) {
 			flag |= UserContextMenuFlag.FRIEND_ADD;
 		} else {
@@ -91,7 +83,6 @@ export default function UserContextMenu({
 		} else {
 			flag |= UserContextMenuFlag.BLOCK_ADD;
 		}
-		//친구 상태에 따라 게임 초대와 관전 코드 넣어줘야함
 		return flag;
 	}, [friends, blocks, mode, userId])
 
@@ -149,9 +140,6 @@ export default function UserContextMenu({
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.ADMIN_APPROVE}>
 							<MenuItem>관리자 임명하기</MenuItem>
-						</UserContextMenuItem>
-						<UserContextMenuItem flag={UserContextMenuFlag.ADMIN_UNAPPROVE}>
-							<MenuItem>관리자 해제하기</MenuItem>
 						</UserContextMenuItem>
 					</MenuList>
 				)}

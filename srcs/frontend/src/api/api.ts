@@ -31,6 +31,16 @@ export const getJustOnlineUser = async() => {
 	return online;
 }
 
+export const getRoomUser = async(path: string | undefined) => {
+	const { data: roomuser } = await axios.get(`/chat/${path}`, {
+		method: "GET",
+		headers: {
+			Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
+	return roomuser;
+}
+
 export const getLoginUserFriendList = async() => {
 	const { data: friend } = await axios.get('/friend/friendlist', {
 		method: "GET",

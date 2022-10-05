@@ -85,7 +85,7 @@ function Game() {
 		socket = io('http://localhost:9633/api/games');
 		if (socket)
 		{
-			console.log("server socket good");
+			// console.log("server socket good");
 		}
 		socket = socket.on('connect', () => {
 			socket.emit('handleUserConnect', userData);

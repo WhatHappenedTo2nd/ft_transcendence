@@ -13,6 +13,7 @@ import { useQuery } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
+import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -86,7 +87,7 @@ function Chatting(props: any) {
 		
 	const onLeaveRoom = useCallback(() => {
 		socket.emit('leave-room', { roomName, name }, () => {
-			navigate('/waiting');
+			navigate('/chatting');
 		});
 	}, [navigate, roomName]);
 
@@ -103,13 +104,16 @@ function Chatting(props: any) {
 						alarm: !chat.name,
 					})}
 				>
-				<span>
+				<UserContextMenu
+				userId={chat.id}
+				name={chat.name}
+				mode='chat'>
 					{chat.name
 					? socket.id === chat.socket_id
 						? ''
 						: chat.name
 					: ''}
-				</span>
+				</UserContextMenu>
 				<Message className="message">{chat.message}</Message>
 				</MessageBox>
 			))}

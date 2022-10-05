@@ -108,7 +108,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	const drawGame = (gameData: GameData, roomData: IRoom) => {
 		gameData.clear();
 		console.log("roomData : ", roomData);
-		console.log("roomData : mode : ", roomData.mode);
+		console.log
 
 		gameData.drawPaddle(roomData.paddleOne);
 		gameData.drawPaddle(roomData.paddleTwo);
