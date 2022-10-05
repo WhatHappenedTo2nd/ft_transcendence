@@ -1,6 +1,12 @@
 import { Logger } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Namespace, Socket } from "socket.io";
+import { GetUser } from "src/user/get.user.decorator";
+import { User } from "src/user/user.entity";
+import { ChatRepository } from "./chat.repository";
+import { Chat } from "./chat.entity";
+import { ChatUser } from "./chatuser.entity";
+import { ChatUserRepository } from "./chatuser.repository";
 
 interface MessagePayload {
 	roomName: string;
@@ -18,6 +24,10 @@ let createdRooms: string[] = [];
 })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() nsp: Namespace;
+	constructor ( 
+		private chatRepository: ChatRepository,
+		private chatUserRepository: ChatUserRepository,
+	) {}
 
 	private logger = new Logger('ChatGateWay');
 
@@ -61,22 +71,30 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 	@SubscribeMessage('room-list')
 	handleRoomList() {
-		return createdRooms;
+		return this.chatRepository.find({});
 	}
 
 
 	@SubscribeMessage('create-room')
 	handleCreateRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() roomName: string,
+		@GetUser() user: User,
+		@MessageBody() roomName: string, password?: string,
 		) {
-			const exists = createdRooms.find((createdRoom) => createdRoom === roomName);
+			const exists = this.chatRepository.findOne({where: {title: roomName}});
 			if (exists) {
 				return { success: false, payload: `${roomName} 방이 이미 존재합니다.` };
 			}
 			
 		socket.join(roomName); // 기존에 없던 room으로 join하면 room이 생성됨
-		createdRooms.push(roomName); // 유저가 생성한 room 목록에 추가
+		const room = this.chatRepository.create({title: roomName});
+		if (password) {
+			room.password = password;
+			room.is_private = true;
+		}
+		this.chatRepository.save(room);
+		const chatuser = this.chatUserRepository.create({chat_id: room, user_id: user, is_muted: false});
+		this.chatUserRepository.save(chatuser);
 		this.nsp.emit('create-room', roomName); // 대기실 방 생성
 
 		return { success: true, payload: roomName };
@@ -86,8 +104,16 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	handleJoinRoom(
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() roomName : string,
+		@GetUser() user: User,
 	) {
 		socket.join(roomName); // join room
+		const room: Chat = this.chatRepository.findOneByRoomname(roomName);
+		const chatuser: ChatUser = this.chatUserRepository.create({
+			chat_id: room,
+			user_id: user,
+			is_muted: false,
+		});
+		this.chatUserRepository.save(chatuser);
 		return { success: true };
 	}
 

@@ -15,4 +15,9 @@ export class ChatRepository extends Repository<Chat> {
 		};
 		return result;
 	}
+
+	async findOneByRoomname(name: string): Promise<Chat> {
+		const room = await this.findOne({where: {title: name}});
+		return room;
+	}
 }
