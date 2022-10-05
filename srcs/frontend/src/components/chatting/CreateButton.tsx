@@ -17,6 +17,7 @@ import {
 import { socket } from '../../App';
 import ICreateRoomResponse from '../interface/IChatProps';
 import { useNavigate } from 'react-router-dom';
+import { getCookie } from "../../api/cookieFunc";
 
 function CreateButton() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,7 +32,7 @@ function CreateButton() {
 			alert('방 제목 입력은 필수입니다!!');
 		}
 		if (titleValue) {
-			socket.emit('create-room', titleValue, password, (response: ICreateRoomResponse) => {
+			socket.emit('create-room', { roomName: titleValue, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				if (!response.success)
 				return alert(response.payload);
 				navigate(`/room/${response.payload}`);
