@@ -13,7 +13,7 @@ function OnlineUserList() {
 		<div>
 			{UserList?.map((user) => {
 				if (Mydata?.id !== user.id && user.is_online) {
-					return (<UserItem key={user.id} user={user} />);
+					return (<UserItem key={user.id} user={user} mode='online' />);
 				}
 				else { return null; }
 			})}

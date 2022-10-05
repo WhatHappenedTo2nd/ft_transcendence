@@ -16,7 +16,7 @@ export default function RoomUserList() {
 		<div>
 			{data?.map((user) => {
 				if (Mydata?.id !== user.id) {
-					return (<UserItem key={user.id} user={user} />);
+					return (<UserItem key={user.id} user={user} mode='chat' />);
 				}
 				else { return null; }
 			})}

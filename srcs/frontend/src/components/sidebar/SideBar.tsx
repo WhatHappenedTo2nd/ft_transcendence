@@ -1,12 +1,16 @@
 import { Box, Flex, Text, Divider } from "@chakra-ui/react"
+import { useQuery } from "react-query";
 import OnlineUserList from "./UserList";
-import FriendList from "./FriendList";
 import { useLocation, useNavigate } from "react-router-dom";
 import RoomUserList from "./RoomUserList";
+import { getLoginUserFriendList } from "../../api/api";
+import IFriendProps from "../interface/IFriendProps";
+import FriendList from "./FriendList";
 
 export default function SideBar(){
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { data } = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList);
 
 	return (
 		<Box
@@ -20,7 +24,7 @@ export default function SideBar(){
 				2기무슨일이고
 			</Text>
 		</Flex>
-		<Divider borderColor="black" />
+		{data?.length ? <Divider borderColor="black" /> : null}
 			<FriendList />
 		<Divider borderColor="black" />
 			{location.pathname.includes(`room`) ? <RoomUserList /> : <OnlineUserList />}
