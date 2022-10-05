@@ -87,7 +87,6 @@ function Chatting(props: any) {
 	);
 		
 	const onLeaveRoom = useCallback(() => {
-		console.log("click-button");
 		socket.emit('leave-room', { roomName, userIntraId: getCookie("intra_id") }, () => {
 			navigate('/chatting');
 		});

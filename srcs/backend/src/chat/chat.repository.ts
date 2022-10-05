@@ -1,5 +1,6 @@
 import { InternalServerErrorException } from "@nestjs/common";
 import { CustomRepository } from "src/typeorm-ex/typeorm-ex.decorator";
+import { User } from "src/user/user.entity";
 import { Repository } from "typeorm";
 import { Chat } from "./chat.entity";
 import { ChatDto } from "./dto/chat.dto";
@@ -33,5 +34,9 @@ export class ChatRepository extends Repository<Chat> {
 		} catch (error) {
 			throw new InternalServerErrorException();
 		}
+	}
+
+	async succedingHost(chat: Chat, user: User): Promise<void> {
+		chat.host = user;
 	}
 }

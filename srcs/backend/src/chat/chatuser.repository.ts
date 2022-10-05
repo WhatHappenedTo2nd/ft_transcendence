@@ -49,4 +49,17 @@ export class ChatUserRepository extends Repository<ChatUser> {
 		})
 		return result;
 	}
+
+	async findNextHost(room: Chat): Promise<User> {
+		const newHost = await this.findOne({
+			relations: {
+				user_id: true,
+				chat_id: true,
+			},
+			where: {
+				chat_id: {id: Equal(room.id)}
+			},
+		});
+		return newHost.user_id;
+	}
 }
