@@ -26,14 +26,17 @@ function CreateButton() {
 	const navigate = useNavigate();
 
 	const onCreateRoom = useCallback(() => {
-		console.log(titleValue);
+		if (!titleValue)
+		{
+			alert('방 제목 입력은 필수입니다!!');
+		}
 		if (titleValue) {
 			socket.emit('create-room', titleValue, password, (response: ICreateRoomResponse) => {
 				if (!response.success)
-					return alert(response.payload);
+				return alert(response.payload);
 				navigate(`/room/${response.payload}`);
 		})}
-	}, [navigate]);
+	}, [titleValue, password, navigate]);
 
 	useEffect(() => {
 		const roomListHandler = (rooms: string[]) => {
@@ -95,10 +98,10 @@ function CreateButton() {
 					colorScheme='blue'
 					mr={3}
 					onClick={() => {
-						console.log(titleValue);
-						console.log(">>>>>>>>>>>>>>>");
 						onCreateRoom();
-						onClose();}}>
+						onClose();
+						setTitleValue("");
+						setPassword("");}}>
 						방 생성하기
 					</Button>
 					<Button variant='ghost' onClick={onClose}>취소</Button>
