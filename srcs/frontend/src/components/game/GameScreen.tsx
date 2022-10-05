@@ -49,8 +49,6 @@ const Canvas = styled.canvas`
 function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenProps) {
 	const socket: Socket = socketProps;
 	const userData: IUser = userDataProps;
-
-	console.log("==========GameScreen 생성 함수 입니다!===========");
 	/**
 	 * JSON.parse
 	 *  JSON을 객체로 바꿔준다.
@@ -71,18 +69,6 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 
 	let animationFrameId: number;
 
-	//Key Arrow UP Event
-	const keyUpEvent = (event: KeyboardEvent) => {
-		console.log("keyup event 입니다.");
-		const keyData: IKey = {
-			roomId: room.roomId,
-			key: event.key,
-			id: userData.id,
-		};
-		console.log("key에 대한 값은 ", keyData);
-		socket.emit('keyUp', keyData);
-	};
-
 	//Key Arrow Down Event
 	const keyDownEvent = (event: KeyboardEvent) => {
 		console.log("keyDown event 입니다.");
@@ -91,8 +77,28 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			key: event.key,
 			id: userData.id,
 		};
+		if (event.repeat) return;
+		console.log(userData.nickname, "에 대한 key DOWN 이벤트 입니다.");
+		if (!event.repeat) console.log("Key pressed [event: keydown] : ", event.key);
+		else console.log("Key repeating [event: keydown]", event.key);
 		console.log("key에 대한 값은 ", keyData);
 		socket.emit('keyDown', keyData);
+	};
+
+	//Key Arrow UP Event
+	const keyUpEvent = (event: KeyboardEvent) => {
+		console.log("keyup event 입니다.");
+		const keyData: IKey = {
+			roomId: room.roomId,
+			key: event.key,
+			id: userData.id,
+		};
+		if (event.repeat) return;
+		console.log(userData.nickname, "에 대한 key UP 이벤트 입니다.");
+		if (!event.repeat) console.log("Key pressed [event: keydown] : ", event.key);
+		else console.log("Key repeating [event: keydown]", event.key);
+		console.log("key에 대한 값은 ", keyData);
+		socket.emit('keyUp', keyData);
 	};
 
 	/**
@@ -102,21 +108,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	const drawGame = (gameData: GameData, roomData: IRoom) => {
 		gameData.clear();
 		console.log("roomData : ", roomData);
-
-
-		console.log("플레이어 one의 데이터는 ", roomData.paddleOne);
-		console.log("플레이어 one의 패들의 x 데이터는 ", roomData.paddleOne.x);
-		console.log("플레이어 one의 패들의 y 데이터는 ", roomData.paddleOne.y);
-		console.log("플레이어 one의 패들의 width 데이터는 ", roomData.paddleOne.width);
-		console.log("플레이어 one의 패들의 height 데이터는 ", roomData.paddleOne.height);
-		console.log("플레이어 one의 패들의 color 데이터는 ", roomData.paddleOne.color);
-
-		console.log("플레이어 two의 데이터는 ", roomData.paddleTwo);
-		console.log("플레이어 two의 패들의 x 데이터는 ", roomData.paddleTwo.x);
-		console.log("플레이어 two의 패들의 y 데이터는 ", roomData.paddleTwo.y);
-		console.log("플레이어 two의 패들의 width 데이터는 ", roomData.paddleTwo.width);
-		console.log("플레이어 two의 패들의 height 데이터는 ", roomData.paddleTwo.height);
-		console.log("플레이어 two의 패들의 color 데이터는 ", roomData.paddleTwo.color);
+		console.log("roomData : mode : ", roomData.mode);
 
 		gameData.drawPaddle(roomData.paddleOne);
 		gameData.drawPaddle(roomData.paddleTwo);
@@ -141,16 +133,16 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				`${playerOneName} Won!`,
 				gameData.screenWidth / 2,
 				gameData.screenHeight / 2,
-				45,
+				100,
 				'white'
-			);
-		}
+				);
+			}
 		else if (gameState === GameState.PLAYER_TWO_WIN) {
 			gameData.drawCenteredTexture(
 				`${playerTwoName} Won!`,
 				gameData.screenWidth / 2,
 				gameData.screenHeight / 2,
-				45,
+				100,
 				'white'
 			);
 		}
@@ -192,8 +184,10 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			else if (room.gameState === GameState.RESUMED) {
 				gameData.drawStartCountDown('READY');
 			}
-			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN) {
-				gameEnd(room.roomId, room.paddleOne.gameuser.nickname, room.paddleOne.gameuser.nickname, room.gameState, gameData);
+			else if (room.gameState === GameState.PLAYER_ONE_WIN ||
+				room.gameState === GameState.PLAYER_TWO_WIN) {
+				gameData.clear();
+				gameEnd(room.roomId, room.paddleOne.gameuser.nickname, room.paddleTwo.gameuser.nickname, room.gameState, gameData);
 			}
 			animationFrameId = window.requestAnimationFrame(gameLoop);
 		}
@@ -209,8 +203,8 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		return () => {
 			if (animationFrameId) window.cancelAnimationFrame(animationFrameId);
 			if (isPlayer) {
-				window.removeEventListener('keyup', keyUpEvent);
 				window.removeEventListener('keydown', keyDownEvent);
+				window.removeEventListener('keyup', keyUpEvent);
 			}
 		};
 	}, []);
@@ -222,10 +216,10 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	return (
 		<div>
 			<LeaveRoomStyleC onClick={leaveRoom} type="button">
-				LEAVE ROOM
+				게임 방 나가기
 			</LeaveRoomStyleC>
-			<Canvas id="pong-canvas" width="1920" height="1080" />
 			<PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} />
+			<Canvas id="pong-canvas" width="1920" height="1080" />
 		</div>
 	);
 }

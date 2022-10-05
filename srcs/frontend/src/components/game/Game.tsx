@@ -51,15 +51,6 @@ function Game() {
 	 */
 	const { isLoading, data: userData, error } = useQuery<IUser>('me', getLoginUserData);
 
-	// console.log("=================================");
-	// console.log("getUserData 가져오기 확인")
-	// console.log("getUserData id : %d", userData?.id);
-	// console.log("getUserData nickname : %s", userData?.nickname);
-	// console.log("getUserData photo : %s", userData?.avatar);
-	// console.log("getUserData wins : %d", userData?.wins);
-	// console.log("getUserData losses : %d", userData?.losses);
-	// console.log("getUserData ratio : %d", userData?.ratio);
-
 	const joinQueue = (event: React.MouseEvent<HTMLButtonElement>) => {
 		socket.emit('joinQueue', event.currentTarget.value);
 	};
@@ -151,7 +142,6 @@ function Game() {
 			{isDisplayGame ?
 				(
 					<>
-						GAME SCREEN
 						<GameScreen socketProps={socket} roomDataProps={room} userDataProps={userData} />
 					</>
 				) :
@@ -160,12 +150,12 @@ function Game() {
 						{queue ?
 						(
 							<QueueButtonStyleC type="button" onClick={leaveQueue}>
-								LEAVE QUEUE
+								게임 매칭 취소
 							</QueueButtonStyleC>
 						) :
 						(
 							<div>
-								<QueueButtonStyleC type="button" onClick={joinQueue} value="BIG">
+								<QueueButtonStyleC type="button" onClick={joinQueue} value="HARD">
 									ACTIVE MODE
 								</QueueButtonStyleC>
 								<QueueButtonStyleC type="button" onClick={joinQueue} value="DEFAULT">
