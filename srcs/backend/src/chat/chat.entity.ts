@@ -14,7 +14,7 @@ export class Chat extends BaseEntity {
 	title: string;
 
 	// 비밀채팅방의 비밀번호
-	@Column({ type: "varchar", length: 20, default: "" })
+	@Column({ type: "varchar", length: 20, default: "", nullable: true })
 	password: string;
 
 	// 비밀방인지 여부

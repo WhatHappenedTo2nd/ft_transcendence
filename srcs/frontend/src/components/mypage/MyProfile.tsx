@@ -6,6 +6,7 @@ import MyPageModal from '../mypage/MyPageModal';
 import styled from 'styled-components';
 import CheckTFA from '../mypage/tfa';
 import UserProps from '../interface/IUserProps';
+import AchieveBadge from './Badge';
 
 interface FeatureProps {
 	text: number | undefined;
@@ -57,6 +58,7 @@ function MyProfile(){
 						<MyPageModal />
 						<CheckTFA />
 					</Flex>
+					<AchieveBadge />
 				</Stack>
 		</SimpleGrid>
 	</Container>

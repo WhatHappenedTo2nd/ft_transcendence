@@ -14,8 +14,9 @@ function AchieveBadge(){
 	// const wins: number = userdata?.wins;
 	return (
 		<Flex>
-			{/* { (wins > 0) ? <Badge marginRight={2}>Default</Badge> : null}  */}
-			<Badge>hi</Badge>
+			{ (Mydata?.tfaAuthorized) ? <Badge variant='subtle' colorScheme='green' marginRight={2}>Authorized</Badge> : null} 
+			{ (userdata?.tfaAuthorized) ? <Badge variant='subtle' colorScheme='green' marginRight={2}>Authorized</Badge> : null} 
+
 		</Flex>
 	);
 } 

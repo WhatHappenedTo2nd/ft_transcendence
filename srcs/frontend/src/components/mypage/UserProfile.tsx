@@ -41,6 +41,7 @@ function UserProfile() {
 				</Flex>
 				<Stack spacing={4} marginTop={5}>
 					<Text fontSize='50px' color='#53B7BA' as='b'>{Userdata?.nickname}</Text>
+					<AchieveBadge />
 					<Flex>
 					<Text
 						color={'blue.400'}

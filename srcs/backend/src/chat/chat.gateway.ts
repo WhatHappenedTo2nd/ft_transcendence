@@ -107,9 +107,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 		@GetUser() user: User,
 	) {
 		socket.join(roomName); // join room
-		const room: Chat = this.chatRepository.findOneByRoomname(roomName);
+		// const room: Chat = this.chatRepository.findOneByRoomname(roomName);
 		const chatuser: ChatUser = this.chatUserRepository.create({
-			chat_id: room,
+			// chat_id: room,
 			user_id: user,
 			is_muted: false,
 		});
