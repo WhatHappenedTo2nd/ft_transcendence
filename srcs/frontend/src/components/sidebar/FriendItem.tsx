@@ -17,7 +17,7 @@ function FriendItem(props: any) {
 		name={user.nickname}
 		mode='friend'>
 		<HStack>
-			<Box boxSize='10' justifyContent='center'>
+			<Box boxSize='10' justifyContent='center' marginStart="2" marginTop="0.5" padding="1" >
 				<Avatar size='sm' src={user?.avatar}>
 					{user.status === Status.PLAYING ? <AvatarBadge boxSize='1em' bg='yellow.500' /> : null}
 					{user.status === Status.ONLINE ? <AvatarBadge boxSize='1em' bg='green.500' /> : null}
