@@ -4,13 +4,14 @@ import { UnlockIcon, LockIcon } from '@chakra-ui/icons'
 import { socket } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import CheckPassword from './CheckPassword';
+import { getCookie } from '../../api/cookieFunc';
 
 function ChatListItem(props: any) {
 	const { chat } = props;
 	const navigate = useNavigate();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const onJoinRoom = (roomName: string) => () => {
-		socket.emit('join-room', roomName, () => {
+		socket.emit('join-room', {roomName, userIntraId: getCookie("intra_id")}, () => {
 			navigate(`/room/${roomName}`);
 		});
 	};

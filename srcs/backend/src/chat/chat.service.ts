@@ -28,6 +28,7 @@ export class ChatService {
 		const roomuser = await this.chatUserRepository.find({
 			relations: {
 				user_id: true,
+				chat_id: true,
 			},
 			where: {
 				chat_id: {id: Equal(room.id)},
