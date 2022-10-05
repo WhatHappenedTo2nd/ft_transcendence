@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from "@nestjs/common";
 import { CustomRepository } from "src/typeorm-ex/typeorm-ex.decorator";
 import { Repository } from "typeorm";
 import { Chat } from "./chat.entity";
@@ -16,8 +17,21 @@ export class ChatRepository extends Repository<Chat> {
 		return result;
 	}
 
-	async findOneByRoomname(name: string): Promise<Chat> {
-		const room = await this.findOne({where: {title: name}});
+	async findOneByRoomname(title: string): Promise<Chat> {
+		const room: Chat = await this.findOneBy({title});
+		if (!room) {
+			return null;
+		}
 		return room;
+	}
+
+	async deleteRoom(title: string): Promise<void> {
+		try {
+			await this.delete({
+				title: title
+			});
+		} catch (error) {
+			throw new InternalServerErrorException();
+		}
 	}
 }

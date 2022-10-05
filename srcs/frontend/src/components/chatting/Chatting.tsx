@@ -14,6 +14,7 @@ import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
 import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
+import { getCookie } from '../../api/cookieFunc';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -86,7 +87,8 @@ function Chatting(props: any) {
 	);
 		
 	const onLeaveRoom = useCallback(() => {
-		socket.emit('leave-room', { roomName, name }, () => {
+		console.log("click-button");
+		socket.emit('leave-room', { roomName, userIntraId: getCookie("intra_id") }, () => {
 			navigate('/chatting');
 		});
 	}, [navigate, roomName]);
