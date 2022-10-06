@@ -36,17 +36,18 @@ function UserProfile() {
 					alt={'profile Picture'}
 					src={Userdata?.avatar}
 					boxSize={'250'}
-					marginLeft={'150'}
+					marginLeft={'130'}
 					/>
 				</Flex>
 				<Stack spacing={4} marginTop={5}>
-					<Text fontSize='50px' color='#53B7BA' as='b'>{Userdata?.nickname}</Text>
+					<Text fontSize='50px' color='#53B7BA' as='b' fontFamily='Establish'>{Userdata?.nickname}</Text>
 					<AchieveBadge />
 					<Flex>
 					<Text
 						color={'blue.400'}
 						fontWeight={600}
 						fontSize={'35px'}
+						fontFamily="welcomeBold"
 						bg={'blue.50'}
 						p={2}
 						alignSelf={'flex-start'}
@@ -57,6 +58,7 @@ function UserProfile() {
 						color={'gray.500'}
 						fontWeight={600}
 						fontSize={'30px'}
+						fontFamily="welcomeRegular"
 						p={2}
 						alignSelf={'flex-start'}
 						marginLeft={'4'}>

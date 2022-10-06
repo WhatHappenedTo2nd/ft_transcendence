@@ -69,10 +69,16 @@ function CreateButton() {
 			backgroundColor="#53B7BA"
 			border="2px"
 			borderColor="#53B7BA"
+			_hover={{ bg: '#ebedf0' }}
+			_active={{
+			  bg: '#dddfe2',
+			  transform: 'scale(0.98)',
+			  borderColor: '#bec3c9',
+			}}
 			onClick={onOpen}
 			>
 			Create
-		</Button>;
+		</Button>
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent>
