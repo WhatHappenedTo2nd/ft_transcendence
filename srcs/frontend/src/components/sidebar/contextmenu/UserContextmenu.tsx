@@ -52,16 +52,17 @@ enum UserContextMenuFlag {
 export default function UserContextMenu({
 	userId, // target User
 	name, // target User name
-	mode,
+	mode, // 현재 우클릭하는 창의 상태 (online 유저 띄우는 창, 친구창, 방 접속인원 창)
+	muted,
+	myrole, // my role (host or member)
 	children,
-	// me,
 }: {
 	userId: number; // target user의 id
 	name: string; // target의 nickname
 	muted?: boolean; // target의 mute 상태
 	mode: UserContextMenuType;
+	myrole?: boolean;
 	children: React.ReactNode;
-	// me?: ChatMemberProps | undefined;
 }) {
 	const friends = useFriends();
 	const blocks = useBlocked();
@@ -70,8 +71,16 @@ export default function UserContextMenu({
 		const isFriend = friends?.filter((f) => f.id === userId).length;
 		const isBlocked = blocks?.filter((b) => b.id === userId).length;
 		if (mode === 'chat') {
-			flag ^= UserContextMenuFlag.GAME_INVITE;
-			// me를 통해 내가 host면 -> chat의 기능들을 추가해주어야한다.
+			flag |= UserContextMenuFlag.GAME_INVITE;
+			if (myrole === true) {
+				flag |= UserContextMenuFlag.ADMIN_APPROVE;
+				flag |= UserContextMenuFlag.CHAT_KICK;
+				if (muted === true) {
+					flag |= UserContextMenuFlag.CHAT_UNMUTE;
+				} else {
+					flag |= UserContextMenuFlag.CHAT_MUTE;
+				}
+			}
 		}
 		if (!isFriend) {
 			flag |= UserContextMenuFlag.FRIEND_ADD;
@@ -84,7 +93,7 @@ export default function UserContextMenu({
 			flag |= UserContextMenuFlag.BLOCK_ADD;
 		}
 		return flag;
-	}, [friends, blocks, mode, userId])
+	}, [friends, blocks, mode, muted, myrole, userId])
 
 	return (
 		<flagContext.Provider value={menuFlag}>
@@ -157,5 +166,4 @@ export default function UserContextMenu({
 
 UserContextMenu.defaultProps = {
 	muted: false,
-	// me: undefined,
 }

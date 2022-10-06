@@ -1,4 +1,4 @@
-export class ChatDto {
+export class ChatListDto {
 	id: number;
 
 	title: string;
@@ -8,6 +8,4 @@ export class ChatDto {
 	is_private: boolean;
 
 	now_playing: boolean;
-
-	host_id: number;
 }
