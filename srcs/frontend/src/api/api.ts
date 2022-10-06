@@ -72,7 +72,6 @@ export const getBlockList = async() => {
 }
 
 export const getChatList = async () => {
-	//TODO: get 할 정보 수정 필요
 	const { data: chat } = await axios.get('/chat', {
 		method: "GET",
 		headers: {
