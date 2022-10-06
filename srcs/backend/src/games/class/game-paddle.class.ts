@@ -1,12 +1,14 @@
 import { GameUser } from "./game-user.class";
 import {
+	CANVAS_WIDTH,
 	CANVAS_HEIGHT,
 	PADDLE_WIDTH,
 	PADDLE_HEIGHT,
 	PADDLE_SPEED,
+	TIMING,
 } from '../constant/games.constant';
 import { GameMode } from "../enum/games.enum";
-import { Logger } from "@nestjs/common";
+import { Logger } from '@nestjs/common';
 
 export interface IPaddle {
 	gameuser: GameUser;
@@ -33,6 +35,8 @@ export class Paddle implements IPaddle {
 	color: string;
 	up: boolean;
 	down: boolean;
+	left: boolean;
+	right: boolean;
 	flash: boolean;
 	step: number;
 	mode: GameMode;
@@ -40,12 +44,7 @@ export class Paddle implements IPaddle {
 	constructor(gameuser: GameUser, x: number, mode:GameMode) {
 		this.gameuser = gameuser;
 		this.width = PADDLE_WIDTH;
-		if (mode === GameMode.HARD){
-			this.height = PADDLE_HEIGHT / 2;
-		}
-		else {
-			this.height = PADDLE_HEIGHT;
-		}
+		this.height = PADDLE_HEIGHT;
 		this.x = x;
 		this.default_x = x;
 		this.y = CANVAS_HEIGHT / 2 - this.height / 2;
@@ -53,11 +52,12 @@ export class Paddle implements IPaddle {
 		this.goal = 0;
 		this.up = false;
 		this.down = false;
+		this.left = false;
+		this.right = false;
 		this.color = 'white';
 		this.mode = mode;
 	}
 
-	/** position reset */
 	reset(): void {
 		this.y = CANVAS_HEIGHT / 2 - this.height / 2;
 		this.x = this.default_x;
@@ -66,26 +66,76 @@ export class Paddle implements IPaddle {
 	update(secondPassed: number): void {
 		const falsh_distance = 0.5;
 
+		// if (this.color !== 'rgba(0, 0, 0, 0.8)' && this.step <= TIMING)
+		// if (this.color !== 'white' && this.step <= TIMING)
+		// {
+		// 	// this.color = ('rgb' + (127 + (this.step / TIMING) * 128) +
+		// 	// ', ' + (this.step / TIMING) * 255 +
+		// 	// ', ' + (this.step / TIMING)* 255 +
+		// 	// ', 0.8');
+		// 	this.logger.log(`this.color의 값은 첫번째? ${this.color}`);
+		// 	// this.color = 'rgba(255, 255, 255, 1)';
+		// 	this.color = 'blue';
+		// 	this.step++;
+		// }
+		// else {
+		// 	this.logger.log(`this.color의 값은 두번째? ${this.color}`);
+		// 	this.step = 0;
+		// 	// this.color = 'rgba(255, 255, 255, 1)';
+		// 	this.color = 'red';
+		// }
+
 		if (this.up && !this.down) {
-			// if (!this.up) {
-			// 	this.y -= this.speed * 0;
-			// }
 			if (this.y <= 0) {
 				this.y = 0;
+			}
+			else if (this.flash) {
+				this.y -= this.speed * secondPassed * falsh_distance;
 			}
 			else {
 				this.y -= this.speed * secondPassed;
 			}
 		}
-		else if (this.down && !this.up) {
-			// if (!this.down) {
-			// 	this.y = this.speed * 0;
-			// }
+
+		if (this.down && !this.up) {
 			if (this. y + this.height >= CANVAS_HEIGHT) {
 				this.y = CANVAS_HEIGHT - this.height;
 			}
+			else if (this.flash) {
+				this.y += this.speed * secondPassed * falsh_distance;
+			}
 			else {
 				this.y += this.speed * secondPassed;
+			}
+		}
+
+		if (this.mode === GameMode.BIG && this.left && !this.right) {
+			if (this.x < 0) {
+				this.x = 0;
+			}
+			else if (this.x > (CANVAS_WIDTH / 4) * 2 && this.x < (CANVAS_WIDTH / 4) * 3) {
+				this.x = (CANVAS_WIDTH / 4) * 3;
+			}
+			else if (this.flash) {
+				this.x -= this.speed * secondPassed *falsh_distance;
+			}
+			else {
+				this.x -= this.speed * secondPassed;
+			}
+		}
+
+		if (this.mode === GameMode.BIG && this.right && !this.left) {
+			if (this.x > CANVAS_WIDTH / 4 && this.x < (CANVAS_WIDTH / 4) * 2) {
+				this.x = CANVAS_WIDTH / 4;
+			}
+			else if (this.x > CANVAS_WIDTH - this.width) {
+				this.x = CANVAS_WIDTH - this.width;
+			}
+			else if (this.flash) {
+				this.x += this.speed * secondPassed *falsh_distance;
+			}
+			else {
+				this.x += this.speed * secondPassed;
 			}
 		}
 	}

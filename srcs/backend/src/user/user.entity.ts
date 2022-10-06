@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
-import { Games } from "src/games/games.entity";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+
 /**
  * User 테이블. 유저의 회원 정보를 저장함.
  */
@@ -11,29 +11,25 @@ export class User extends BaseEntity {
 
 	// 42서울에서 사용하는 인트라 아이디.
 	// 나중에 닉네임이 바뀌어도 로그인 할 때 기존 유저인지 확인하기 위함.
-	@Column({
-		nullable: true,
-	})
+	@Column()
 	intra_id: string;
 
 	// 사이트에서 사용하는 닉네임.
 	// 처음 로그인을 했을 때는 intra_id와 동일하게 설정됨.
-	@Column({ nullable: true, type: "varchar", length: 20 })
+	@Column({ type: "varchar", length: 20 })
 	nickname: string;
 
 	// 사용자 프로필 이미지.
 	// 처음 로그인을 했을 때는 인트라 프로필 이미지와 동일하게 설정됨.
-	@Column({
-		nullable: true,
-	})
+	@Column()
 	avatar: string;
 
 	// 유저가 접속 중인지 여부
-	@Column({ nullable: true, default: false })
+	@Column({ default: false })
 	is_online: boolean;
 
 	// 유저가 게임 중인지 여부
-	@Column({ nullable: true, default: false })
+	@Column({ default: false })
 	now_playing: boolean;
 
 	// 2차 인증할 때 받는 이메일.
@@ -44,7 +40,7 @@ export class User extends BaseEntity {
 	@Column({nullable: true})
 	tfaCode: string;
 
-	@Column({ nullable: true, default: false })
+	@Column({ default: false })
 	tfaAuthorized: boolean;
 
 	/** games */
@@ -61,18 +57,37 @@ export class User extends BaseEntity {
 	losses: number;
 
 	@Column({
-	nullable: true,
-	default: 0,
+		nullable: true,
+		default: 0,
 	})
 	ratio: number;
+
 	@Column({
 		nullable: true,
 		default: '',
 	})
 	roomId: string;
-
-	// @ManyToMany(() => Games, (game) => game.players)
-	// games: Games[];
 }
 
+/**
+ * 차단한 사람과 차단 당한 사람 테이블
+ */
+// @Entity()
+// export class History extends BaseEntity {
+// 	@PrimaryGeneratedColumn()
+// 	id: number;
 
+// 	@ManyToOne(() => User, (user) => user.id)
+// 	user_a: User;
+
+// 	@ManyToOne(() => User, (user) => user.id)
+// 	user_b: User;
+
+// 	// 이긴 유저의 점수
+// 	@Column({ default: 0 })
+// 	score_a: number;
+
+// 	// 진 유저의 점수
+// 	@Column({ default: 0 })
+// 	score_b: number;
+// }

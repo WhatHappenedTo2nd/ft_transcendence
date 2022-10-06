@@ -1,10 +1,10 @@
-import { canvasWidth, canvasHeight, IBall, IPlayer, IRoom } from '../interface/IGameProps';
+import { canvasWidth, canvasHeigth, IBall, IPlayer, IRoom } from '../interface/IGameProps';
 
 type Net = {
 	x: number;
 	y: number;
 	width: number;
-	height: number;
+	hegiht: number;
 };
 
 /**
@@ -30,7 +30,7 @@ export default class GameData {
 		this.context = this.canvas.getContext('2d');
 		this.degress = 0;
 		this.screenWidth = canvasWidth;
-		this.screenHeight = canvasHeight;
+		this.screenHeight = canvasHeigth;
 		this.room = roomProps;
 		this.ball = this.room.ball;
 		this.paddleOne = this.room.paddleOne;
@@ -39,23 +39,28 @@ export default class GameData {
 			x: canvasWidth / 2 - 10,
 			y: 0,
 			width: 20,
-			height: 50,
+			hegiht: 50,
 		};
 	}
 
-	drawRectangle(x: number, y: number, width: number, height: number, color: string)
+	drawRectangle(x: number, y: number, width: number, hegiht: number, color: string)
 	{
 		if (this.context) {
 			this.context.save();
 			this.context.fillStyle = color;
-			this.context.fillRect(x, y, width, height);
+			this.context.fillRect(x, y, width, hegiht);
 			this.context.restore();
 		}
 	}
 
 	drawPaddle(paddleData: IPlayer)
 	{
-		this.drawRectangle(paddleData.x, paddleData.y, paddleData.width, paddleData.height, paddleData.color);
+		if (this.context) {
+			this.context.save();
+			this.context.fillStyle = paddleData.color;
+			this.context.fillRect(paddleData.x, paddleData.y, paddleData.width, paddleData.height);
+			this.context.restore();
+		}
 	}
 
 	drawBall(ballData: IBall)
@@ -96,18 +101,18 @@ export default class GameData {
 
 	drawNet()
 	{
-		for (let i = 0; i <= canvasHeight / 2 - this.net.height; i += this.net.height) {
+		for (let i = 0; i <= canvasHeigth / 2 - this.net.hegiht; i += this.net.hegiht) {
 			this.net.y = i;
-			this.drawRectangle(this.net.x, this.net.y, this.net.width, this.net.height, 'white');
-			this.drawRectangle(this.net.x, canvasHeight - (this.net.height + this.net.y), this.net.width, this.net.height, 'white');
+			this.drawRectangle(this.net.x, this.net.y, this.net.width, this.net.hegiht, 'white');
+			this.drawRectangle(this.net.x, canvasHeigth - (this.net.hegiht + this.net.y), this.net.width, this.net.hegiht, 'white');
 			i += 19;
 		}
 	}
 
 	drawScore(playerOne: IPlayer, playerTwo: IPlayer)
 	{
-		this.drawTexture(`${playerOne.goal}`, canvasWidth / 4, canvasHeight / 10, 45, 'white');
-		this.drawTexture(`${playerTwo.goal}`, 3 * (canvasWidth / 4), canvasHeight / 10, 45, 'white');
+		this.drawTexture(`${playerOne.goal}`, canvasWidth / 4, canvasHeigth / 10, 45, 'white');
+		this.drawTexture(`${playerTwo.goal}`, 3 * (canvasWidth / 4), canvasHeigth / 10, 45, 'white');
 	}
 
 	drawStartCountDown(countDown: string)

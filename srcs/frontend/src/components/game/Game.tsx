@@ -24,22 +24,7 @@ import { getLoginUserData } from '../../api/api'
  */
 let socket: Socket;
 
-const ChatContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	border: 1px solid #000;
-	padding: 1rem;
-
-	min-height: 360px;
-	max-height: 600px;
-	width: 100%
-	overflow: auto;
-
-	background-color: black;
-`;
-
 const QueueButtonStyleC = styled.button`
-	hegiht: 50px;
 	width: 100%
 `;
 
@@ -65,6 +50,15 @@ function Game() {
 	 *  error : 데이터 fetch에 실패한 상태
 	 */
 	const { isLoading, data: userData, error } = useQuery<IUser>('me', getLoginUserData);
+
+	// console.log("=================================");
+	// console.log("getUserData 가져오기 확인")
+	// console.log("getUserData id : %d", userData?.id);
+	// console.log("getUserData nickname : %s", userData?.nickname);
+	// console.log("getUserData photo : %s", userData?.avatar);
+	// console.log("getUserData wins : %d", userData?.wins);
+	// console.log("getUserData losses : %d", userData?.losses);
+	// console.log("getUserData ratio : %d", userData?.ratio);
 
 	const joinQueue = (event: React.MouseEvent<HTMLButtonElement>) => {
 		socket.emit('joinQueue', event.currentTarget.value);
@@ -146,17 +140,28 @@ function Game() {
 	}, [userData]);
 	/**
 	 * 서버와 연동 전이라 데이터를 가져올 수 없음.
-	 * return NULL에서 걸림 -> 해결
+	 * return NULL에서 걸림
 	 */
-	if (isLoading || error) {
+	if (isLoading || error)
+	{
+		if (isLoading)
+			// console.log("Game useQuery isLoading 확인");
+		if (error)
+			// console.log("Game useQuery error 확인");
 		return null;
 	}
 
+	// console.log("isDisplayGame의 값은 ", isDisplayGame);
+	/**
+	 * @qna
+	 * 	return문 안에서 console.log를 이용해서 확인하는 것처럼 할 수 없는지?
+	 */
 	return (
 		<div>
 			{isDisplayGame ?
 				(
 					<>
+						GAME SCREEN
 						<GameScreen socketProps={socket} roomDataProps={room} userDataProps={userData} />
 					</>
 				) :
@@ -165,12 +170,12 @@ function Game() {
 						{queue ?
 						(
 							<QueueButtonStyleC type="button" onClick={leaveQueue}>
-								게임 매칭 취소
+								LEAVE QUEUE
 							</QueueButtonStyleC>
 						) :
 						(
 							<div>
-								<QueueButtonStyleC type="button" onClick={joinQueue} value="HARD">
+								<QueueButtonStyleC type="button" onClick={joinQueue} value="BIG">
 									ACTIVE MODE
 								</QueueButtonStyleC>
 								<QueueButtonStyleC type="button" onClick={joinQueue} value="DEFAULT">
@@ -178,7 +183,7 @@ function Game() {
 								</QueueButtonStyleC>
 							</div>
 						)}
-						{/* <GameRooms gameRooms={gameRooms} socket={socket} /> */}
+						<GameRooms gameRooms={gameRooms} socket={socket} />
 					</>
 				)}
 		</div>
