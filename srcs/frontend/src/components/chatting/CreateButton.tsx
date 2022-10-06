@@ -34,9 +34,8 @@ function CreateButton() {
 		if (titleValue) {
 			socket.emit('create-room', { roomName: titleValue, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				if (!response.success)
-				navigate(`/room/${titleValue}`);
-				else 
-					return alert(`${titleValue} : 이미 선점된 방입니다.`);
+				return alert(response.payload);
+				navigate(`/room/${response.payload}`);
 		})}
 	}, [titleValue, password, navigate]);
 

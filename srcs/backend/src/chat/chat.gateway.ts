@@ -84,7 +84,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			const user = await this.userRepository.findByIntraId(userIntraId);
 			const exists = await this.chatRepository.findOneByRoomname(roomName);
 			if (exists) {
-				return { success: false, payload: `${roomName} 방이 이미 존재합니다.` };
+				return { success: false, payload: `${roomName} : 이미 선점된 방입니다.` };
 			}
 			const room = this.chatRepository.create({title: roomName, host: user});
 			if (password) {
