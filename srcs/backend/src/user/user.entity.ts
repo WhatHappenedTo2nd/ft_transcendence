@@ -11,17 +11,17 @@ export class User extends BaseEntity {
 
 	// 42서울에서 사용하는 인트라 아이디.
 	// 나중에 닉네임이 바뀌어도 로그인 할 때 기존 유저인지 확인하기 위함.
-	@Column()
+	@Column({ nullable: true })
 	intra_id: string;
 
 	// 사이트에서 사용하는 닉네임.
 	// 처음 로그인을 했을 때는 intra_id와 동일하게 설정됨.
-	@Column({ type: "varchar", length: 20 })
+	@Column({ nullable: true, type: "varchar", length: 20 })
 	nickname: string;
 
 	// 사용자 프로필 이미지.
 	// 처음 로그인을 했을 때는 인트라 프로필 이미지와 동일하게 설정됨.
-	@Column()
+	@Column({ nullable: true })
 	avatar: string;
 
 	// 유저가 접속 중인지 여부
@@ -37,7 +37,7 @@ export class User extends BaseEntity {
 	@Column({ nullable : true })
 	email: string ;
 
-	@Column({nullable: true})
+	@Column({ nullable: true })
 	tfaCode: string;
 
 	@Column({ default: false })
