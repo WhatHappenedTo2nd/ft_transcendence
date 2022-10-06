@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import styled from "styled-components";
 import { useQuery, useQueryClient } from 'react-query';
 import { getLoginUserData } from '../../api/api';

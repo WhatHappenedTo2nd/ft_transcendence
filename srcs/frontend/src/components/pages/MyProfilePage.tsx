@@ -1,4 +1,4 @@
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem, Divider } from '@chakra-ui/react';
 import MyProfile from '../mypage/MyProfile';
 import SideBar from "../sidebar/SideBar";
 import History from "../mypage/History";
@@ -13,17 +13,16 @@ function MyProfilePage (){
 				md: `'nav main'`
 			}}
 			gap={4}>
-			<GridItem area={'main'}>
+			<GridItem area={'main'} marginTop={10}>
 				<Grid gridTemplateRows={{
 					md: "1fr 1fr"
-					}}
+				}}
 					gridTemplateAreas={{
 						md: `'myprofile'
-							'history'`
-						}}
-						gap={4}>
-					<GridItem area={'myprofile'}
-					style={{border: '1px solid black',borderRadius: '5px'}}>
+						'history'`
+					}}
+						gap={10}>
+					<GridItem area={'myprofile'}>
 						<MyProfile/>
 					</GridItem>
 					<GridItem area={'history'}

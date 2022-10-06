@@ -4,19 +4,21 @@ const LeaveButton = styled.button`
 	margin-bottom: 0.5rem;
 	display: block;
 	margin-left: auto;
+	color: #53B7BA;
+	styld: bold;
 `;
 
 const ChatContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	border: 1px solid #000;
+	border: 1px solid #bec3c9;
 	padding: 1rem;
 
 	min-height: 360px;
 	max-height: 600px;
 	overflow: auto;
 
-	background: #b2c7d9;
+	background: #ebedf0;
 `;
 
 const MessageBox = styled.div`
@@ -27,7 +29,7 @@ const MessageBox = styled.div`
 		align-self: flex-end;
 
 		.message {
-			background: yellow;
+			background: #53B7BA;
 			align-self: flex-end;
 		}
 	}
@@ -39,6 +41,7 @@ const MessageBox = styled.div`
 
 const Message = styled.span`
 	margin-bottom: 0.5rem;
+	border: solid 2px #53B7BA;
 	background: #fff;
 	width: fit-content;
 	padding: 12px;
@@ -48,10 +51,12 @@ const Message = styled.span`
 const MessageForm = styled.form`
 	display: flex;
 	margin-top: 24px;
+	color: #53B7BA;
 
 	input {
 		flex-grow: 1;
 		margin-right: 1rem;
+		border: solid 1px #bec3c9;
 	}
 `;
 

@@ -11,7 +11,6 @@ import SideBar from "../sidebar/SideBar";
  */
 function ChoicePage() {
 	const navigate = useNavigate();
-	const loginUser = "yjungpong"
 
 	return (
 		<Grid gridTemplateColumns={{
@@ -21,8 +20,12 @@ function ChoicePage() {
 		  gridTemplateAreas={{
 			md: `'nav main'`
 		  }}
-		  gap={4}>
-			<GridItem area={'main'}>
+		  gap={20}>
+			<GridItem area={'main'}
+			marginRight="auto"
+			marginLeft="auto"
+			marginTop={180}
+			>
 				<ChoiceBox
 					title="Profile"
 					onClick={() => {
@@ -30,7 +33,7 @@ function ChoicePage() {
 						console.log("프로필 선택");
 					}}
 					/>
-				<Divider borderColor="black" borderWidth="1px" />
+				<Divider borderColor="white" borderWidth="50px" />
 				<ChoiceBox
 					title="Chatting"
 					onClick={() => {
