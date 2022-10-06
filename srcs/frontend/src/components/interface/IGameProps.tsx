@@ -114,4 +114,7 @@ export interface IMatch
  * 2022/09/28
  * IMatch interface 추가 -> 승자/패자/승리점수/패배점수
  * gamesController에서 넘겨준 데이터를 저장할 인터페이스
+ *
+ * 2022/10/6
+ * Make에러 수정
  */

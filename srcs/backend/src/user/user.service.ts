@@ -151,7 +151,7 @@ export class UserService {
 	// }
 
 	/**
-	 * setIsPlaying
+	 * setNowPlaying
 	 * getUserWithoutFriends(id)를 통해 유저 정보를 가지고 오고 유저 상태를 게임 중으로 바꿈
 	 */
 	async setNowPlaying(id: number, status: boolean): Promise<void> {
