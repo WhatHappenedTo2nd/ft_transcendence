@@ -24,7 +24,7 @@ interface MessagePayload {
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() nsp: Namespace;
-	constructor ( 
+	constructor (
 		private chatRepository: ChatRepository,
 		private chatUserRepository: ChatUserRepository,
 		private userRepository: UserRepository
@@ -39,8 +39,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	// 			(createdRoom) => createdRoom === room,
 	// 		);
 	// 		if (!deletedRoom) return;
-		
-		
+
+
 	// 		this.nsp.emit('delete-room', deletedRoom);
 	// 		createdRooms = createdRooms.filter(
 	// 			(createdRoom) => createdRoom !== deletedRoom,
@@ -111,7 +111,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			return { success: false };
 		}
 		const chatuser: ChatUser = this.chatUserRepository.create({
-			// chat_id: room,
+			chat_id: room,
 			user_id: user,
 			is_muted: false,
 		});
