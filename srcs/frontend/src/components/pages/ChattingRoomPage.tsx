@@ -28,14 +28,17 @@ function ChattingRoomPage() {
 							'chattingroom'`
 						}}
 						gap={4}>
-					<GridItem area={'button'}>
+					<GridItem area={'button'}
+						marginLeft="auto"
+						marginRight="auto"
+						marginTop={30}>
 						<Grid gridTemplateColumns={{
 							md: "1fr 1fr"
 							}}
 							gridTemplateAreas={{
 								md: `'random create'`
 								}}>
-							<GridItem area={'random'}>
+							<GridItem area={'random'} marginRight={10}>
 								<RandomButton
 								title="Random"
 								onClick={() => {
@@ -43,7 +46,7 @@ function ChattingRoomPage() {
 									console.log("랜덤 매칭");
 								}}/>
 							</GridItem>
-							<GridItem area={'create'}>
+							<GridItem area={'create'} marginLeft={10}>
 								<CreateButton />
 							</GridItem>
 						</Grid>

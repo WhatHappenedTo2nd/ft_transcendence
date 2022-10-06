@@ -17,6 +17,19 @@ function ChoiceBox(props: { title: any; onClick: any; }) {
 			h='sm'
 			fontSize={'5xl'}
 			onClick={onClick}
+			fontFamily="Establish"
+			backgroundColor="#53B7BA"
+			width={500}
+			height={200}
+			borderRadius={10}
+			border="2px"
+			borderColor="#53B7BA"
+			_hover={{ bg: '#ebedf0' }}
+			_active={{
+			  bg: '#dddfe2',
+			  transform: 'scale(0.98)',
+			  borderColor: '#53B7BA',
+			}}
 			>
 				{title}
 			</Box>

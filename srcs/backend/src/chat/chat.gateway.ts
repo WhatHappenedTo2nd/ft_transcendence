@@ -111,7 +111,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			return { success: false };
 		}
 		const chatuser: ChatUser = this.chatUserRepository.create({
-			chat_id: room,
+			// chat_id: room,
 			user_id: user,
 			is_muted: false,
 		});
