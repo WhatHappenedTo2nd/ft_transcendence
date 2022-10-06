@@ -5,7 +5,7 @@ import IUserProps from "./IUserProps";
  * 1920 * 1080
  */
 export const canvasWidth = 1920;
-export const canvasHeigth = 1080;
+export const canvasHeight = 1080;
 
 /**
  * Game 시작 전/후 게임플레이 중 상태를 나타낸다.
