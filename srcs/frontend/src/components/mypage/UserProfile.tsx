@@ -24,6 +24,7 @@ function UserProfile() {
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
 
+	let ratio = (Mydata!.wins / (Mydata!.wins + Mydata!.losses)) * 100;
 	if (Userdata?.nickname == Mydata?.nickname)
 		return <MyProfile />;
 
@@ -52,6 +53,7 @@ function UserProfile() {
 						p={2}
 						alignSelf={'flex-start'}
 						rounded={'md'}>
+						{ratio}%
 						{/* {Userdata?.ratio}% */}
 					</Text>
 					<Text
