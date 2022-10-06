@@ -16,7 +16,8 @@ function MyProfile(){
 	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
-  
+
+	let ratio = (Mydata!.wins / (Mydata!.wins + Mydata!.losses)) * 100;
 	return (
 
 	<Container maxW={'5xl'} py={12} alignContent={'center'}>
@@ -41,7 +42,8 @@ function MyProfile(){
 							p={2}
 							alignSelf={'flex-start'}
 							rounded={'md'}>
-							{Mydata?.ratio}%
+							{/* {Mydata?.ratio}% */}
+							{ratio}%
 						</Text>
 						<Text
 							color={'gray.500'}

@@ -50,7 +50,7 @@ function UserProfile() {
 						p={2}
 						alignSelf={'flex-start'}
 						rounded={'md'}>
-						{Userdata?.ratio}%
+						{/* {Userdata?.ratio}% */}
 					</Text>
 					<Text
 						color={'gray.500'}
