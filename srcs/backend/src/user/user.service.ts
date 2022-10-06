@@ -154,7 +154,7 @@ export class UserService {
 	 * setIsPlaying
 	 * getUserWithoutFriends(id)를 통해 유저 정보를 가지고 오고 유저 상태를 게임 중으로 바꿈
 	 */
-	async setIsPlaying(id: number, status: boolean): Promise<void> {
+	async setNowPlaying(id: number, status: boolean): Promise<void> {
 		const user = await this.getUserById(id);
 		user.now_playing = status;
 		await this.userRepository.save(user);

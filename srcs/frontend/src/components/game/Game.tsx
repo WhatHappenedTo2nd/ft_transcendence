@@ -39,7 +39,7 @@ const ChatContainer = styled.div`
 `;
 
 const QueueButtonStyleC = styled.button`
-	hegiht: 50px;
+	height: 50px;
 	width: 100%
 `;
 
