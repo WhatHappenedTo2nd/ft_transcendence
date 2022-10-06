@@ -5,7 +5,7 @@ import IUserProps from "./IUserProps";
  * 1920 * 1080
  */
 export const canvasWidth = 1920;
-export const canvasHeigth = 1080;
+export const canvasHeight = 1080;
 
 /**
  * Game 시작 전/후 게임플레이 중 상태를 나타낸다.
@@ -114,4 +114,7 @@ export interface IMatch
  * 2022/09/28
  * IMatch interface 추가 -> 승자/패자/승리점수/패배점수
  * gamesController에서 넘겨준 데이터를 저장할 인터페이스
+ *
+ * 2022/10/6
+ * Make에러 수정
  */
