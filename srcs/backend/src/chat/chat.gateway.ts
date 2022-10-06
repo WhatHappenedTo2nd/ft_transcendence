@@ -140,6 +140,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		});
 		if (!check.length) {
 			await this.chatRepository.deleteRoom(roomName);
+		} else {
+			const newHost = await this.chatUserRepository.findNextHost(room);
+			await this.chatRepository.succedingHost(room, newHost);
 		}
 		return { success: true };
 	}
