@@ -15,7 +15,7 @@ export class GameUser {
 	losses?: number;
 	ratio?: number;
 
-	constructor( id: number, nickname: string, avatar: string,  wins?: number, losses?: number, ratio?: number, socketId?: string ) {
+	constructor( id: number, nickname: string, avatar: string,  wins?: number, losses?: number, ratio?:number, socketId?: string ) {
 		this.id = id;
 		this.nickname = nickname;
 		this.avatar = avatar;
@@ -45,8 +45,8 @@ export class GameUser {
 	}
 
 	setMode(mode: string) {
-		if (mode === 'BIG') {
-			this.mode = GameMode.BIG;
+		if (mode === 'HARD') {
+			this.mode = GameMode.HARD;
 		} else {
 			this.mode = GameMode.DEFAULT;
 		}

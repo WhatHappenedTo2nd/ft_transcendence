@@ -4,6 +4,7 @@ import {
 	CANVAS_WIDTH,
 	BALL_DEFAULT_SPEED,
 	BALL_DEFAULT_RADIUS,
+	BALL_HARD_SPEED,
 	BALL_MAX_SPEED,
 	BALL_ACCELERATION,
 } from '../constant/games.constant';
@@ -25,6 +26,7 @@ export interface IBall{
 }
 
 export class Ball implements IBall {
+
 	x: number;
 	y: number;
 	r: number;
@@ -43,16 +45,12 @@ export class Ball implements IBall {
 		this.x = CANVAS_WIDTH / 2;
 		this.y = CANVAS_HEIGHT / 2;
 		this.r = BALL_DEFAULT_RADIUS;
-		if (mode == GameMode.BIG) {
-			this.speed = BALL_DEFAULT_SPEED;
+		if (mode == GameMode.HARD) {
+			this.speed = BALL_HARD_SPEED;
 		} else {
 			this.speed = BALL_DEFAULT_SPEED;
 		}
-		if (mode === GameMode.BIG) {
-			this.acceleration = BALL_ACCELERATION;
-		} else {
-			this.acceleration = BALL_ACCELERATION;
-		}
+		this.acceleration = BALL_ACCELERATION;
 		this.velocity = {
 			dx:this.speed * (Math.random() < 0.5 ? 1 : -1),
 			dy: 0,
@@ -69,15 +67,13 @@ export class Ball implements IBall {
 		let dir = this.x < CANVAS_WIDTH / 2 ? -1 : 1;
 		this.x = CANVAS_WIDTH / 2;
 		this.y = CANVAS_HEIGHT / 2;
-		if (mode === GameMode.BIG) {
-			this.speed = BALL_DEFAULT_SPEED;
+		this.speed = BALL_DEFAULT_SPEED;
+		this.acceleration = BALL_ACCELERATION;
+		this.r = BALL_DEFAULT_RADIUS;
+		if (mode === GameMode.HARD) {
+			this.speed = BALL_HARD_SPEED;
 		} else {
 			this.speed = BALL_DEFAULT_SPEED;
-		}
-		if (mode === GameMode.BIG) {
-			this.acceleration = BALL_ACCELERATION;
-		} else {
-			this.acceleration = BALL_ACCELERATION;
 		}
 		this.velocity = {
 			dx: dir * this.speed,
@@ -162,11 +158,11 @@ export class Ball implements IBall {
 			}
 		}
 
-		if (this.x + this.r >= CANVAS_WIDTH && this.goal === false) {
+		if (this.x + this.r > CANVAS_WIDTH && this.goal === false) {
 			p1.goal++;
 			this.goal = true;
 		}
-		if (this.x - this.r <= 0 && this.goal === false) {
+		if (this.x - this.r < 0 && this.goal === false) {
 			p2.goal++;
 			this.goal = true;
 		}

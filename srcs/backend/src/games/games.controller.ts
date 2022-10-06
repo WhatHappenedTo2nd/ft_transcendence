@@ -1,7 +1,6 @@
-import { Controller, Get, Param} from '@nestjs/common';
+import { Controller, Get, Logger, Param} from '@nestjs/common';
 import { GamesService } from './games.service';
 import { Games } from './games.entity';
-
 /**
  * Promise
  * 프로미스가 생성된 시점에는 알려지지 않았을 수도 있는 값을 위한 대리자로, 비동기 연산이 종료된 이후에 결과 값과 실패 사유를 처리하기 위한 처리기를 연결할 수 있습니다.
@@ -10,11 +9,11 @@ import { Games } from './games.entity';
  */
 @Controller('games')
 export class GamesController {
+	private logger: Logger = new Logger('gameController');
 	/**
-	 *
-	 * @param gameService
+	 * @param gamesService
 	 */
-	constructor (private gameService: GamesService) {}
+	constructor (private gamesService: GamesService) {}
 
 	/**
 	 * 게임 유저 정보 반환
@@ -22,14 +21,14 @@ export class GamesController {
 	 */
 	@Get()
 	async findAll(): Promise<Games[]> {
-		const gameusers = await this.gameService.findAll();
+		const gameusers = await this.gamesService.findAll();
 		return gameusers;
 	}
 
 	@Get('/:id')
 	async findByGameUser(@Param('id') id: number): Promise<Games[]> {
-		const games = await this.gameService.find(id);
-
+		const games = await this.gamesService.find(id);
+		this.logger.log(`game 데이터는 ${games} 입니다.`);
 		let response = [];
 
 		for (let i = 0; i < games.length; i++) {
@@ -40,6 +39,13 @@ export class GamesController {
 			const win_score = games[i].win_score;
 			const lose_score = games[i].lose_score;
 
+			this.logger.log(`gameGateway id : ${games[i].id}`);
+			this.logger.log(`gameGateway me : ${id}`);
+			this.logger.log(`gameGateway winner : ${winner}`);
+			this.logger.log(`gameGateway loser : ${loser}`);
+			this.logger.log(`gameGateway win_score: ${win_score}`);
+			this.logger.log(`gameGatewaylose_score: ${lose_score}`);
+
 			response.push({
 				id:games[i].id,
 				me: id,
@@ -49,6 +55,7 @@ export class GamesController {
 				lose_score: lose_score,
 			});
 		}
+
 		return response;
 	}
 }
