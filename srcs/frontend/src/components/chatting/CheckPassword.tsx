@@ -4,6 +4,7 @@ import { socket } from '../../App';
 import { useState, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import ICreateRoomResponse from '../interface/IChatProps';
+import { getCookie } from "../../api/cookieFunc";
 
 function CheckPassword(props: any) {
 	const { chatPassword } = props;
@@ -18,13 +19,13 @@ function CheckPassword(props: any) {
 		if (!(password === chatPassword))
 			alert('비밀번호를 다시 입력해주세요.');
 		if (password === chatPassword) {
-			socket.emit('join-room', chatTitle, (response: ICreateRoomResponse) => {
+			socket.emit('join-room', { roomName: chatTitle, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				if (!response.success)
 				return alert(response.payload);
 				navigate(`/room/${chatTitle}`);
 			});
 		}
-	}, [password, navigate]);
+	}, [chatTitle, password, navigate]);
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
