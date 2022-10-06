@@ -1,7 +1,6 @@
 import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { Repository } from "typeorm";
 import { Games } from './games.entity';
-import { GameCreateDto } from "./dto/game-create.dto";
 
 /**
  * Repository 생성(필요한) 이유
@@ -32,8 +31,7 @@ import { GameCreateDto } from "./dto/game-create.dto";
  * @see https://prod.velog.io/@pk3669/typeorm-0.3.x-EntityRepository-%EB%8F%8C%EB%A0%A4%EC%A4%98
  */
  @CustomRepository(Games)
-export class GamesRepository extends Repository<Games> {
-}
+export class GamesRepository extends Repository<Games> {}
 
 /**
  * GameRepository

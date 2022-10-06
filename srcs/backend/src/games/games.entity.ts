@@ -27,36 +27,35 @@ export class Games extends BaseEntity {
 	/**
 	 * 추가로 필요한 데이터
 	 */
-	@ManyToOne(() => User, (user) => user.id, {
-		cascade: true,
-	})
+	@ManyToOne(() => User, (user) => user.id)
+	@JoinTable()
 	players: User[];
-	// @JoinTable()
+	//  //Player: User;
 
-	@Column({
-		nullable: true,
-	})
+	@Column()
 	winner_id: number;
 
-	@Column({
-		nullable: true,
-	})
+	@Column()
 	loser_id: number;
 
-	@Column({
-		nullable: true,
-	})
+	@Column()
 	win_score: number;
 
-	@Column({
-		nullable: true,
-	})
+	@Column()
 	lose_score: number;
 
-	@Column({
-		nullable: true,
-	})
+	@Column()
 	mode: number;
+
+	/** 추가로 필요한가 */
+	// @Column()
+	// wins: number;
+
+	// @Column()
+	// losses: number;
+
+	// @Column()
+	// ratio: number;
 }
 
 /**

@@ -30,14 +30,12 @@ export const PADDLE_HEIGHT = 200;
 
 export const BALL_DEFAULT_RADIUS = 25;
 export const BALL_DEFAULT_SPEED = 500;
-export const BALL_HARD_SPEED = 700;
-
-export const BALL_MAX_SPEED = 2000;
+export const BALL_MAX_SPEED = 1500;
 export const BALL_ACCELERATION = 200;
 
 export const DEFAULT_MAX_USER = 100;
 export const SET_INTERVAL_MILISECONDS = 3000;
-export const MAX_GOAL = 5;
+export const MAX_GOAL = 10;
 export const MAX_QUEUE = 100;
 
 /**
