@@ -5,7 +5,7 @@ import IUserProps from "./IUserProps";
  * 1920 * 1080
  */
 export const canvasWidth = 1920;
-export const canvasHeight = 1080;
+export const canvasHeigth = 1080;
 
 /**
  * Game 시작 전/후 게임플레이 중 상태를 나타낸다.
@@ -50,10 +50,10 @@ export interface IPlayer {
 	gameuser: IUser;
 	x: number;
 	y: number;
-	color: string;
 	width: number;
 	height: number;
 	goal: number;
+	color: string;
 }
 
 /**
@@ -98,9 +98,6 @@ export interface IRoom {
 	gameDuration: number;
 }
 
-/**
- * !인터페이스에서 인터페이스를 가져온다???
- */
 export interface IMatch
 {
 	id: number;

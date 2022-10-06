@@ -17,7 +17,7 @@ export class UserRepository extends Repository<User> {
 	async createUser(userLoginDto: UserLoginDto): Promise<void> {
 		const { intra_id, avatar } = userLoginDto;
 		const user = this.create({ intra_id, nickname: intra_id, avatar });
-
+		
 		try {
 			await this.save(user);
 		} catch (error) {
