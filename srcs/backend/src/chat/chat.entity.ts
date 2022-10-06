@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToOne, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToOne, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
 import { User } from "src/user/user.entity";
 
 /**
@@ -23,6 +23,7 @@ export class Chat extends BaseEntity {
 
 	// 채팅방 소유자. 채팅방을 만든 사람.
 	@OneToOne(() => User, (user) => user.id)
+	@JoinColumn()
 	host: User;
 
 	// 이 채팅방에서 게임이 진행되고 있는지 여부

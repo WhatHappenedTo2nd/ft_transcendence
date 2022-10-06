@@ -4,4 +4,5 @@ export default interface IChatListrops {
 	password: string;
 	is_private: boolean;
 	now_playing: boolean;
+	host: number;
 };

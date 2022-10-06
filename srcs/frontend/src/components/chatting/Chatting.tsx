@@ -9,7 +9,7 @@ import {
   } from '../../styles/chat.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getLoginUserData } from '../../api/api';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
@@ -23,6 +23,7 @@ import { getCookie } from '../../api/cookieFunc';
 **/
 
 function Chatting(props: any) {
+	const queryClient = useQueryClient();
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
 	const [message, setMessage] = useState<string>('');
@@ -90,6 +91,7 @@ function Chatting(props: any) {
 		socket.emit('leave-room', { roomName, userIntraId: getCookie("intra_id") }, () => {
 			navigate('/chatting');
 		});
+		queryClient.invalidateQueries('roomuser');
 	}, [navigate, roomName]);
 
 	return (
