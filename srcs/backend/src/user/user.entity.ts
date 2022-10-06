@@ -68,3 +68,8 @@ export class User extends BaseEntity {
 	})
 	roomId: string;
 }
+
+/**
+ * 2022/10/06
+ * 유저엔티티 nullable 추가!
+ */
