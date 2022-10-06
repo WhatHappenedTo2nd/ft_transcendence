@@ -55,12 +55,7 @@ export default class GameData {
 
 	drawPaddle(paddleData: IPlayer)
 	{
-		if (this.context) {
-			this.context.save();
-			this.context.fillStyle = paddleData.color;
-			this.context.fillRect(paddleData.x, paddleData.y, paddleData.width, paddleData.height);
-			this.context.restore();
-		}
+		this.drawRectangle(paddleData.x, paddleData.y, paddleData.width, paddleData.height, paddleData.color);
 	}
 
 	drawBall(ballData: IBall)

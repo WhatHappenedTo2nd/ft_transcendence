@@ -24,7 +24,22 @@ import { getLoginUserData } from '../../api/api'
  */
 let socket: Socket;
 
+const ChatContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #000;
+	padding: 1rem;
+
+	min-height: 360px;
+	max-height: 600px;
+	width: 100%
+	overflow: auto;
+
+	background-color: black;
+`;
+
 const QueueButtonStyleC = styled.button`
+	hegiht: 50px;
 	width: 100%
 `;
 
@@ -163,7 +178,7 @@ function Game() {
 								</QueueButtonStyleC>
 							</div>
 						)}
-						<GameRooms gameRooms={gameRooms} socket={socket} />
+						{/* <GameRooms gameRooms={gameRooms} socket={socket} /> */}
 					</>
 				)}
 		</div>
