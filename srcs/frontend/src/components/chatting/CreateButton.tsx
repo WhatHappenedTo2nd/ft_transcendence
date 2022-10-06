@@ -72,7 +72,7 @@ function CreateButton() {
 			onClick={onOpen}
 			>
 			Create
-		</Button>;
+		</Button>
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent>

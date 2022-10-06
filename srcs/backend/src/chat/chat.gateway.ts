@@ -106,7 +106,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	) {
 		const user = await this.userRepository.findByIntraId(userIntraId);
 		socket.join(roomName); // join room
-		console.log(user);
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
 		if (password && (password !== room.password)) {
 			return { success: false };
