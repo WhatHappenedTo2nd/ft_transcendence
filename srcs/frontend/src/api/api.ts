@@ -87,6 +87,7 @@ export const getGameHistory = async (id: number) => {
 	return gameHistory;
 }
 
+
 /**
  * 2022/09/28
  * hkwon - 게임 히스토리 api작성

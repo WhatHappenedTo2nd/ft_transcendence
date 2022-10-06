@@ -44,12 +44,7 @@ function ChattingRoomPage() {
 								}}/>
 							</GridItem>
 							<GridItem area={'create'}>
-								<CreateButton
-								title="create"
-								onClick={() => {
-									navigate("/chattingroom");
-									console.log("채팅방 생성");
-								}}/>
+								<CreateButton />
 							</GridItem>
 						</Grid>
 					</GridItem>

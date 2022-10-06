@@ -48,6 +48,22 @@ export class UserRepository extends Repository<User> {
 		return user;
 	}
 
+	async findById(id: number): Promise<User> {
+		const user: User = await this.findOneBy({id});
+		if (user == null) {
+			throw new NotFoundException(`User not found`);
+		}
+		return user;
+	}
+
+	async findByIntraId(intra: string): Promise<User> {
+		const user: User = await this.findOneBy({intra_id: intra});
+		if (user == null) {
+			throw new NotFoundException(`User not found`);
+		}
+		return user;
+	}
+
 	async infoUser(user: User): Promise<UserDefaultDto> {
 		const result: UserDefaultDto = {
 			id: user.id,

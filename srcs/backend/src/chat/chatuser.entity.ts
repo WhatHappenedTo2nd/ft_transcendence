@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "src/user/user.entity";
 import { Chat } from "./chat.entity";
 
@@ -15,10 +15,12 @@ import { Chat } from "./chat.entity";
  
 	 // 채팅방 객체
 	 @ManyToOne(() => Chat, (chat) => chat.id)
+	 @JoinColumn()
 	 chat_id: Chat;
  
 	 // 유저 객체
 	 @ManyToOne(() => User, (user) => user.id)
+	 @JoinColumn()
 	 user_id: User;
  
 	 // 음소거된 유저인지 여부

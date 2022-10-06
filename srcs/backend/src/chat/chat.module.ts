@@ -5,12 +5,14 @@ import { ChatRepository } from './chat.repository';
 import { TypeOrmExModule } from '../typeorm-ex/typeorm-ex.module';
 import { ChatGateway } from './chat.gateway';
 import { ChatUserRepository } from './chatuser.repository';
+import { UserRepository } from 'src/user/user.repository';
 
 @Module({
   imports: [
     TypeOrmExModule.forCustomRepository([
       ChatRepository,
       ChatUserRepository,
+      UserRepository,
     ])
   ],
   providers: [ChatService, ChatGateway],

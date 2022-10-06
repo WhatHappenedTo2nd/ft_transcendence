@@ -9,11 +9,12 @@ import {
   } from '../../styles/chat.styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getLoginUserData } from '../../api/api';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
 import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
+import { getCookie } from '../../api/cookieFunc';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -22,6 +23,7 @@ import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 **/
 
 function Chatting(props: any) {
+	const queryClient = useQueryClient();
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
 	const [message, setMessage] = useState<string>('');
@@ -86,9 +88,10 @@ function Chatting(props: any) {
 	);
 		
 	const onLeaveRoom = useCallback(() => {
-		socket.emit('leave-room', { roomName, name }, () => {
+		socket.emit('leave-room', { roomName, userIntraId: getCookie("intra_id") }, () => {
 			navigate('/chatting');
 		});
+		queryClient.invalidateQueries('roomuser');
 	}, [navigate, roomName]);
 
 	return (
