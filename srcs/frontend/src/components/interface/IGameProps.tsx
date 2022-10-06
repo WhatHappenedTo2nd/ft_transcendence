@@ -20,6 +20,8 @@ export enum GameState {
 	PLAYER_TWO_SCORED,
 	PLAYER_ONE_WIN,
 	PLAYER_TWO_WIN,
+	PLAYER_ONE_OUT,
+	PLAYER_TWO_OUT,
 }
 
 export interface IKey {
