@@ -107,7 +107,7 @@ export class UserService {
 		return user;
 	}
 
-	/* 
+	/*
 	* 유저가 입력한 2차인증 코드 확인
 	* 맞으면 tfaAuthorized 테이블이 true로 변함
 	* @param id
@@ -179,16 +179,16 @@ export class UserService {
 	 * @param isWinner
 	 * @returns
 	 */
-	async updateStatus(user: User, isWinner: boolean) {
+	async updateStatus(user: User, isWinner: boolean): Promise<User> {
 		if (isWinner) {
 			user.wins += 1;
 		}
 		else {
 			user.losses += 1;
 		}
-		user.ratio = (user.wins / (user.wins + user.losses)) * 100;
-		const updatedUser = await this.userRepository.save(user);
-		return updatedUser;
+		user.ratio = user.wins - user.losses;
+		// user.ratio = Math.abs((user.wins / (user.wins + user.losses)) * 100);
+		return await this.userRepository.save(user);
 	}
 }
 

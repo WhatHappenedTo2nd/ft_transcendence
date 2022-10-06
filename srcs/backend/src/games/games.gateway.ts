@@ -159,7 +159,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		this.rooms.forEach((room: Room) => {
 			/** 게임 방에 있다면 우선 유저부터 방에서 지운다 */
 			// if (room.isAPlayer(gameuser)) {
-			if (room.isAPlayer(gameuser) && room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN) {
+			if (room.isAPlayer(gameuser)) {
 				if (gameuser === room.paddleOne.gameuser)
 				{
 					this.logger.log(`게임을 떠난 유저는 패들 1 : ${gameuser.nickname}입니다.`);
@@ -453,7 +453,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		if (room.players.length === 0) {
 			this.logger.log('leaveRoom: 더 이상 유저가 남아있지 않습니다. 게임을 저장하세요.');
 			/** 방에 유저는 없지만 게임은 종료된 상태 */
-			if ((room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN))
+			if ((room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN) || room.gameState !== GameState.GAME_SAVED)
 			{
 				/** 방의 현재 시간과 방이 생성된 시간의 차이 */
 				this.logger.log('leaveRoom: saveGame 정상적인 게임종료를 실행합니다.');
@@ -518,6 +518,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				loser_id = room.paddleTwo.gameuser.id;
 				win_score = 1;
 				lose_score = -1;
+				room.gameState = GameState.GAME_SAVED;
 			}
 		} /** Player2 승리 */
 		else if (room.gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.PLAYER_ONE_OUT) {
@@ -538,6 +539,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				loser_id = room.paddleOne.gameuser.id;
 				win_score = 1;
 				lose_score = -1;
+				room.gameState = GameState.GAME_SAVED;
 			}
 		}
 		this.logger.log(`winner_id: ${winner_id}, loser_id: ${loser_id}, win_score: ${win_score}, lose_score: ${lose_score}, mode: ${room.mode}`);
