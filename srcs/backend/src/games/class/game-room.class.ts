@@ -3,7 +3,7 @@ import { Paddle } from "./game-paddle.class";
 import { GameUser } from "./game-user.class";
 import { GameMode, GameState } from "../enum/games.enum";
 import { CANVAS_WIDTH, MAX_GOAL } from "../constant/games.constant";
-
+import { Logger } from "@nestjs/common";
 export interface IRoom {
 	roomId: string;
 	gameState: GameState;
@@ -34,10 +34,10 @@ export type SerializeRoom = {
 			id: number;
 			nickname: string;
 		};
-		width: number;
-		hegiht: number;
 		x: number;
 		y: number;
+		width: number;
+		height: number;
 		color: string;
 		goal: number;
 	};
@@ -46,10 +46,10 @@ export type SerializeRoom = {
 			id: number;
 			nickname: string;
 		};
-		width: number;
-		hegiht: number;
 		x: number;
 		y: number;
+		width: number;
+		height: number;
 		color: string;
 		goal: number;
 	};
@@ -71,10 +71,11 @@ export type SerializeRoom = {
 }
 
 export default class Room implements IRoom {
+	private logger: Logger = new Logger('Room');
 	roomId: string;
 	gameState: GameState;
 	players: GameUser[];
-	spectators: GameUser[]; //관중
+	// spectators: GameUser[]; //관중
 	paddleOne: Paddle;
 	paddleTwo: Paddle;
 	ball: Ball;
@@ -95,9 +96,9 @@ export default class Room implements IRoom {
 		this.roomId = roomId;
 		this.gameState = GameState.STARTING;
 		this.players = [];
-		this.spectators = [];
-		this.paddleOne = new Paddle(gameusers[0],  CANVAS_WIDTH/2 - 300, customisation.mode);
-		this.paddleTwo = new Paddle(gameusers[1], CANVAS_WIDTH/2 + 300, customisation.mode);
+		// this.spectators = [];
+		this.paddleOne = new Paddle(gameusers[0], 10, customisation.mode);
+		this.paddleTwo = new Paddle(gameusers[1], CANVAS_WIDTH - 40, customisation.mode);
 		this.ball = new Ball(customisation.mode);
 		this.timestampStart = Date.now();
 		this.lastUpdate = Date.now();
@@ -123,24 +124,24 @@ export default class Room implements IRoom {
 	 * @param gameusers
 	 * @returns
 	 */
-	isASpectator(gameusers: GameUser): boolean {
-		/**
-		 * @func findIndex: 주어진 판별 함수를 만족하는 배열의 첫 번째 요소에 대한 인덱스를 반환합니다. 만족하는 요소가 없으면 -1을 반환합니다.
-		 * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
-		 * 배열의 요소에서 value 속성 값이 gameusers.id인 배열의 요소를 반환
-		 */
-		/**
-		 * 관전자 배열에 유저가 있는지 확인
-		 * 배열 안에 관전자로 있다면 true, 없다면 false
-		 */
-		const index = this.spectators.findIndex((value) => {
-			return value.id === gameusers.id;
-		});
-		if (index === -1) {
-			return false;
-		}
-		return true;
-	}
+	// isASpectator(gameusers: GameUser): boolean {
+	// 	/**
+	// 	 * @func findIndex: 주어진 판별 함수를 만족하는 배열의 첫 번째 요소에 대한 인덱스를 반환합니다. 만족하는 요소가 없으면 -1을 반환합니다.
+	// 	 * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
+	// 	 * 배열의 요소에서 value 속성 값이 gameusers.id인 배열의 요소를 반환
+	// 	 */
+	// 	/**
+	// 	 * 관전자 배열에 유저가 있는지 확인
+	// 	 * 배열 안에 관전자로 있다면 true, 없다면 false
+	// 	 */
+	// 	const index = this.spectators.findIndex((value) => {
+	// 		return value.id === gameusers.id;
+	// 	});
+	// 	if (index === -1) {
+	// 		return false;
+	// 	}
+	// 	return true;
+	// }
 
 	findOne(gameuser: GameUser): number {
 		return this.players.findIndex((element) => element.id === gameuser.id);
@@ -148,10 +149,6 @@ export default class Room implements IRoom {
 
 	addUser(gameuser: GameUser) {
 		this.players.push(gameuser);
-	}
-
-	addSpectator(gameuser: GameUser) {
-		this.spectators.push(gameuser);
 	}
 
 	getUser(): GameUser[] {
@@ -164,13 +161,16 @@ export default class Room implements IRoom {
 			this.players.splice(userIndex, 1);
 		}
 	}
+	// addSpectator(gameuser: GameUser) {
+	// 	this.spectators.push(gameuser);
+	// }
 
-	removeSpectator(gameuser: GameUser) {
-		const userIndex: number = this.spectators.findIndex((value) => value.nickname === gameuser.nickname);
-		if (userIndex !== -1) {
-			this.spectators.splice(userIndex, 1);
-		}
-	}
+	// removeSpectator(gameuser: GameUser) {
+	// 	const userIndex: number = this.spectators.findIndex((value) => value.nickname === gameuser.nickname);
+	// 	if (userIndex !== -1) {
+	// 		this.spectators.splice(userIndex, 1);
+	// 	}
+	// }
 
 	getDuration(): number {
 		let duration: number = Date.now() - this.timestampStart;
@@ -223,68 +223,6 @@ export default class Room implements IRoom {
 		});
 		this.timer = time;
 	}
-
-	/** Key event */
-
-	// KeyEvent(room: Room, key:string, id: number, bool: boolean) : void {
-	// 	if (bool){
-	// 		if (key === 'ArrowUp') {
-	// 			room.paddleOne.up = true;
-	// 		}
-	// 		if (key === 'ArrowDown') {
-	// 			room.paddleOne.down = true;
-	// 		}
-	// 		if (room.paddleOne.mode === GameMode.BIG && key === 'Arrowleft') {
-	// 			room.paddleOne.left = true;
-	// 		}
-	// 		if (room.paddleOne.mode === GameMode.BIG && key === 'Arrowright') {
-	// 			room.paddleOne.right = true;
-	// 		}
-	// 		if (room.paddleOne.mode === GameMode.BIG  && key === 'Q') {
-	// 			room.paddleOne.flash = true;
-	// 			room.paddleTwo.flash = true;
-	// 			room.ball.flash = true;
-	// 		}
-	// 	}
-	// 	else {
-	// 		if (key === 'ArrowUp') {
-	// 			room.paddleTwo.up = true;
-	// 		}
-	// 		if (key === 'ArrowDown') {
-	// 			room.paddleTwo.down = true;
-	// 		}
-	// 		if (room.paddleTwo.mode === GameMode.BIG && key === 'Arrowleft') {
-	// 			room.paddleTwo.left = true;
-	// 		}
-	// 		if (room.paddleTwo.mode === GameMode.BIG && key === 'Arrowright') {
-	// 			room.paddleTwo.right = true;
-	// 		}
-	// 		if (room.paddleTwo.mode === GameMode.BIG  && key === 'Q') {
-	// 			room.paddleOne.flash = true;
-	// 			room.paddleTwo.flash = true;
-	// 			room.ball.flash = true;
-	// 		}
-	// 	}
-	// }
-	KeyEvent(paddleOne:Paddle, paddleTwo:Paddle, ball:Ball, key:string, bool: boolean) : void {
-		if (key === 'ArrowUp') {
-			paddleOne.up = bool;
-		}
-		if (key === 'ArrowDown') {
-			paddleOne.down = bool;
-		}
-		if (paddleOne.mode === GameMode.BIG && key === 'Arrowleft') {
-			paddleOne.left = bool;
-		}
-		if (paddleOne.mode === GameMode.BIG && key === 'Arrowright') {
-			paddleOne.right = bool;
-		}
-		if (paddleOne.mode === GameMode.BIG  && key === 'Q') {
-			paddleOne.flash = bool;
-			paddleTwo.flash = bool;
-			ball.flash = bool;
-		}
-	}
 	/**
 	 * 골이 들어갔을 때(점수가 났을 때) 실행
 	 */
@@ -298,7 +236,7 @@ export default class Room implements IRoom {
 		 * 최대 점수에 도달 -> PLAYER_WIN
 		 * 그렇지 않으면 -> PLAYER_SCORE
 		 */
-			if ((this.mode === GameMode.DEFAULT || this.mode === GameMode.BIG) &&
+			if ((this.mode === GameMode.DEFAULT || this.mode === GameMode.HARD) &&
 				(this.paddleOne.goal === this.maxGoal || this.paddleTwo.goal === this.maxGoal))
 			{
 				if(this.paddleOne.goal === this.maxGoal) {
@@ -332,7 +270,7 @@ export default class Room implements IRoom {
 
 	pauseForfait() {
 		if (this.players[0].id === this.paddleOne.gameuser.id) {
-			this,this.changeGameState(GameState.PLAYER_ONE_WIN);
+			this.changeGameState(GameState.PLAYER_ONE_WIN);
 		} else {
 			this.changeGameState(GameState.PLAYER_TWO_WIN);
 		}
@@ -348,7 +286,7 @@ export default class Room implements IRoom {
 					nickname: this.paddleOne.gameuser.nickname,
 				},
 				width: this.paddleOne.width,
-				hegiht: this.paddleOne.height,
+				height: this.paddleOne.height,
 				x: this.paddleOne.x,
 				y: this.paddleOne.y,
 				color: this.paddleOne.color,
@@ -360,7 +298,7 @@ export default class Room implements IRoom {
 					nickname: this.paddleTwo.gameuser.nickname,
 				},
 				width: this.paddleTwo.width,
-				hegiht: this.paddleTwo.height,
+				height: this.paddleTwo.height,
 				x: this.paddleTwo.x,
 				y: this.paddleTwo.y,
 				color: this.paddleTwo.color,

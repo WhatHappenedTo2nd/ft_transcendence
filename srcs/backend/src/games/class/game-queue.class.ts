@@ -73,10 +73,11 @@ export default class Queue {
 		let players: Array<GameUser> = Array();
 		let firstPlayer: GameUser = this.dequeue();
 		let secondPlayerId: number = 0;
-		let difference: number = Math.abs(firstPlayer.ratio - this.queue[0].ratio);
+		// let difference: number = Math.abs(firstPlayer.ratio - this.queue[0].ratio);
 
 		for (let i = 1; i < this.size(); i++) {
-			if (firstPlayer.mode === this.queue[i].mode && Math.abs(firstPlayer.ratio - this.queue[i].ratio) < difference)
+			// if (firstPlayer.mode === this.queue[i].mode && Math.abs(firstPlayer.ratio - this.queue[i].ratio) < difference)
+			if (firstPlayer.mode === this.queue[i].mode)
 				secondPlayerId = i;
 		}
 

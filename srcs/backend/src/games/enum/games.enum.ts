@@ -28,7 +28,6 @@ export enum UserStatus {
  * PLAYER_TWO_SCORED
  * PLAYER_ONE_WIN
  * PLAYER_TWO_WIN
- * END_GAME
  */
 export enum GameState {
 	WAITING,
@@ -40,18 +39,18 @@ export enum GameState {
 	PLAYER_TWO_SCORED,
 	PLAYER_ONE_WIN,
 	PLAYER_TWO_WIN,
-	END_GAME,
+	PLAYER_ONE_OUT,
+	PLAYER_TWO_OUT,
+	GAME_SAVED,
 }
 /**
  * 게임 모드
  *
  * DEFAULT
- * TIMER
- * LIFE
  */
 export enum GameMode {
 	DEFAULT,
-	BIG,
+	HARD,
 }
 
 /**

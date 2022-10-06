@@ -17,12 +17,12 @@ const GameRoomliStyleC = styled.li`
 	text-align: center;
 `;
 
-const SpectateButtonSyteldC = styled.button`
-	margin-top: 10px;
-	border: none;
-	color: red;
-	background-color: black;
-`;
+// const SpectateButtonSyteldC = styled.button`
+// 	margin-top: 10px;
+// 	border: none;
+// 	color: red;
+// 	background-color: black;
+// `;
 
 interface IGameRoomProps {
 	gameRooms: IRoom[];
@@ -34,9 +34,9 @@ const GameRoomListStyledC = styled.ul`
 `;
 
 function GameRooms({ gameRooms, socket }: IGameRoomProps) {
-	const onEnterGameRoom = ( event: React.MouseEvent<HTMLButtonElement>) => {
-		socket.emit('spectateRoom', event.currentTarget.value);
-	};
+	// const onEnterGameRoom = ( event: React.MouseEvent<HTMLButtonElement>) => {
+	// 	socket.emit('spectateRoom', event.currentTarget.value);
+	// };
 	// console.log("===========GameRoom 생성 함수 입니다!============");
 	// console.log("GameRoom의 데이터는 ", gameRooms);
 	return (
@@ -45,9 +45,8 @@ function GameRooms({ gameRooms, socket }: IGameRoomProps) {
 				gameRooms.map((gameRoom) => {
 				return (
 					<GameRoomliStyleC key={gameRoom.roomId}>
-						<SpectateButtonSyteldC onClick={onEnterGameRoom}
-						type='button' value={gameRoom.roomId}>
-						</SpectateButtonSyteldC>
+						{/* <SpectateButtonSyteldC onClick={onEnterGameRoom} type='button' value={gameRoom.roomId}>
+						</SpectateButtonSyteldC> */}
 						<PlayerInfo leftPlayer={gameRoom.paddleOne} rightPlayer={gameRoom.paddleTwo} />
 					</GameRoomliStyleC>
 				);
