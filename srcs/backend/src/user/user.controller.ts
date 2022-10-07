@@ -16,10 +16,10 @@ import e from 'express';
 export class UserController {
 	private logger = new Logger('UserController');
 	constructor(
-		private userService: UserService, 
+		private userService: UserService,
 		private friendService: FriendService) {}
 
-	/* 
+	/*
 	*  로그인한 모든 유저의 정보를 리턴
 	*/
 	@Get()
@@ -28,7 +28,7 @@ export class UserController {
 		return users;
 	}
 
-	/* 
+	/*
 	*  유저 본인의 정보를 리턴
 	*/
 	@Get('/me')
@@ -36,7 +36,7 @@ export class UserController {
 		return this.userService.infoUser(user);
 	}
 
-	/* 
+	/*
 	*  프로필 사진 저장, 닉네임 저장
 	*  multer를 이용해 multipart/form-data 로 넘어온 파일 관리
 	*  사진 한 장이므로 uploadedfile() 사용
@@ -44,7 +44,7 @@ export class UserController {
 	@Post('/me')
 	@UseInterceptors(FileInterceptor('file', multerOptions))
 	async updateUserProfile(@Req() req, @UploadedFile() file) {
-		
+
 		const nickname = req.body.nickname;
 
 		const user = await this.getMe(req.user);
@@ -55,7 +55,7 @@ export class UserController {
 	async getOnlineUser(@GetUser() user: User): Promise<User[]> {
 		const users = await this.userService.getUserList();
 		const friend = await this.friendService.getFriendId(user);
-		
+
 		const newuser: User[] = [];
 		users.forEach((u) => {
 			if (!friend.includes(u.id)) {
@@ -82,8 +82,8 @@ export class UserController {
 	async getOtherByNickname(@Param('nickname') nickname: string): Promise<User> {
 		return this.userService.getUserByNickname(nickname);
 	}
-	
-	/* 
+
+	/*
 	*  파라미터로 받은 닉네임과 일치하는 유저 정보 리턴
 	*/
 	@Post('/me/tfa')

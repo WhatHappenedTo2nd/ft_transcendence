@@ -13,9 +13,9 @@ export class GameUser {
 	roomId?: string;
 	wins?: number;
 	losses?: number;
-	ratio?: number;
+	ratio?: string;
 
-	constructor( id: number, nickname: string, avatar: string,  wins?: number, losses?: number, ratio?:number, socketId?: string ) {
+	constructor( id: number, nickname: string, avatar: string,  wins?: number, losses?: number, ratio?:string, socketId?: string ) {
 		this.id = id;
 		this.nickname = nickname;
 		this.avatar = avatar;

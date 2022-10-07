@@ -25,7 +25,7 @@ export class GamesController {
 		return gameusers;
 	}
 
-	@Get('/:id')
+	@Get('/id')
 	async findByGameUser(@Param('id') id: number): Promise<Games[]> {
 		const games = await this.gamesService.find(id);
 		this.logger.log(`game 데이터는 ${games} 입니다.`);
@@ -39,12 +39,6 @@ export class GamesController {
 			const win_score = games[i].win_score;
 			const lose_score = games[i].lose_score;
 
-			this.logger.log(`gameGateway id : ${games[i].id}`);
-			this.logger.log(`gameGateway me : ${id}`);
-			this.logger.log(`gameGateway winner : ${winner}`);
-			this.logger.log(`gameGateway loser : ${loser}`);
-			this.logger.log(`gameGateway win_score: ${win_score}`);
-			this.logger.log(`gameGatewaylose_score: ${lose_score}`);
 
 			response.push({
 				id:games[i].id,
