@@ -111,7 +111,8 @@ function Chatting(props: any) {
 				<UserContextMenu
 				userId={chat.id}
 				name={chat.name}
-				mode='chat'>
+				mode='chat'
+				>
 					{chat.name
 					? socket.id === chat.socket_id
 						? ''
