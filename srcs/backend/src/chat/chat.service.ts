@@ -83,4 +83,11 @@ export class ChatService {
 
 		await this.chatUserRepository.unMuteUser(room, target);
 	}
+
+	async moveHostUser(roomname: string, targetname: string): Promise<void> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+
+		await this.chatRepository.succedingHost(room, target);
+	}
 }

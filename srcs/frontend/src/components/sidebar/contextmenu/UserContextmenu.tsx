@@ -10,6 +10,7 @@ import AddFriendMenu from "./UI/AddFriendMenu";
 import BlockMenu from "./UI/BlockMenu";
 import RemoveFriendMenu from "./UI/RemoveFriendMenu";
 import MuteMenu from "./UI/MuteMenu";
+import HostApproveMenu from "./UI/HostApproveMenu";
 
 export type UserContextMenuType = 'friend' | 'chat' | 'online';
 
@@ -153,7 +154,9 @@ export default function UserContextMenu({
 							target={name} />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.ADMIN_APPROVE}>
-							<MenuItem>관리자 임명하기</MenuItem>
+							<HostApproveMenu
+							label="운영자 임명"
+							target={name} />
 						</UserContextMenuItem>
 					</MenuList>
 				)}
