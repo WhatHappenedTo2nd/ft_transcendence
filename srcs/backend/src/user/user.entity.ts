@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Games } from "src/games/games.entity";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 /**
  * User 테이블. 유저의 회원 정보를 저장함.
@@ -58,15 +59,18 @@ export class User extends BaseEntity {
 
 	@Column({
 		nullable: true,
-		default: 0,
+		// default: 0,
 	})
-	ratio: number;
+	ratio: string;
 
 	@Column({
 		nullable: true,
 		default: '',
 	})
 	roomId: string;
+
+	@ManyToMany(() => Games, (game)=>game.players)
+	games: Games[];
 }
 
 /**
