@@ -40,4 +40,9 @@ export class ChatController {
 	async unMuteUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
 		await this.chatService.unMuteUser(roomname ,targetname);
 	}
+
+	@Patch('/host/:roomname/:targetname')
+	async moveHostUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
+		await this.chatService.moveHostUser(roomname ,targetname);
+	}
 }
