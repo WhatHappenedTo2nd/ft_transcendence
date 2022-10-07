@@ -9,7 +9,7 @@ export class UserDefaultDto {
 	intra_id: string;
 
 	nickname: string;
-	
+
 	avatar: string;
 
 	is_online: boolean;
@@ -26,5 +26,5 @@ export class UserDefaultDto {
 
 	losses: number;
 
-	ratio: number;
+	ratio: string;
 }

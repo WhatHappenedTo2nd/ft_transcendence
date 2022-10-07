@@ -27,9 +27,11 @@ export class Games extends BaseEntity {
 	/**
 	 * 추가로 필요한 데이터
 	 */
-	@ManyToOne(() => User, (user) => user.id, {
-		cascade: true,
-	})
+	// @ManyToOne(() => User, (user) => user.id, {
+	// 	cascade: true,
+	// })
+	@ManyToMany(() => User, (user) => user.games)
+	@JoinTable()
 	players: User[];
 	// @JoinTable()
 
