@@ -62,4 +62,18 @@ export class ChatUserRepository extends Repository<ChatUser> {
 		});
 		return newHost.user_id;
 	}
+
+	async isMutedUser(user: User): Promise<ChatUser> {
+		const mutedUser = this.findOne({
+			relations: {
+				chat_id: true,
+				user_id: true,
+			},
+			where: {
+				user_id: {id: Equal(user.id)},
+				is_muted: true,
+			},
+		});
+		return mutedUser;
+	}
 }
