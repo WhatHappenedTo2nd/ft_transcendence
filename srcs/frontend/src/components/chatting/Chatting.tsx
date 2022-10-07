@@ -80,7 +80,7 @@ function Chatting(props: any) {
 
 			// socket.emit()에서 첫 번째 인자에는 이벤트 이름을, 두 번째 인자에는 전송할 데이터를,
 			// 세 번째 인자에는 콜백 함수로 서버에서 응답이 오면 실행할 함수를 넣어준다. 콜백 함수의 인자로는 서버에서 보내준 데이터가 들어온다.
-			socket.emit('message', { roomName, message, name }, (chat: IChat) => {
+			socket.emit('message', { roomName, message, name, userIntraId: getCookie("intra_id") }, (chat: IChat) => {
 				setChats((prevChats) => [...prevChats, chat]);
 				setMessage('');
 			});
