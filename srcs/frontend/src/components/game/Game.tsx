@@ -24,23 +24,23 @@ import { getLoginUserData } from '../../api/api'
  */
 let socket: Socket;
 
-const ChatContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	border: 1px solid #000;
-	padding: 1rem;
-
-	min-height: 360px;
-	max-height: 600px;
-	width: 100%
-	overflow: auto;
-
-	background-color: black;
-`;
-
 const QueueButtonStyleC = styled.button`
 	height: 50px;
 	width: 100%
+	color: white;
+	padding: 10px;
+`;
+
+const Button = styled.button`
+	display: inline-block;
+	color: white;
+	width: 30%;
+	font-size: 1em;
+	margin: 1em;
+	padding: 0.25em 1em;
+	border: 2px solid white;
+	border-radius: 3px;
+	display: block;
 `;
 
 /**
@@ -164,18 +164,18 @@ function Game() {
 					<>
 						{queue ?
 						(
-							<QueueButtonStyleC type="button" onClick={leaveQueue}>
-								게임 매칭 취소
-							</QueueButtonStyleC>
+							<Button type="button" onClick={leaveQueue}>
+								게임 대기열 나가기
+							</Button>
 						) :
 						(
 							<div>
-								<QueueButtonStyleC type="button" onClick={joinQueue} value="HARD">
+								<Button type="button" onClick={joinQueue} value="HARD">
 									ACTIVE MODE
-								</QueueButtonStyleC>
-								<QueueButtonStyleC type="button" onClick={joinQueue} value="DEFAULT">
+								</Button>
+								<Button type="button" onClick={joinQueue} value="DEFAULT">
 									BASIC MODE
-								</QueueButtonStyleC>
+								</Button>
 							</div>
 						)}
 						{/* <GameRooms gameRooms={gameRooms} socket={socket} /> */}

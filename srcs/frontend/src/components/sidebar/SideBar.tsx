@@ -16,17 +16,17 @@ export default function SideBar(){
 		<Box
 			borderRight= "1px"
 			pos="fixed"
-			w="15% || 700px"
+			w="max(15%, 230px)"
 			h="100%"
-			>
-		<Flex h="20" alignItems="center" mx="8" justifyContent="space-between" onClick={() => {navigate("/home")}}>
-			<Text fontSize="2xl" fontFamily="Establish">
-				2기무슨일이고
-			</Text>
-		</Flex>
-		{data?.length ? <Divider borderColor="black" /> : null}
+		>
+			<Flex h="20" alignItems="center" mx="8" justifyContent="space-between" onClick={() => {navigate("/home")}}>
+				<Text fontSize="2xl" fontFamily="Establish">
+					2기무슨일이고
+				</Text>
+			</Flex>
+			{data?.length ? <Divider borderColor="black" /> : null}
 			<FriendList />
-		<Divider borderColor="black" />
+			<Divider borderColor="black" />
 			{location.pathname.includes(`room`) ? <RoomUserList /> : <OnlineUserList />}
 		</Box>
 	)
