@@ -1,8 +1,7 @@
 import { InternalServerErrorException } from "@nestjs/common";
-import passport from "passport";
 import { CustomRepository } from "src/typeorm-ex/typeorm-ex.decorator";
 import { User } from "src/user/user.entity";
-import { Equal, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Chat } from "./chat.entity";
 import { ChatDto } from "./dto/chat.dto";
 
