@@ -10,6 +10,6 @@ export default interface IUserChatProps {
 	tfaAuthorized: boolean;
 	wins: number;
 	losses: number;
-	ratio: number;
+	ratio: string;
 	is_host: boolean;
 };

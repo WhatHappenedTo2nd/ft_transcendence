@@ -39,7 +39,7 @@ export interface IUser {
 	avatar: string;
 	wins: number;
 	losses: number;
-	ratio: number;
+	ratio: string;
 }
 
 /**

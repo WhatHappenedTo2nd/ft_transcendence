@@ -36,6 +36,18 @@ const LeaveRoomStyleC = styled.button`
 	}
 `;
 
+const LeaveButton = styled.button`
+	display: inline-block;
+	color: white;
+	width: 30%;
+	font-size: 1em;
+	margin: 1em;
+	padding: 0.25em 1em;
+	border: 2px solid white;
+	border-radius: 3px;
+	display: block;
+`;
+
 const Canvas = styled.canvas`
 	width: 100%;
 	box-size: border-box;
@@ -211,9 +223,9 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 
 	return (
 		<div>
-			<LeaveRoomStyleC onClick={leaveRoom} type="button">
+			<LeaveButton onClick={leaveRoom} type="button">
 				게임 방 나가기
-			</LeaveRoomStyleC>
+			</LeaveButton>
 			<PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} />
 			<Canvas id="pong-canvas" width="1920" height="1080" />
 		</div>

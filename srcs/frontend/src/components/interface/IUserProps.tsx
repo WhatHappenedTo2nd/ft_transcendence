@@ -10,5 +10,5 @@ export default interface IUserProps {
 	tfaAuthorized: boolean;
 	wins: number;
 	losses: number;
-	ratio: number;
+	ratio: string;
 };
