@@ -61,12 +61,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	}
 
 	@SubscribeMessage('message')
-	handleMessage(
+	async handleMessage(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomName, message, name }: MessagePayload
+		@MessageBody() { roomName, message, name, userIntraId }: MessagePayload
 	) {
 		const socket_id = socket.id;
-		socket.broadcast.to(roomName).emit('message', { name, message });
+		const user = await this.userRepository.findByIntraId(userIntraId);
+		const mutedUser = await this.chatUserRepository.isMutedUser(user);
+		if (mutedUser && mutedUser.is_muted === true) {
+			;
+		} else {
+			socket.broadcast.to(roomName).emit('message', { name, message });
+		}
 		return { name, message, socket_id };
 	}
 
