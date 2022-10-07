@@ -1,9 +1,21 @@
 import styled from '@emotion/styled';
 
-const LeaveButton = styled.button`
-	margin-bottom: 0.5rem;
+const ChatName = styled.div`
+	display: inline-block;
+	color: black;
+	font-size: 1em;
+	margin: 0 30px;
+	padding: 0.25em 1em;
+	border: 2px solid #53B7BA;
+	border-radius: 3px;
 	display: block;
-	margin-left: auto;
+	width:400px;
+	text-align: center;
+`;
+
+const LeaveButton = styled.button`
+	display: block;
+	margin: 0 2em;
 	color: #53B7BA;
 	styld: bold;
 `;
@@ -13,8 +25,9 @@ const ChatContainer = styled.div`
 	flex-direction: column;
 	border: 1px solid #bec3c9;
 	padding: 1rem;
-
-	min-height: 360px;
+	margin: 0 30px;
+	width: 400px;
+	min-height: 600px;
 	max-height: 600px;
 	overflow: auto;
 
@@ -60,4 +73,4 @@ const MessageForm = styled.form`
 	}
 `;
 
-export { LeaveButton, ChatContainer, MessageBox, Message, MessageForm };
+export { ChatName, LeaveButton, ChatContainer, MessageBox, Message, MessageForm };
