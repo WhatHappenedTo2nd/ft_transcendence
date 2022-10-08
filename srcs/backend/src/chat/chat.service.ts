@@ -6,6 +6,10 @@ import { Equal } from 'typeorm';
 import { ChatUserDefaultDto } from './dto/chatuser-default.dto';
 import { ChatDto } from './dto/chat.dto';
 import { ChatListDto } from './dto/chat.list.dto';
+import { UserRepository } from 'src/user/user.repository';
+import { User } from 'src/user/user.entity';
+import { Chat } from './chat.entity';
+import { ChatGateway } from './chat.gateway';
 
 @Injectable()
 export class ChatService {
@@ -15,6 +19,8 @@ export class ChatService {
 		@InjectRepository(ChatRepository)
 		private chatRepository: ChatRepository,
 		private chatUserRepository: ChatUserRepository,
+		private userRepository: UserRepository,
+		private chatGateWay: ChatGateway,
 	) {}
 
 	async getChatList(): Promise<ChatListDto[]> {
@@ -57,5 +63,31 @@ export class ChatService {
 			roomUserList.push(user);
 		});
 		return roomUserList;
+	}
+
+	async kickUser(roomname: string, targetname: string): Promise<void> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+	}
+
+	async muteUser(roomname: string, targetname: string): Promise<void> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+
+		await this.chatUserRepository.muteUser(room, target);
+	}
+
+	async unMuteUser(roomname: string, targetname: string): Promise<void> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+
+		await this.chatUserRepository.unMuteUser(room, target);
+	}
+
+	async moveHostUser(roomname: string, targetname: string): Promise<void> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+
+		await this.chatRepository.succedingHost(room, target);
 	}
 }

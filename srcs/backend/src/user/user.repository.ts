@@ -77,7 +77,8 @@ export class UserRepository extends Repository<User> {
 			tfaAuthorized: user.tfaAuthorized,
 			wins: user.wins,
 			losses: user.losses,
-			ratio: user.ratio
+			ratio: user.ratio,
+			is_first: user.is_first,
 		};
 		return result;
 	}

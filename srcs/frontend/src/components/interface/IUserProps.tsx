@@ -11,4 +11,5 @@ export default interface IUserProps {
 	wins: number;
 	losses: number;
 	ratio: string;
+	is_first: boolean;
 };

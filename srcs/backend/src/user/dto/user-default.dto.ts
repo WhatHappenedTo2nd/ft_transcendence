@@ -27,4 +27,6 @@ export class UserDefaultDto {
 	losses: number;
 
 	ratio: string;
+
+	is_first: boolean;
 }
