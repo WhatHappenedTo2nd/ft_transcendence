@@ -33,7 +33,6 @@ export class Games extends BaseEntity {
 	@ManyToMany(() => User, (user) => user.games)
 	@JoinTable()
 	players: User[];
-	// @JoinTable()
 
 	@Column({
 		nullable: true,

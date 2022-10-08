@@ -25,10 +25,12 @@ export class GamesController {
 		return gameusers;
 	}
 
-	@Get('/id')
+	@Get('/:id')
 	async findByGameUser(@Param('id') id: number): Promise<Games[]> {
-		const games = await this.gamesService.find(id);
+		const games = await this.gamesService.findAll();
+		// const games = await this.gamesService.findGame(id);
 		this.logger.log(`game 데이터는 ${games} 입니다.`);
+		console.log(games);
 		let response = [];
 
 		for (let i = 0; i < games.length; i++) {
@@ -38,7 +40,6 @@ export class GamesController {
 			const loser = games[i].players.find((value) => value.id === loserId);
 			const win_score = games[i].win_score;
 			const lose_score = games[i].lose_score;
-
 
 			response.push({
 				id:games[i].id,
@@ -52,6 +53,17 @@ export class GamesController {
 
 		return response;
 	}
+
+
+	@Get('/all')
+	async getAllGame(): Promise<Games[]> {
+		console.log("GameController:: api 접근을 했습니다.");
+		this.logger.log('GameController:: api 접근을 했습니다. log');
+		const games = await this.gamesService.findAllGame();
+		console.log(games);
+		return games;
+	}
+
 }
 
 /**

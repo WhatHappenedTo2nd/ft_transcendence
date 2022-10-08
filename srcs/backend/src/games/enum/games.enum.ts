@@ -41,7 +41,8 @@ export enum GameState {
 	PLAYER_TWO_WIN,
 	PLAYER_ONE_OUT,
 	PLAYER_TWO_OUT,
-	GAME_SAVED,
+	GAME_SAVED_ONE_OUT,
+	GAME_SAVED_TWO_OUT,
 }
 /**
  * 게임 모드
