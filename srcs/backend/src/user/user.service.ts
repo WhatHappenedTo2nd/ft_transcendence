@@ -133,6 +133,15 @@ export class UserService {
 		return user;
 	}
 
+	async cancleTFA(id: number, tfaCode: string, email: string, tfaAuthorized: boolean): Promise<User> {
+		const user = await this.getUserById(id);
+		user.email = null;
+		user.tfaCode = null;
+		user.tfaAuthorized = false;
+		await this.userRepository.save(user);
+		return user;
+	}
+
 	async signup(id: number, is_first:boolean): Promise<User> {
 		const user = await this.getUserById(id);
 		user.is_first = false;
