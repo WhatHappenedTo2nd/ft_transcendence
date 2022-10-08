@@ -33,7 +33,7 @@ function SignUp() {
 				}
 			})
 			.then((res) => {
-				alert(`즐거운 게임 되세요!`);
+				alert(`즐거운 게임 되세요!👍`);
 				setisFirst(Boolean);
 				return (res);
 			})
