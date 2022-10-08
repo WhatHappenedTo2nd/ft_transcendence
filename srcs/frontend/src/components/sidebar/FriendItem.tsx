@@ -15,6 +15,7 @@ function FriendItem(props: any) {
 		<UserContextMenu
 		userId={user.id}
 		name={user.nickname}
+		game={user.status === Status.PLAYING}
 		mode='friend'>
 		<HStack>
 			<Box boxSize='10' justifyContent='center' marginStart="2" marginTop="0.5" padding="1" >

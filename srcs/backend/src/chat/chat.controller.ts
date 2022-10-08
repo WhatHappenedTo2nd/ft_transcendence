@@ -4,6 +4,7 @@ import { ChatService } from './chat.service';
 import { ApiTags } from '@nestjs/swagger';
 import { ChatUserDefaultDto } from './dto/chatuser-default.dto';
 import { ChatListDto } from './dto/chat.list.dto';
+import { Chat } from './chat.entity';
 
 @ApiTags('chat')
 @Controller('chat')
@@ -24,6 +25,12 @@ export class ChatController {
 		return roomuser;
 	}
 
+	@Get('/find/:target')
+	async getWhereAreYou(@Param('target') target: string): Promise<Chat> {
+		const room = await this.chatService.getWhereAreYou(target);
+		return room;
+	}
+
 	@Patch('/kick/:roomname/:targetname')
 	async kickUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
 		await this.chatService.kickUser(roomname ,targetname);
@@ -31,8 +38,6 @@ export class ChatController {
 
 	@Patch('/mute/:roomname/:targetname')
 	async muteUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
-		console.log(roomname);
-		console.log(targetname);
 		await this.chatService.muteUser(roomname ,targetname);
 	}
 
@@ -45,4 +50,5 @@ export class ChatController {
 	async moveHostUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
 		await this.chatService.moveHostUser(roomname ,targetname);
 	}
+
 }

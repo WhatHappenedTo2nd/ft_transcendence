@@ -50,6 +50,19 @@ export class ChatUserRepository extends Repository<ChatUser> {
 		return result;
 	}
 
+	async findRowJustUser(user: User): Promise<ChatUser> {
+		const result = await this.findOne({
+			relations: {
+				user_id: true,
+				chat_id: true,
+			},
+			where: {
+				user_id: {id: Equal(user.id)},			
+			},
+		})
+		return result;
+	}
+
 	async findNextHost(room: Chat): Promise<User> {
 		const newHost = await this.findOne({
 			relations: {

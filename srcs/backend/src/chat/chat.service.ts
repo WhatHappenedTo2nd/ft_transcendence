@@ -10,6 +10,7 @@ import { UserRepository } from 'src/user/user.repository';
 import { User } from 'src/user/user.entity';
 import { Chat } from './chat.entity';
 import { ChatGateway } from './chat.gateway';
+import { ChatUser } from './chatuser.entity';
 
 @Injectable()
 export class ChatService {
@@ -89,5 +90,11 @@ export class ChatService {
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
 
 		await this.chatRepository.succedingHost(room, target);
+	}
+
+	async getWhereAreYou(targetname: string): Promise<Chat> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const targetroom: ChatUser = await this.chatUserRepository.findRowJustUser(target);
+		return targetroom.chat_id;
 	}
 }
