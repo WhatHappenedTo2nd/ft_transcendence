@@ -12,4 +12,5 @@ export default interface IUserChatProps {
 	losses: number;
 	ratio: string;
 	is_host: boolean;
+	is_muted: boolean;
 };

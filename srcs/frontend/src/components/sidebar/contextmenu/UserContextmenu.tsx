@@ -9,6 +9,8 @@ import styled from "styled-components";
 import AddFriendMenu from "./UI/AddFriendMenu";
 import BlockMenu from "./UI/BlockMenu";
 import RemoveFriendMenu from "./UI/RemoveFriendMenu";
+import MuteMenu from "./UI/MuteMenu";
+import HostApproveMenu from "./UI/HostApproveMenu";
 
 export type UserContextMenuType = 'friend' | 'chat' | 'online';
 
@@ -142,13 +144,19 @@ export default function UserContextMenu({
 							<MenuItem>추방하기</MenuItem>
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT_MUTE}>
-							<MenuItem>음소거하기</MenuItem>
+							<MuteMenu
+							label="음소거"
+							target={name} />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT_UNMUTE}>
-							<MenuItem>음소거 해제하기</MenuItem>
+							<MuteMenu
+							label="음소거 해제"
+							target={name} />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.ADMIN_APPROVE}>
-							<MenuItem>관리자 임명하기</MenuItem>
+							<HostApproveMenu
+							label="운영자 임명"
+							target={name} />
 						</UserContextMenuItem>
 					</MenuList>
 				)}
