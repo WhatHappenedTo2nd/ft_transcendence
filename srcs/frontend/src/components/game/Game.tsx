@@ -98,10 +98,6 @@ function Game() {
 		 * on/emit : 서버와 연결된 이벤트 처리, 서버에게 메세지 전송
 		 */
 		socket = io('http://localhost:9633/api/games');
-		if (socket)
-		{
-			// console.log("server socket good");
-		}
 		socket = socket.on('connect', () => {
 			socket.emit('handleUserConnect', userData);
 			socket.emit('getCurrentGames');

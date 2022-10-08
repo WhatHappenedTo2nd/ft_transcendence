@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { GameCreateDto } from './dto/game-create.dto';
@@ -9,7 +9,6 @@ import { GamesRepository } from './games.repository';
 
 @Injectable()
 export class GamesService {
-	private logger: Logger = new Logger('GamesService');
 	/**
 	 * @param gamesRepository
 	 */
@@ -33,15 +32,8 @@ export class GamesService {
 	 * @param id
 	 * @returns
 	 */
-	async find(id: number) {
-		const found = await this.gamesRepository.find({
-			where: [{ winner_id: id }, { loser_id: id }],
-			relations: ['players'],
-		});
-		if (!found.length) {
-			return [];
-		}
-		return found;
+	async findGame(id: number) {
+		return this.gamesRepository.findGame(id);
 	}
 
 	async findOne(id: number): Promise<Games> {
@@ -52,13 +44,16 @@ export class GamesService {
 		return game;
 	}
 
+	async findAllGame(): Promise<Games []> {
+		const games = await this.gamesRepository.find({});
+		return games;
+	}
+
 	/**
 	 * GameCreateDto
 	 */
 	async create(gameCreateDto : GameCreateDto): Promise<Games> {
-		this.logger.log(`게임서비스에서 게임을 저장합니다.`);
 		const game = this.gamesRepository.create({ ...gameCreateDto });
-		this.logger.log(`게임서비스/gameDTO에 게임을 저장합니다.`);
 		return await this.gamesRepository.save(game);
 	}
 

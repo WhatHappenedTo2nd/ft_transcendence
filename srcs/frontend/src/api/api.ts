@@ -96,6 +96,11 @@ export const getGameHistory = async (id: number) => {
 	return gameHistory;
 }
 
+export const getAllGameHistory = async () => {
+	const { data: allGameHistory } = await axios.get('/api/games/all');
+	return allGameHistory;
+}
+
 
 /**
  * 2022/09/28

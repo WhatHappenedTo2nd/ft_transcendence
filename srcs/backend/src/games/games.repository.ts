@@ -33,6 +33,16 @@ import { GameCreateDto } from "./dto/game-create.dto";
  */
  @CustomRepository(Games)
 export class GamesRepository extends Repository<Games> {
+	async findGame(id: number) {
+		const found = await this.find({
+			where: [{ winner_id: id }, { loser_id: id }],
+			relations: ['players'],
+		});
+		if (!found.length) {
+			return [];
+		}
+		return found;
+	}
 }
 
 /**

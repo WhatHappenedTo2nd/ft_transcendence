@@ -137,7 +137,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		gameState: GameState,
 		gameData: GameData,
 	) => {
-		if (gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_OUT) {
+		if (gameState === GameState.PLAYER_ONE_WIN || gameState === GameState.GAME_SAVED_TWO_OUT) {
 			gameData.drawCenteredTexture(
 				`${playerOneName} Won!`,
 				gameData.screenWidth / 2,
@@ -146,7 +146,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				'white'
 				);
 			}
-		else if (gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.PLAYER_ONE_OUT) {
+		else if (gameState === GameState.PLAYER_TWO_WIN || gameState === GameState.GAME_SAVED_ONE_OUT) {
 			gameData.drawCenteredTexture(
 				`${playerTwoName} Won!`,
 				gameData.screenWidth / 2,
@@ -193,7 +193,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			else if (room.gameState === GameState.RESUMED) {
 				gameData.drawStartCountDown('READY');
 			}
-			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState ===  GameState.PLAYER_TWO_OUT || room.gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.PLAYER_ONE_OUT) {
+			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState ===  GameState.GAME_SAVED_ONE_OUT || room.gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.GAME_SAVED_TWO_OUT) {
 				gameData.clear();
 				gameEnd(room.roomId, room.paddleOne.gameuser.nickname, room.paddleTwo.gameuser.nickname, room.gameState, gameData);
 			}
