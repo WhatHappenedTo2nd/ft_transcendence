@@ -66,9 +66,33 @@ export default function CheckTFA() {
 		else alert('빈칸으로 제출할 수 없습니다.')
 	};
 
+	const tfaBack = async () => {
+		await axios({
+			method: 'patch',
+			headers: {
+				'content-type': 'application/json',
+				Authorization: 'Bearer ' + getCookie("accessToken")
+			},
+				url: '/user/me/cancleTFA',
+				data: {
+					"email" : null,
+					"tfaCode" : null,
+					"tfaAuthorized" : false,
+				}
+			})
+			.then((res) => {
+				alert(`2차 인증이 취소되었습니다.`);
+				return (res);
+			})
+			.catch((err) => {
+					const errMsg = err.response.data.message;
+					alert(errMsg);
+			});
+	};
+
 	return (
 		<>
-		{(!Mydata?.tfaAuthorized) ? <Button variant='outline' colorScheme='teal' marginLeft={'3'} onClick={onOpen}>{<EmailIcon />}</Button> : <CheckIcon alignSelf={'flex-start'} marginLeft={'3'} color="green.300" w={8} h={8}/>}
+		{(!Mydata?.tfaAuthorized) ? <Button variant='outline' colorScheme='teal' marginLeft={'3'} onClick={onOpen}>{<EmailIcon />}</Button> : <Button alignSelf={'flex-start'} marginLeft={'3'} color="green.300" w={10} h={10} onClick={()=>{tfaBack()}}>{<CheckIcon />}</Button>}
 		
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
