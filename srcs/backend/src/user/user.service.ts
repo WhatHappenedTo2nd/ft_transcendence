@@ -34,13 +34,23 @@ export class UserService {
 		return user;
 	}
 
-	//파라미터로 전달받은 nickname과 일치하는 유저를 리턴
+	//파라미터로 전달받은 파라미터와 일치하는 유저를 리턴
 	async getUserByNickname(nickname: string): Promise<User> {
 		const user = await this.userRepository.findOne({where: {nickname}});
 		if (!user) {
 			throw new NotFoundException(`해당 유저를 찾을 수 없습니다`)
 		}
 		if (!nickname)
+			return ;
+		return user;
+	}
+
+	async getUserByIntraId(intra_id: string): Promise<User> {
+		const user = await this.userRepository.findOne({where: {intra_id}});
+		if (!user) {
+			throw new NotFoundException(`해당 유저를 찾을 수 없습니다`)
+		}
+		if (!intra_id)
 			return ;
 		return user;
 	}
@@ -115,12 +125,17 @@ export class UserService {
 	*/
 	async checkTFACode(id: number, tfaCode: string): Promise<User> {
 		const user = await this.getUserById(id);
-		console.log(tfaCode);
-		console.log(user.tfaCode);
 		if (tfaCode != user.tfaCode)
 			throw new ConflictException('인증 코드를 다시 확인해주세요.')
 		if (tfaCode == user.tfaCode)
 			user.tfaAuthorized = true;
+		await this.userRepository.save(user);
+		return user;
+	}
+
+	async signup(id: number, is_first:boolean): Promise<User> {
+		const user = await this.getUserById(id);
+		user.is_first = false;
 		await this.userRepository.save(user);
 		return user;
 	}

@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Divider, Grid, GridItem } from '@chakra-ui/react'
 import ChoiceBox from "../login/ChoiceBox";
-import SideBar from "../sidebar/SideBar";
+import { useQuery } from "react-query";
+import IUserProps from "../interface/IUserProps";
+import { getLoginUserData } from "../../api/api";
+import SignUp from "../mypage/Signup";
 
 /**
  * 로그인에 성공하면 나오는 프로필/채팅 선택 페이지
@@ -12,7 +15,11 @@ import SideBar from "../sidebar/SideBar";
 function ChoicePage() {
 	const navigate = useNavigate();
 
+	const {data: Mydata} = useQuery<IUserProps>('me', getLoginUserData);
+
 	return (
+		<>
+		{Mydata?.is_first == true ? <SignUp /> : null}
 		<Grid gridTemplateColumns={{
 			base: "9fr",
 			md: "2fr 7fr"
@@ -43,6 +50,7 @@ function ChoicePage() {
 					/>
 			</GridItem>
 		</Grid>
+		</>
 	);
 }
 

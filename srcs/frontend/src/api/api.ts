@@ -61,6 +61,16 @@ export const getUserByNickname = async (nickname: string | undefined) => {
 	return usernick;
 }
 
+export const getUserByIntraid = async (intra_id: string | undefined) => {
+	const { data: intraID } = await axios.get(`/user/profile/${intra_id}`, {
+	method: "GET",
+	headers: {
+		Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
+	return intraID;
+}
+
 export const getBlockList = async() => {
 	const { data: block } = await axios.get('/friend/blocklist', {
 		method: "GET",

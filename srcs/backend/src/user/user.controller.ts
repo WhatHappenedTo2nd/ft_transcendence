@@ -83,6 +83,11 @@ export class UserController {
 		return this.userService.getUserByNickname(nickname);
 	}
 
+	@Get('/profile/:intra_id')
+	async getOtherByIntraId(@Param('intra_id') intra_id: string): Promise<User> {
+		return this.userService.getUserByIntraId(intra_id);
+	}
+
 	/*
 	*  파라미터로 받은 닉네임과 일치하는 유저 정보 리턴
 	*/
@@ -101,5 +106,12 @@ export class UserController {
 		const tfaCode = req.body.tfaCode;
 		const user = await this.getMe(req.user);
 		return this.userService.checkTFACode(user.id, tfaCode);
+	}
+
+	@Post('/me/signup')
+	async signup(@Req() req) {
+		const isFirst = req.body.is_first;
+		const user = await this.getMe(req.user);
+		return this.userService.signup(user.id, isFirst);
 	}
 }

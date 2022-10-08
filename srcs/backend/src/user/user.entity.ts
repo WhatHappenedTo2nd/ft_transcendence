@@ -44,6 +44,9 @@ export class User extends BaseEntity {
 	@Column({ default: false })
 	tfaAuthorized: boolean;
 
+	@Column({default : true})
+	is_first: boolean;
+
 	/** games */
 	@Column({
 		nullable: true,
