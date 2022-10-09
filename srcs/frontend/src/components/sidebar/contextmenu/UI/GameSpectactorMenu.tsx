@@ -1,5 +1,5 @@
-import { MenuItem, Text, useDisclosure, useToast } from '@chakra-ui/react';
-import { useQuery, useQueryClient } from "react-query";
+import { MenuItem, Text, useDisclosure } from '@chakra-ui/react';
+import { useQuery } from "react-query";
 import { useNavigate } from 'react-router-dom';
 import { getWhereAreYou } from '../../../../api/api';
 import { getCookie } from '../../../../api/cookieFunc';
