@@ -78,6 +78,7 @@ export class UserRepository extends Repository<User> {
 			wins: user.wins,
 			losses: user.losses,
 			ratio: user.ratio,
+			socket_id: user.socket_id,
 			is_first: user.is_first,
 		};
 		return result;

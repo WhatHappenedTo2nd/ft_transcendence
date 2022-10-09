@@ -1,4 +1,4 @@
-import { InternalServerErrorException, Logger } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Namespace, Socket } from "socket.io";
 import { ChatRepository } from "./chat.repository";
@@ -7,6 +7,7 @@ import { ChatUser } from "./chatuser.entity";
 import { ChatUserRepository } from "./chatuser.repository";
 import { Equal } from "typeorm";
 import { UserRepository } from "src/user/user.repository";
+import { ChatService } from "./chat.service";
 
 interface MessagePayload {
 	userIntraId: string;
@@ -27,7 +28,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	constructor (
 		private chatRepository: ChatRepository,
 		private chatUserRepository: ChatUserRepository,
-		private userRepository: UserRepository
+		private userRepository: UserRepository,
+		private chatService: ChatService,
 	) {}
 
 	private logger = new Logger('ChatGateWay');
@@ -71,7 +73,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		if (mutedUser && mutedUser.is_muted === true) {
 			;
 		} else {
-			socket.broadcast.to(roomName).emit('message', { name, message });
+			// socket.broadcast.to(roomName).except().emit('message', { name, message });
+			const room = await this.chatRepository.findOneByRoomname(roomName);
+			const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
+			const whoBlockedMe = await this.chatService.findWhoBlockedMe(user, room);
+			chatUsers.forEach((e) => {
+				whoBlockedMe.forEach((elem) => {
+					if (e.user_id === elem) {
+						;
+					} else {
+						// socket.to(elem.socket_id).emit('message', { name, message });
+					}
+				})
+			})
+			// socket.broadcast.to(roomName).emit('message', { name, message });
 		}
 		return { name, message, socket_id };
 	}

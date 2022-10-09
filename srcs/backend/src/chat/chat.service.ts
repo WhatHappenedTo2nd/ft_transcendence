@@ -9,7 +9,7 @@ import { ChatListDto } from './dto/chat.list.dto';
 import { UserRepository } from 'src/user/user.repository';
 import { User } from 'src/user/user.entity';
 import { Chat } from './chat.entity';
-import { ChatGateway } from './chat.gateway';
+import { FriendRepository } from 'src/friend/friend.repository';
 import { ChatUser } from './chatuser.entity';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class ChatService {
 		private chatRepository: ChatRepository,
 		private chatUserRepository: ChatUserRepository,
 		private userRepository: UserRepository,
-		private chatGateWay: ChatGateway,
+		private friendRepository: FriendRepository,
 	) {}
 
 	async getChatList(): Promise<ChatListDto[]> {
@@ -90,6 +90,30 @@ export class ChatService {
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
 
 		await this.chatRepository.succedingHost(room, target);
+	}
+
+	/**
+	 * 채팅방 내에서 날 블락한 사람 찾아서 그 목록 반환
+	 * @param user 나
+	 * @param room 내가 들어간 채팅방
+	 * @returns 날 블락한 사람 목록
+	 */
+	async findWhoBlockedMe(user: User, room: Chat): Promise<User[]> {
+		// ChatUser에서 특정 방에 있는 모든 유저를 가져옴
+		const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
+		console.log(chatUsers);
+
+		const blockedMe: User[] = [];
+		chatUsers.forEach(async (e) => {
+			const row = await this.friendRepository.findRow(e.user_id, user);
+			console.log(row);
+			if (row.block === true) {
+				const blockUser = await this.userRepository.findById(row.user_id.id);
+				console.log(blockUser);
+				blockedMe.push(blockUser);
+			}
+		});
+		return blockedMe;
 	}
 
 	async getWhereAreYou(targetname: string): Promise<Chat> {
