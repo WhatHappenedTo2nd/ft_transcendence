@@ -8,8 +8,10 @@ export default interface IUserProps {
 	email: string;
 	tfaCode:string;
 	tfaAuthorized: boolean;
+	is_first: boolean;
 	wins: number;
 	losses: number;
 	ratio: string;
-	is_first: boolean;
+	roomId: string;
+	socket_id: string;
 };
