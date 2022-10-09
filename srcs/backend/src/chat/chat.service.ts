@@ -101,19 +101,20 @@ export class ChatService {
 	async findWhoBlockedMe(user: User, room: Chat): Promise<User[]> {
 		// ChatUser에서 특정 방에 있는 모든 유저를 가져옴
 		const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
-		console.log(chatUsers);
-
-		const blockedMe: User[] = [];
-		chatUsers.forEach(async (e) => {
+		// 날 블락한 사람들 목록을 담음
+		const blockerList: User[] = [];
+		// forEach는 async await이 안 됨.
+		for (let e of chatUsers) {
+			// Friend 테이블에서 user_id가 채팅방에 있는 어떤 유저, another_id가 나인 row 찾음.
 			const row = await this.friendRepository.findRow(e.user_id, user);
-			console.log(row);
-			if (row.block === true) {
-				const blockUser = await this.userRepository.findById(row.user_id.id);
-				console.log(blockUser);
-				blockedMe.push(blockUser);
+			// 그런 row가 있을 때, block이 true이면 e.user_id가 나를 블락한 것.
+			if (row && row.block === true) {
+				// 날 블락한 사람 찾아서 blockerList에 넣음.
+				const blocker = await this.userRepository.findById(row.user_id.id);
+				blockerList.push(blocker);
 			}
-		});
-		return blockedMe;
+		}
+		return blockerList;
 	}
 
 	async getWhereAreYou(targetname: string): Promise<Chat> {

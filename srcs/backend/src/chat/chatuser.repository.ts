@@ -1,5 +1,6 @@
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { CustomRepository } from "src/typeorm-ex/typeorm-ex.decorator";
+import { UserIdDto } from "src/user/dto/user-id.dto";
 import { User } from "src/user/user.entity";
 import { Equal, Repository } from "typeorm";
 import { Chat } from "./chat.entity";
@@ -7,7 +8,7 @@ import { ChatUser } from "./chatuser.entity";
 
 @CustomRepository(ChatUser)
 export class ChatUserRepository extends Repository<ChatUser> {
-	
+
 	async addUser(room: Chat, user: User): Promise<void> {
 		const check = await this.findRow(room, user);
 		if (check !== null) {
