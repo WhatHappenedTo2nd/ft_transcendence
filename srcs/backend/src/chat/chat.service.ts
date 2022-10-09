@@ -11,6 +11,7 @@ import { User } from 'src/user/user.entity';
 import { Chat } from './chat.entity';
 import { FriendRepository } from 'src/friend/friend.repository';
 import { ChatUser } from './chatuser.entity';
+import { UserIdDto } from 'src/user/dto/user-id.dto';
 
 @Injectable()
 export class ChatService {
@@ -98,22 +99,33 @@ export class ChatService {
 	 * @param room 내가 들어간 채팅방
 	 * @returns 날 블락한 사람 목록
 	 */
-	async findWhoBlockedMe(user: User, room: Chat): Promise<User[]> {
+	async findWhoBlockedMe(user: User, room: Chat): Promise<UserIdDto[]> {
 		// ChatUser에서 특정 방에 있는 모든 유저를 가져옴
+		const blockerList: UserIdDto[] = [];
 		const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
-		console.log(chatUsers);
-
-		const blockedMe: User[] = [];
-		chatUsers.forEach(async (e) => {
-			const row = await this.friendRepository.findRow(e.user_id, user);
-			console.log(row);
-			if (row.block === true) {
-				const blockUser = await this.userRepository.findById(row.user_id.id);
-				console.log(blockUser);
-				blockedMe.push(blockUser);
+		if (blockerList.length === 0) {
+			for (let e of chatUsers) {
+				const row = await this.friendRepository.findRow(e.user_id, user);
+				if (row && row.block === true) {
+					const blocker = new UserIdDto;
+					blocker.id = row.user_id.id;
+					blockerList.push(blocker);
+				}
 			}
-		});
-		return blockedMe;
+
+			// chatUsers.forEach(async (e) => {
+			// 	// another_id가 나인 row가 있는지 확인
+			// 	const row = await this.friendRepository.findRow(e.user_id, user);
+			// 	console.log(`row: ${row}`);
+			// 	if (row && row.block === true) {
+			// 		const blocker = new UserIdDto;
+			// 		blocker.id = row.user_id.id;
+			// 		blockerList.push(blocker);
+			// 	}
+			// });
+		}
+		console.log('blockedMe!!!' + blockerList);
+		return blockerList;
 	}
 
 	async getWhereAreYou(targetname: string): Promise<Chat> {

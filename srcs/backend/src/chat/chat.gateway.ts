@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { InternalServerErrorException, Logger } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Namespace, Socket } from "socket.io";
 import { ChatRepository } from "./chat.repository";
@@ -8,6 +8,10 @@ import { ChatUserRepository } from "./chatuser.repository";
 import { Equal } from "typeorm";
 import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
+import { GetUser } from "src/user/get.user.decorator";
+import { User } from "src/user/user.entity";
+import { UserIdDto } from "src/user/dto/user-id.dto";
+import { FriendRepository } from "src/friend/friend.repository";
 
 interface MessagePayload {
 	userIntraId: string;
@@ -30,6 +34,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		private chatUserRepository: ChatUserRepository,
 		private userRepository: UserRepository,
 		private chatService: ChatService,
+		private friendRepository: FriendRepository
 	) {}
 
 	private logger = new Logger('ChatGateWay');
@@ -62,6 +67,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		this.logger.log(`${socket.id} 소켓 연결 해제`);
 	}
 
+	@SubscribeMessage('save-socket')
+	async saveSocketData(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() { userIntraId }: MessagePayload
+	) {
+		this.logger.log(`현재 socket id: ${socket.id}`);
+		await this.userRepository.saveSocketId(socket.id, userIntraId);
+	}
+
 	@SubscribeMessage('message')
 	async handleMessage(
 		@ConnectedSocket() socket: Socket,
@@ -75,18 +89,39 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		} else {
 			// socket.broadcast.to(roomName).except().emit('message', { name, message });
 			const room = await this.chatRepository.findOneByRoomname(roomName);
+			// 채팅방에 속한 모든 유저 목록을 가져옴
 			const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
+			// 채팅방에 속한 유저들 중 나를 차단한 사람 목록을 가져옴
 			const whoBlockedMe = await this.chatService.findWhoBlockedMe(user, room);
-			chatUsers.forEach((e) => {
-				whoBlockedMe.forEach((elem) => {
-					if (e.user_id === elem) {
+
+			if (whoBlockedMe.length === 0) {
+				this.logger.log('block한 사람이 없어');
+				socket.broadcast.to(roomName).emit('message', { name, message });
+			} else {
+				// for (let e of chatUsers) {
+				// 	this.logger.log('블락한 사람이 있어서 반복문 ㄱ');
+				// 	const res = whoBlockedMe.find((i) => { e.user_id === i });
+				// 	this.logger.log(`나 블락한 사람: ${res}`);
+				// 	if (res) {
+				// 		this.logger.log('얘 나 블락함. 안 보냄');
+				// 	} else {
+				// 		this.logger.log('얜 나 블락 안 함');
+				// 		socket.to(e.user_id.socket_id).emit('message', { name, message });
+				// 	}
+				// }
+				// this.logger.log('반복문 끝');
+				chatUsers.forEach((e) => {
+					this.logger.log('블락한 사람이 있어서 반복문 ㄱ');
+					const res = whoBlockedMe.find((i) => { e.user_id.id === i.id });
+					if (res) {
+						this.logger.log('블락한 사람 찾음. 안 보냄');
 						;
 					} else {
-						// socket.to(elem.socket_id).emit('message', { name, message });
+						this.logger.log('얜 나 블락 안 함');
+						socket.to(e.user_id.socket_id).emit('message', { name, message });
 					}
-				})
-			})
-			// socket.broadcast.to(roomName).emit('message', { name, message });
+				});
+			}
 		}
 		return { name, message, socket_id };
 	}
