@@ -1,5 +1,6 @@
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { CustomRepository } from "src/typeorm-ex/typeorm-ex.decorator";
+import { UserIdDto } from "src/user/dto/user-id.dto";
 import { User } from "src/user/user.entity";
 import { Equal, Repository } from "typeorm";
 import { Chat } from "./chat.entity";

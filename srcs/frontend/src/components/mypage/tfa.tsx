@@ -16,6 +16,7 @@ export default function CheckTFA() {
 
 	const {data: Mydata} = useQuery<UserProps>('me', getLoginUserData);
 
+	//메일주소 입력
 	const mailSubmit = async() => {
 		if (inputValue)
 			await axios({
@@ -42,6 +43,7 @@ export default function CheckTFA() {
 		else alert('빈칸으로 제출할 수 없습니다.')
 	};
 
+	//확인코드 입력
 	const codeSubmit = async() => {
 		if (inputValue)
 			await axios({
@@ -67,6 +69,7 @@ export default function CheckTFA() {
 		else alert('빈칸으로 제출할 수 없습니다.')
 	};
 
+	//입력했던 메일주소, 확인 코드 삭제 및 tfa인증 false로 돌림
 	const tfaBack = async () => {
 		await axios({
 			method: 'patch',
@@ -91,6 +94,10 @@ export default function CheckTFA() {
 			});
 	};
 
+	// tfaAuthorized가 false면 EmailIcon
+	// 메일주소와 확인코드를 받는 모달
+	// 모두 제대로 들어갔으면 checkIcon으로 변환
+	// checkIcon 버튼을 누르면 모든 입력값이 다 초기화
 	return (
 		<>
 		{(!Mydata?.tfaAuthorized) ? <Button variant='outline' colorScheme='teal' marginLeft={'3'} onClick={onOpen}>{<EmailIcon />}</Button> : <Button alignSelf={'flex-start'} marginLeft={'3'} color="green.300" w={10} h={10} onClick={()=>{tfaBack()}}>{<CheckIcon />}</Button>}

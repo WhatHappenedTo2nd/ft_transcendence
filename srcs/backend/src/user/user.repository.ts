@@ -83,4 +83,11 @@ export class UserRepository extends Repository<User> {
 		};
 		return result;
 	}
+
+	async saveSocketId(socket_id: string, userIntraId: string) {
+		const user = await this.findByIntraId(userIntraId);
+		const socketUser = await this.findOne({ where: { id: user.id } });
+		socketUser.socket_id = socket_id;
+		await this.save(socketUser);
+	}
 }

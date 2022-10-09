@@ -10,6 +10,7 @@ import { useQuery } from "react-query";
 import IUserProps from "../interface/IUserProps";
 import { getLoginUserData } from "../../api/api";
 import SignUp from "../mypage/Signup";
+import NotFound from "./NotFound";
 
 export default function HomePage() {
 	const {data: Mydata} = useQuery<IUserProps>('me', getLoginUserData);
@@ -24,6 +25,7 @@ export default function HomePage() {
 			<Route path="/room/:roomName" element={<GamePage />} />
 			<Route path="/game" element={<GamePage />} />
 			<Route path="/waiting" element={<WaitingRoom />} />
+			<Route path="/*" element={<NotFound />} />
 		</Routes>
 		</>
 	);

@@ -3,7 +3,6 @@ import { Image, Container, Text, Flex, SimpleGrid, Stack } from '@chakra-ui/reac
 import { useQuery } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import MyPageModal from '../mypage/MyPageModal';
-import styled from 'styled-components';
 import CheckTFA from '../mypage/tfa';
 import UserProps from '../interface/IUserProps';
 
@@ -69,35 +68,5 @@ function MyProfile(){
 
 	);
 }
-
-
-
-const Main = styled.main`
-  width: 100%;
-  height: 50vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Title = styled.h3`
-  text-align: center;
-`;
-
-const DialogButton = styled.button`
-  width: 160px;
-  height: 48px;
-  background-color: blueviolet;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 400;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-`;
 
 export default MyProfile;

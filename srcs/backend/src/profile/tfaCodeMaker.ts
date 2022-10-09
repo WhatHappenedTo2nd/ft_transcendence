@@ -1,3 +1,5 @@
+//4자리 난수 생성기
+
 export function randomString(length: number, chars) {
 	let mask = '';
   

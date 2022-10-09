@@ -88,7 +88,7 @@ export class UserController {
 	}
 
 	/*
-	*  파라미터로 받은 닉네임과 일치하는 유저 정보 리턴
+	*  2차 인증을 받기 위한 이메일 입력
 	*/
 	@Post('/me/tfa')
 	async tfaCheck(@Req() req) {
@@ -97,6 +97,11 @@ export class UserController {
 		return this.userService.sendEmail(user.id, email);
 	}
 
+	/**
+	 * 2차 인증 코드 입력
+	 * @param req 
+	 * @returns 
+	 */
 	@Patch('/me/cancleTFA')
 	async cancleTFA(@Req() req) {
 		const email = req.body.email;
@@ -116,6 +121,10 @@ export class UserController {
 		return this.userService.checkTFACode(user.id, tfaCode);
 	}
 
+	/**
+	 * 처음 가입한 사람일 경우 user.is_first가 true
+	 * 프로필 수정 페이지 띄운 다음 user.is_first false로 돌림
+	 */
 	@Post('/me/signup')
 	async signup(@Req() req) {
 		const isFirst = req.body.is_first;

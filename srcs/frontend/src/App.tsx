@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ChakraProvider} from '@chakra-ui/react';
+import { ChakraProvider, Switch} from '@chakra-ui/react';
 import MainPage from './components/pages/MainPage';
 import { io } from 'socket.io-client';
 import HomePage from './components/pages/HomePage';
@@ -12,8 +12,8 @@ function App() {
     <ChakraProvider>
       <BrowserRouter>
           <Routes>
-            <Route index element={<MainPage />} />
-            <Route path="/*" element={<HomePage />} />
+              <Route index element={<MainPage />} />
+              <Route path="/*" element={<HomePage />} />
           </Routes>
       </BrowserRouter>
     </ChakraProvider>
