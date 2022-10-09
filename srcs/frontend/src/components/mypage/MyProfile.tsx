@@ -15,11 +15,10 @@ interface FeatureProps {
 //이미지와 닉네임과 승률이 뜨는 부분입니다. 낫 모달모달
 
 function MyProfile(){
-
 	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
-  
+
 	return (
 
 	<Container maxW={'5xl'} py={12} alignContent={'center'}>

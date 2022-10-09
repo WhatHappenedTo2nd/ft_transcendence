@@ -60,6 +60,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	// 소켓 연결이 끊기면 실행
 	handleDisconnect(@ConnectedSocket() socket: Socket) {
 		this.logger.log(`${socket.id} 소켓 연결 해제`);
+		this.logger.log
 	}
 
 	@SubscribeMessage('message')
@@ -126,6 +127,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@MessageBody() { roomName, password, userIntraId }: MessagePayload
 	) {
 		const user = await this.userRepository.findByIntraId(userIntraId);
+		if (user)
+		{
+			this.logger.log(`chat joinRoom user는 ${user.nickname}입니다`);
+		}
 		socket.join(roomName); // join room
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
 		if (password && (password !== room.password)) {
@@ -155,6 +160,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	) {
 		socket.leave(roomName); // leave room
 		const user = await this.userRepository.findByIntraId(userIntraId);
+		if (user)
+		{
+			this.logger.log(`chat leaveRoom user는 ${user.nickname}입니다`);
+		}
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
 		await this.chatUserRepository.deleteUser(room, user);
 		const check = await this.chatUserRepository.find({
