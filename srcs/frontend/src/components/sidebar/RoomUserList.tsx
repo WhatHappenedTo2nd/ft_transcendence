@@ -1,3 +1,5 @@
+import { Button } from '@chakra-ui/button';
+import { Divider } from '@chakra-ui/react';
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom';
 import { getLoginUserData,  getRoomUser } from '../../api/api';
@@ -22,6 +24,8 @@ export default function RoomUserList() {
 				}
 				else { return null; }
 			})}
+			{role?.is_host && data?.length && data?.length > 1 ? <Divider borderColor="black" /> : null}
+			{role?.is_host ? <Button>test</Button> : null }
 		</div>
 	);
 }
