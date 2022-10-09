@@ -11,7 +11,7 @@ export default function SideBar(){
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { data } = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList);
-
+	
 	return (
 		<Box
 			borderRight= "1px"
