@@ -1,5 +1,4 @@
 import React, {useEffect, useState } from "react";
-import styled from "styled-components";
 import { useQuery, useQueryClient } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import {
@@ -14,8 +13,6 @@ import {
 	useDisclosure,
 	FormControl,
 	FormLabel,
-	FormErrorMessage,
-	FormHelperText,
 	Input,
 	Image
 } from '@chakra-ui/react';
@@ -35,7 +32,6 @@ interface UserProps {
 }
 
 // 마이페이지에서 프로필 사진과 닉네임을 수정할 수 있는 모달창입니다
-// 프로필 수정하기를 누르면 나오는 창
 
 function MyPageModal() {
 	const { isOpen, onOpen, onClose } = useDisclosure()
@@ -76,7 +72,6 @@ function MyPageModal() {
 				setInputValue('');
 				setInputPhoto('');
 				return (res);
-				// handleClose();
 			})
 			.catch((err) => {
 					const errMsg = err.response.data.message;
