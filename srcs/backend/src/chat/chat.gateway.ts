@@ -1,4 +1,4 @@
-import { InternalServerErrorException, Logger } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Namespace, Socket } from "socket.io";
 import { ChatRepository } from "./chat.repository";
@@ -83,7 +83,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 						;
 					} else {
 						// socket.to(elem.socket_id).emit('message', { name, message });
-						socket.to(elem.socket_id).emit('message', { name, message });
 					}
 				})
 			})

@@ -9,7 +9,6 @@ import { ChatListDto } from './dto/chat.list.dto';
 import { UserRepository } from 'src/user/user.repository';
 import { User } from 'src/user/user.entity';
 import { Chat } from './chat.entity';
-import { ChatGateway } from './chat.gateway';
 import { FriendRepository } from 'src/friend/friend.repository';
 import { ChatUser } from './chatuser.entity';
 
@@ -22,7 +21,6 @@ export class ChatService {
 		private chatRepository: ChatRepository,
 		private chatUserRepository: ChatUserRepository,
 		private userRepository: UserRepository,
-		private chatGateWay: ChatGateway,
 		private friendRepository: FriendRepository,
 	) {}
 
