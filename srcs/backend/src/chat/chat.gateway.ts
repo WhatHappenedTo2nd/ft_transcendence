@@ -178,4 +178,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 		return { success: true };
 	}
+
+	@SubscribeMessage('edit-room')
+	async handleEditRoom(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() {roomName, password, userIntraId}: MessagePayload
+		) {
+			// roomname -> 새로 바꿀 방 이름
+			// password -> 새로 바꿀 방의 패스워드
+			// 
+			const user = await this.userRepository.findByIntraId(userIntraId);
+			const targetRoom = await this.chatService.getWhereAreYou(user.nickname);
+			const overlapRoom = await this.chatRepository.findOneByRoomname(roomName);
+			if (overlapRoom) {
+				return { success: false, payload: `${roomName} : 이미 선점된 방입니다.` };
+			}
+			targetRoom.title = roomName;
+			if (password) {
+				targetRoom.password = password;
+				targetRoom.is_private = true;
+			}
+			await this.chatRepository.save(targetRoom);
+
+			return { success: true, payload: roomName };
+		}
 }
