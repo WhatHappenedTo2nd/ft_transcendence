@@ -1,5 +1,4 @@
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
-import { Friend } from "src/friend/friend.entity";
 import { CustomRepository } from "src/typeorm-ex/typeorm-ex.decorator";
 import { User } from "src/user/user.entity";
 import { Equal, Repository } from "typeorm";
@@ -46,6 +45,19 @@ export class ChatUserRepository extends Repository<ChatUser> {
 			where: {
 				user_id: {id: Equal(user.id)},
 				chat_id: {id: Equal(room.id)},				
+			},
+		})
+		return result;
+	}
+
+	async findRowJustUser(user: User): Promise<ChatUser> {
+		const result = await this.findOne({
+			relations: {
+				user_id: true,
+				chat_id: true,
+			},
+			where: {
+				user_id: {id: Equal(user.id)},			
 			},
 		})
 		return result;

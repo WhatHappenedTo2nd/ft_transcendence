@@ -11,6 +11,7 @@ import BlockMenu from "./UI/BlockMenu";
 import RemoveFriendMenu from "./UI/RemoveFriendMenu";
 import MuteMenu from "./UI/MuteMenu";
 import HostApproveMenu from "./UI/HostApproveMenu";
+import GameSpectactorMenu from "./UI/GameSpectactorMenu";
 
 export type UserContextMenuType = 'friend' | 'chat' | 'online';
 
@@ -38,13 +39,14 @@ enum UserContextMenuFlag {
 	BLOCK_ADD = 1 << 3, // 블락
 	BLOCK_REMOVE = 1 << 4, // 블락 해제
 	GAME_INVITE = 1 << 5, // 게임초대
-	CHAT_KICK = 1 << 6, // 채팅에서 내쫒기, mode가 host일 때
-	CHAT_MUTE = 1 << 7, // 채팅에서 뮤트 시키기
-	CHAT_UNMUTE = 1 << 8, // 채팅에서 뮤트 해제
-	ADMIN_APPROVE = 1 << 9, // 관리자 이전
+	GAME_SPECTACTOR = 1 << 6, // 게임 관전
+	CHAT_KICK = 1 << 7, // 채팅에서 내쫒기, mode가 host일 때
+	CHAT_MUTE = 1 << 8, // 채팅에서 뮤트 시키기
+	CHAT_UNMUTE = 1 << 9, // 채팅에서 뮤트 해제
+	ADMIN_APPROVE = 1 << 10, // 관리자 이전
   
 	FRIEND = FRIEND_ADD | FRIEND_REMOVE | BLOCK_ADD | BLOCK_REMOVE,
-	GAME = GAME_INVITE,
+	GAME = GAME_INVITE | GAME_SPECTACTOR,
 	CHAT = CHAT_KICK |
 	  CHAT_MUTE |
 	  CHAT_UNMUTE |
@@ -55,6 +57,7 @@ export default function UserContextMenu({
 	userId, // target User
 	name, // target User name
 	mode, // 현재 우클릭하는 창의 상태 (online 유저 띄우는 창, 친구창, 방 접속인원 창)
+	game, // target now game
 	muted,
 	myrole, // my role (host or member)
 	children,
@@ -62,6 +65,7 @@ export default function UserContextMenu({
 	userId: number; // target user의 id
 	name: string; // target의 nickname
 	muted?: boolean; // target의 mute 상태
+	game?: boolean;
 	mode: UserContextMenuType;
 	myrole?: boolean;
 	children: React.ReactNode;
@@ -88,6 +92,9 @@ export default function UserContextMenu({
 			flag |= UserContextMenuFlag.FRIEND_ADD;
 		} else {
 			flag |= UserContextMenuFlag.FRIEND_REMOVE;
+			if (game) {
+				flag |= UserContextMenuFlag.GAME_SPECTACTOR;
+			}
 		}
 		if (isBlocked) {
 			flag |= UserContextMenuFlag.BLOCK_REMOVE;
@@ -137,6 +144,12 @@ export default function UserContextMenu({
 						<UserContextMenuItem flag={UserContextMenuFlag.GAME_INVITE}>
 							<MenuItem>게임 초대하기</MenuItem>
 						</UserContextMenuItem>
+						<UserContextMenuItem flag={UserContextMenuFlag.GAME_SPECTACTOR}>
+							<GameSpectactorMenu
+							label="게임 관전하기"
+							target={name} 
+							/>
+						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT}>
 							<MenuDivider />
 						</UserContextMenuItem>
@@ -174,4 +187,5 @@ export default function UserContextMenu({
 
 UserContextMenu.defaultProps = {
 	muted: false,
+	game: false,
 }

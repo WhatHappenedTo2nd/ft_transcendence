@@ -96,6 +96,22 @@ export const getGameHistory = async (id: number) => {
 	return gameHistory;
 }
 
+export const getAllGameHistory = async () => {
+	const { data: allGameHistory } = await axios.get('/api/games/all');
+	return allGameHistory;
+}
+
+export const getWhereAreYou = async (target: string | undefined) => {
+	const { data: chat } = await axios.get(`/chat/find/${target}`, {
+		method: "GET",
+		headers: {
+			Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
+	return chat;
+}
+
+
 
 /**
  * 2022/09/28

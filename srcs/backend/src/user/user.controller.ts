@@ -1,5 +1,5 @@
 import { multerOptions } from '../profile/multerOption';
-import { Controller, Get, Param, UseGuards, Logger, Req, Body, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Param, Patch, UseGuards, Logger, Req, Body, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -8,7 +8,6 @@ import { GetUser } from './get.user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FriendService } from 'src/friend/friend.service';
-import e from 'express';
 
 @ApiTags('user')
 @Controller('user')
@@ -96,6 +95,15 @@ export class UserController {
 		const email = req.body.email;
 		const user = await this.getMe(req.user);
 		return this.userService.sendEmail(user.id, email);
+	}
+
+	@Patch('/me/cancleTFA')
+	async cancleTFA(@Req() req) {
+		const email = req.body.email;
+		const tfaCode = req.body.tfaCode;
+		const tfaAuthorized = req.body.tfaAuthorized;
+		const user = await this.getMe(req.user);
+		return this.userService.cancleTFA(user.id, email, tfaCode, tfaAuthorized);
 	}
 
 	/*
