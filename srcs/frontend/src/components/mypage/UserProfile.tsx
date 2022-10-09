@@ -5,12 +5,6 @@ import { getUserByNickname, getLoginUserData } from '../../api/api';
 import styled from 'styled-components';
 import IUserProps from '../interface/IUserProps'
 import { useNavigate, useParams } from 'react-router';
-import MyProfile from './MyProfile';
-import AchieveBadge from './Badge';
-
-type Props = {
-	data: IUserProps;
-};
 
 /**
  * 다른 유저 정보 리턴
@@ -43,7 +37,6 @@ function UserProfile() {
 				</Flex>
 				<Stack spacing={4} marginTop={5}>
 					<Text fontSize='50px' color='#53B7BA' as='b' fontFamily='Establish'>{Userdata?.nickname}</Text>
-					<AchieveBadge />
 					<Flex>
 					<Text
 						color={'blue.400'}

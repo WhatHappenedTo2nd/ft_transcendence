@@ -34,6 +34,9 @@ interface UserProps {
 	tfaAuthorized: boolean;
 }
 
+// 마이페이지에서 프로필 사진과 닉네임을 수정할 수 있는 모달창입니다
+// 프로필 수정하기를 누르면 나오는 창
+
 function MyPageModal() {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [inputValue, setInputValue] = useState('');
