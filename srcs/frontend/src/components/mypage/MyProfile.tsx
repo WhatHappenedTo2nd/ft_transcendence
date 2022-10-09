@@ -13,11 +13,10 @@ interface FeatureProps {
   }
 
 function MyProfile(){
-
 	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
-  
+
 	return (
 
 	<Container maxW={'5xl'} py={12} alignContent={'center'}>
