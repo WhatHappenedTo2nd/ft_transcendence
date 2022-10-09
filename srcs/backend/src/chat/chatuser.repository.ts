@@ -7,7 +7,7 @@ import { ChatUser } from "./chatuser.entity";
 
 @CustomRepository(ChatUser)
 export class ChatUserRepository extends Repository<ChatUser> {
-	
+
 	async addUser(room: Chat, user: User): Promise<void> {
 		const check = await this.findRow(room, user);
 		if (check !== null) {
@@ -44,7 +44,7 @@ export class ChatUserRepository extends Repository<ChatUser> {
 			},
 			where: {
 				user_id: {id: Equal(user.id)},
-				chat_id: {id: Equal(room.id)},				
+				chat_id: {id: Equal(room.id)},
 			},
 		})
 		return result;
@@ -57,7 +57,7 @@ export class ChatUserRepository extends Repository<ChatUser> {
 				chat_id: true,
 			},
 			where: {
-				user_id: {id: Equal(user.id)},			
+				user_id: {id: Equal(user.id)},
 			},
 		})
 		return result;
