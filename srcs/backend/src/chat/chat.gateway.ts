@@ -85,7 +85,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		const user = await this.userRepository.findByIntraId(userIntraId);
 		const mutedUser = await this.chatUserRepository.isMutedUser(user);
 		if (mutedUser && mutedUser.is_muted === true) {
-			;
+			this.logger.log(`${mutedUser.user_id.intra_id}는 뮤트됨`);
 		} else {
 			// socket.broadcast.to(roomName).except().emit('message', { name, message });
 			const room = await this.chatRepository.findOneByRoomname(roomName);
@@ -98,29 +98,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				this.logger.log('block한 사람이 없어');
 				socket.broadcast.to(roomName).emit('message', { name, message });
 			} else {
-				// for (let e of chatUsers) {
-				// 	this.logger.log('블락한 사람이 있어서 반복문 ㄱ');
-				// 	const res = whoBlockedMe.find((i) => { e.user_id === i });
-				// 	this.logger.log(`나 블락한 사람: ${res}`);
-				// 	if (res) {
-				// 		this.logger.log('얘 나 블락함. 안 보냄');
-				// 	} else {
-				// 		this.logger.log('얜 나 블락 안 함');
-				// 		socket.to(e.user_id.socket_id).emit('message', { name, message });
-				// 	}
-				// }
-				// this.logger.log('반복문 끝');
-				chatUsers.forEach((e) => {
-					this.logger.log('블락한 사람이 있어서 반복문 ㄱ');
-					const res = whoBlockedMe.find((i) => { e.user_id.id === i.id });
-					if (res) {
-						this.logger.log('블락한 사람 찾음. 안 보냄');
-						;
-					} else {
-						this.logger.log('얜 나 블락 안 함');
-						socket.to(e.user_id.socket_id).emit('message', { name, message });
+				// 채팅방에 있는 모든 사람들 중에
+				for (let e of chatUsers) {
+					// 날 블락한 사람들 목록 중에
+					for (let i of whoBlockedMe) {
+						// Friend 테이블에서 user_id가 날 블락한 사람이고, another_id가 나인 row 찾음.
+						const row = await this.friendRepository.findRow(i, user);
+						// 만약 찾으면 거기서 block이 true이면 i가 날 차단한 것
+						if (row && row.block === true) {
+							this.logger.log(`${row.user_id.intra_id}가 나 블락함`);
+						} else {
+							this.logger.log(`${e.user_id.intra_id}는 나 블락 안 함`);
+							// 날 차단하지 않은 유저의 소켓에먄 메세지 전송.
+							socket.to(e.user_id.socket_id).emit('message', { name, message });
+						}
 					}
-				});
+				}
 			}
 		}
 		return { name, message, socket_id };
