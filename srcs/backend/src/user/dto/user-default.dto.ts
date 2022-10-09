@@ -28,5 +28,7 @@ export class UserDefaultDto {
 
 	ratio: string;
 
+	socket_id: string;
+
 	is_first: boolean;
 }

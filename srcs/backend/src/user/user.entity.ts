@@ -72,6 +72,10 @@ export class User extends BaseEntity {
 	})
 	roomId: string;
 
+	/** chatting */
+	@Column({ nullable: true })
+	socket_id: string;
+
 	@ManyToMany(() => Games, (game)=>game.players)
 	games: Games[];
 }
