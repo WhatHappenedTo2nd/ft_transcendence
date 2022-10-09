@@ -1,6 +1,8 @@
+import { Divider } from '@chakra-ui/react';
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom';
 import { getLoginUserData,  getRoomUser } from '../../api/api';
+import EditButton from '../chatting/EditButton';
 import IUserChatProps from '../interface/IUserChatProps';
 import IUserProps from '../interface/IUserProps';
 import UserItem from './UserItem';
@@ -22,6 +24,8 @@ export default function RoomUserList() {
 				}
 				else { return null; }
 			})}
+			{role?.is_host && data?.length && data?.length > 1 ? <Divider borderColor="black" /> : null}
+			{role?.is_host ? <EditButton /> : null }
 		</div>
 	);
 }

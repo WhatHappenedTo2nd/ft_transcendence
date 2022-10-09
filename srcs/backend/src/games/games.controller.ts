@@ -1,6 +1,7 @@
-import { Controller, Get, Logger, Param} from '@nestjs/common';
+import { Controller, Get, Logger, Param, UseGuards} from '@nestjs/common';
 import { GamesService } from './games.service';
 import { Games } from './games.entity';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 /**
  * Promise
  * 프로미스가 생성된 시점에는 알려지지 않았을 수도 있는 값을 위한 대리자로, 비동기 연산이 종료된 이후에 결과 값과 실패 사유를 처리하기 위한 처리기를 연결할 수 있습니다.
@@ -8,6 +9,7 @@ import { Games } from './games.entity';
  * 다만 최종 결과를 반환하는 것이 아니고, 미래의 어떤 시점에 결과를 제공하겠다는 '약속'(프로미스)을 반환합니다
  */
 @Controller('games')
+@UseGuards(JwtAuthGuard)
 export class GamesController {
 	private logger: Logger = new Logger('gameController');
 	/**
@@ -25,12 +27,11 @@ export class GamesController {
 		return gameusers;
 	}
 
-	@Get('/:id')
+	@Get(':id')
 	async findByGameUser(@Param('id') id: number): Promise<Games[]> {
-		const games = await this.gamesService.findAll();
-		// const games = await this.gamesService.findGame(id);
-		this.logger.log(`game 데이터는 ${games} 입니다.`);
-		console.log(games);
+		// const games = await this.gamesService.findAll();
+		const games = await this.gamesService.findGame(id);
+
 		let response = [];
 
 		for (let i = 0; i < games.length; i++) {
@@ -50,7 +51,6 @@ export class GamesController {
 				lose_score: lose_score,
 			});
 		}
-
 		return response;
 	}
 

@@ -65,6 +65,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	// 소켓 연결이 끊기면 실행
 	handleDisconnect(@ConnectedSocket() socket: Socket) {
 		this.logger.log(`${socket.id} 소켓 연결 해제`);
+		this.logger.log
 	}
 
 	@SubscribeMessage('save-socket')
@@ -154,10 +155,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@MessageBody() { roomName, password, userIntraId }: MessagePayload
 	) {
 		const user = await this.userRepository.findByIntraId(userIntraId);
+		if (user)
+		{
+			this.logger.log(`chat joinRoom user는 ${user.nickname}입니다`);
+		}
 		socket.join(roomName); // join room
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
 		if (password && (password !== room.password)) {
 			return { success: false };
+		}
+		const find: ChatUser = await this.chatUserRepository.findRow(room, user);
+		if (find) {
+			return { success: true };
 		}
 		const chatuser: ChatUser = this.chatUserRepository.create({
 			chat_id: room,
@@ -179,6 +188,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	) {
 		socket.leave(roomName); // leave room
 		const user = await this.userRepository.findByIntraId(userIntraId);
+		if (user)
+		{
+			this.logger.log(`chat leaveRoom user는 ${user.nickname}입니다`);
+		}
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
 		await this.chatUserRepository.deleteUser(room, user);
 		const check = await this.chatUserRepository.find({
@@ -194,4 +207,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 		return { success: true };
 	}
+
+	@SubscribeMessage('edit-room')
+	async handleEditRoom(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() {roomName, password, userIntraId}: MessagePayload
+		) {
+			// roomname -> 새로 바꿀 방 이름
+			// password -> 새로 바꿀 방의 패스워드
+			// 
+			const user = await this.userRepository.findByIntraId(userIntraId);
+			const targetRoom = await this.chatService.getWhereAreYou(user.nickname);
+			const overlapRoom = await this.chatRepository.findOneByRoomname(roomName);
+			if (overlapRoom) {
+				return { success: false, payload: `${roomName} : 이미 선점된 방입니다.` };
+			}
+			targetRoom.title = roomName;
+			if (password) {
+				targetRoom.password = password;
+				targetRoom.is_private = true;
+			}
+			await this.chatRepository.save(targetRoom);
+
+			return { success: true, payload: roomName };
+		}
 }
