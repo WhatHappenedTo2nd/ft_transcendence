@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Image, Container, SimpleGrid, Flex, Stack, Text } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { getUserByNickname, getLoginUserData } from '../../api/api';
-import styled from 'styled-components';
 import IUserProps from '../interface/IUserProps'
 import { useNavigate, useParams } from 'react-router';
 
@@ -65,34 +64,5 @@ function UserProfile() {
 		</Container>
   );
 }
-
-
-const Main = styled.main`
-  width: 100%;
-  height: 50vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Title = styled.h3`
-  text-align: center;
-`;
-
-const DialogButton = styled.button`
-  width: 160px;
-  height: 48px;
-  background-color: blueviolet;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 400;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-`;
 
 export default UserProfile;

@@ -3,8 +3,8 @@ import { diskStorage } from 'multer';
 // import { Profile } from 'passport-42';
 
 /**
- *  프로필 이미지 현재 폴더에 저장
- * 	path는 public에 위치
+ *  프로필 이미지 폴더에 저장
+ * 	path는 backend의 public profilePicture 폴더에 위치
  *  path가 존재하지 않을 경우 생성
  */
 export const multerOptions = {
