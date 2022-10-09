@@ -1,4 +1,5 @@
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
+import { Friend } from "src/friend/friend.entity";
 import { CustomRepository } from "src/typeorm-ex/typeorm-ex.decorator";
 import { User } from "src/user/user.entity";
 import { Equal, Repository } from "typeorm";
@@ -125,5 +126,18 @@ export class ChatUserRepository extends Repository<ChatUser> {
 		} else {
 			throw new BadRequestException(['이미 음소거 된 유저입니다.']);
 		}
+	}
+
+	async getAllChatUsers(room: Chat): Promise<ChatUser[]> {
+		const chatUsers = await this.find({
+			relations: {
+				chat_id: true,
+				user_id: true,
+			},
+			where: {
+				chat_id: {id: Equal(room.id)},
+			},
+		});
+		return chatUsers;
 	}
 }
