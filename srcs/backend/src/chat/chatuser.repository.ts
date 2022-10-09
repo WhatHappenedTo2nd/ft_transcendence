@@ -139,4 +139,17 @@ export class ChatUserRepository extends Repository<ChatUser> {
 			throw new BadRequestException(['이미 음소거 된 유저입니다.']);
 		}
 	}
+
+	async getAllChatUsers(room: Chat): Promise<ChatUser[]> {
+		const chatUsers = await this.find({
+			relations: {
+				chat_id: true,
+				user_id: true,
+			},
+			where: {
+				chat_id: {id: Equal(room.id)},
+			},
+		});
+		return chatUsers;
+	}
 }
