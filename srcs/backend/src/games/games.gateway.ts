@@ -66,7 +66,7 @@ import { Games } from './games.entity';
 		origin: 'http://localhost:3000',
 		methods: ['GET', 'POST'],
 	},
-	namespace: 'api/games',
+	namespace: 'api/games/',
 })
 
 export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -77,7 +77,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		// @Inject(forwardRef(() => ChatGateway))
 		// private readonly chatGateway: ChatGateWay,
 	) {}
-
 	@WebSocketServer()
 	server: Server;
 
@@ -529,7 +528,8 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				loser_id = room.paddleTwo.gameuser.id;
 				win_score = 1;
 				lose_score = -1;
-				room.gameState = GameState.GAME_SAVED_TWO_OUT;
+				room.changeGameState(GameState.GAME_SAVED_TWO_OUT);
+				// room.gameState = GameState.GAME_SAVED_TWO_OUT;
 			}
 		} /** Player2 승리 */
 		else if (room.gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.PLAYER_ONE_OUT) {
@@ -550,7 +550,8 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				loser_id = room.paddleOne.gameuser.id;
 				win_score = 1;
 				lose_score = -1;
-				room.gameState = GameState.GAME_SAVED_ONE_OUT;
+				room.changeGameState(GameState.GAME_SAVED_ONE_OUT);
+				// room.gameState = GameState.GAME_SAVED_ONE_OUT;
 			}
 		}
 		this.logger.log(`winner_id: ${winner_id}, loser_id: ${loser_id}, win_score: ${win_score}, lose_score: ${lose_score}, mode: ${room.mode}`);

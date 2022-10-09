@@ -91,13 +91,18 @@ export const getChatList = async () => {
 	return chat;
 }
 
-export const getGameHistory = async (id: number) => {
-	const { data: gameHistory } = await axios.get(`/api/games/${id}`);
+export const getGameHistory = async (id: number | undefined) => {
+	const { data: gameHistory } = await axios.get(`/games/${id}`, {
+		method: "GET",
+		headers: {
+			Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
 	return gameHistory;
 }
 
 export const getAllGameHistory = async () => {
-	const { data: allGameHistory } = await axios.get('/api/games/all');
+	const { data: allGameHistory } = await axios.get('/games/all');
 	return allGameHistory;
 }
 
