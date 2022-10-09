@@ -66,7 +66,7 @@ import { Games } from './games.entity';
 		origin: 'http://localhost:3000',
 		methods: ['GET', 'POST'],
 	},
-	namespace: 'api/games/',
+	namespace: 'api/games',
 })
 
 export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
