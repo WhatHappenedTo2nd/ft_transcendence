@@ -7,6 +7,7 @@ import { CheckIcon, EmailIcon } from '@chakra-ui/icons';
 import { getCookie } from '../../api/cookieFunc';
 import UserProps from '../interface/IUserProps';
 
+//tfa에 관한 모든 부분을 처리합니다.
 
 export default function CheckTFA() {
 	const { isOpen, onOpen, onClose } = useDisclosure();

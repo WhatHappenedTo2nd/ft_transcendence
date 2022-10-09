@@ -6,11 +6,13 @@ import MyPageModal from '../mypage/MyPageModal';
 import styled from 'styled-components';
 import CheckTFA from '../mypage/tfa';
 import UserProps from '../interface/IUserProps';
-import AchieveBadge from './Badge';
 
 interface FeatureProps {
 	text: number | undefined;
   }
+
+//말 그대로 마이페이지에 들어가면 나오는 바로 그 부분!
+//이미지와 닉네임과 승률이 뜨는 부분입니다. 낫 모달모달
 
 function MyProfile(){
 	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
@@ -61,7 +63,6 @@ function MyProfile(){
 						<MyPageModal />
 						<CheckTFA />
 					</Flex>
-					<AchieveBadge />
 				</Stack>
 		</SimpleGrid>
 	</Container>
