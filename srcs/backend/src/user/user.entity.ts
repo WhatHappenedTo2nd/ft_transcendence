@@ -62,7 +62,7 @@ export class User extends BaseEntity {
 
 	@Column({
 		nullable: true,
-		// default: 0,
+		default: '',
 	})
 	ratio: string;
 
