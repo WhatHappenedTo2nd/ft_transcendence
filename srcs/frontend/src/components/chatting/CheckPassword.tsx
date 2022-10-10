@@ -22,7 +22,7 @@ function CheckPassword(props: any) {
 			socket.emit('join-room', { roomName: chatTitle, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				if (!response.success)
 				return alert(response.payload);
-				navigate(`/room/${chatTitle}`);
+				navigate(`/room/${response.payload}`);
 			});
 		}
 	}, [chatTitle, password, navigate]);
