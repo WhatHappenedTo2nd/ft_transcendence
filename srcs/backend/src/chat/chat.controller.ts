@@ -31,19 +31,19 @@ export class ChatController {
 		return room;
 	}
 
-	@Patch('/mute/:roomname/:targetname')
-	async muteUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
-		await this.chatService.muteUser(roomname ,targetname);
+	@Patch('/mute/:roomid/:targetname')
+	async muteUser(@Param('roomid') roomid: string, @Param('targetname') targetname: string): Promise<void> {
+		await this.chatService.muteUser(roomid ,targetname);
 	}
 
-	@Patch('/unmute/:roomname/:targetname')
-	async unMuteUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
-		await this.chatService.unMuteUser(roomname ,targetname);
+	@Patch('/unmute/:roomid/:targetname')
+	async unMuteUser(@Param('roomid') roomid: string, @Param('targetname') targetname: string): Promise<void> {
+		await this.chatService.unMuteUser(roomid ,targetname);
 	}
 
-	@Patch('/host/:roomname/:targetname')
-	async moveHostUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
-		await this.chatService.moveHostUser(roomname ,targetname);
+	@Patch('/host/:roomid/:targetname')
+	async moveHostUser(@Param('roomid') roomid: string, @Param('targetname') targetname: string): Promise<void> {
+		await this.chatService.moveHostUser(roomid, targetname);
 	}
 
 }
