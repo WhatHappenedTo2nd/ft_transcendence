@@ -14,8 +14,9 @@ export class GameUser {
 	wins?: number;
 	losses?: number;
 	ratio?: string;
+	roomNo?: number;
 
-	constructor( id: number, nickname: string, avatar: string,  wins?: number, losses?: number, ratio?:string, socketId?: string ) {
+	constructor( id: number, nickname: string, avatar: string,  wins?: number, losses?: number, ratio?:string, socketId?: string) {
 		this.id = id;
 		this.nickname = nickname;
 		this.avatar = avatar;
@@ -42,6 +43,10 @@ export class GameUser {
 
 	setUserStatus(status: UserStatus) {
 		this.status = status;
+	}
+
+	setRoomNo(roomNo:number | undefined){
+		this.roomNo = roomNo;
 	}
 
 	setMode(mode: string) {
