@@ -17,7 +17,7 @@ function App() {
       setLogin(false);
     }
     return () => {
-      socket.disconnect();
+      
     };
   }, []);
 

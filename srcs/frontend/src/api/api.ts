@@ -116,6 +116,16 @@ export const getWhereAreYou = async (target: string | undefined) => {
 	return chat;
 }
 
+export const getWhereAreYouByIntraId = async (target: string | undefined) => {
+	const { data: chat } = await axios.get(`/chat/find/intra/${target}`, {
+		method: "GET",
+		headers: {
+			Authorization: 'Bearer ' + getCookie("accessToken")
+		}
+	});
+	return chat;
+}
+
 
 
 /**
