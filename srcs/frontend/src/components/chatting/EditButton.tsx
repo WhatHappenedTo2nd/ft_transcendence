@@ -20,7 +20,7 @@ import { getCookie } from "../../api/cookieFunc";
 
 export default function EditButton() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [rooms, setRooms] = useState<string[]>([]);
+	const [, setRooms] = useState<string[]>([]);
 	const [titleValue, setTitleValue] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
