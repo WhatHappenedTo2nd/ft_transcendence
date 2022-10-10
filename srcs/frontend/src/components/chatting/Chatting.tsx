@@ -30,25 +30,26 @@ function Chatting(props: any) {
 	const queryClient = useQueryClient();
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
-	const { data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
+	const { isLoading: titleLoading, data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
 	const [message, setMessage] = useState<string>('');
 	const [roomName, setRoomName] = useState<string>((chat ? chat.title : ''));
 	const [name, setNickname] = useState<string>('');
 	const chatContainerEl = useRef<HTMLDivElement>(null);
-
+	
 	const roomId = Number(useParams<'roomName'>().roomName);
 	const navigate = useNavigate();
+	
 
 	useEffect(() => {
 		socket.emit('save-socket', { userIntraId: getCookie("intra_id") });
 	}, [socket]);
 
-	useEffect(() => {
-		socket.on('edit-room', (response: ICreateRoomResponse) => {
-			if (response.success)
-				setRoomName(response.payload);
-		});
-	}, [setRoomName, socket])
+	// useEffect(() => {
+	// 	socket.on('edit-room', (response: ICreateRoomResponse) => {
+	// 		if (response.success)
+	// 			setRoomName(response.payload);
+	// 	});
+	// }, [setRoomName, socket])
 
 	// 채팅이 길어지면(chats.length) 스크롤이 생성되므로, 스크롤의 위치를 최근 메시지에 위치시키기 위함
 	useEffect(() => {
@@ -78,6 +79,15 @@ function Chatting(props: any) {
 			navigate('/chatting');
 		});
 	})
+
+	useEffect(() => {
+		const roomNameHandler = (name: string) => setRoomName(name);
+		socket.on('edit-room', roomNameHandler);
+
+		return () => {
+			socket.off('edit-room', roomNameHandler);
+		}
+	}, [])
 
 	const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
 		if (Mydata?.nickname) setNickname(Mydata.nickname);
@@ -117,10 +127,11 @@ function Chatting(props: any) {
 		queryClient.invalidateQueries('roomuser');
 	}, [navigate, roomId, roomName]);
 
+	if ( titleLoading ) return <h1>Loading...</h1>;
 	return (
 		<div>
 			<ChatRoomName>
-				<ChatName>{roomName}</ChatName>
+				<ChatName>{chat?.title}</ChatName>
 				<LeaveButton onClick={onLeaveRoom}>방 나가기</LeaveButton>
 			</ChatRoomName>
 			<ChatContainer ref={chatContainerEl}>

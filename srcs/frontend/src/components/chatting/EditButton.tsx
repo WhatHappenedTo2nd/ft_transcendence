@@ -17,37 +17,23 @@ import { socket } from '../../App';
 import ICreateRoomResponse from '../interface/IChatProps';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from "../../api/cookieFunc";
+import { useQuery } from "react-query";
+import IUserProps from "../interface/IUserProps";
+import IChatListProps from "../interface/IChatListProps";
+import { getLoginUserData, getWhereAreYou } from "../../api/api";
 
 export default function EditButton() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [rooms, setRooms] = useState<string[]>([]);
-	const [titleValue, setTitleValue] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
-
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
+	const { data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
+	const roomId = chat?.id;
+	const roomName = chat?.title;
+	
 	const onEditRoom = useCallback(() => {
-		if (!titleValue)
-		{
-			alert('방 제목 입력은 필수입니다!!');
-		}
-		if (titleValue) {
-			socket.emit('edit-room', { roomName: titleValue, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
-				if (!response.success)
-				return alert(response.payload);
-		})}
-	}, [titleValue, password, navigate]);
-
-	useEffect(() => {
-		const EditRoomHandler = (newRoom: string) => {
-			setRooms((prevRooms) => [...prevRooms, newRoom]);
-		};
-
-		socket.on('edit-room', EditRoomHandler);
-
-		return () => {
-			socket.off('edit-room', EditRoomHandler);
-		};
-	}, []);
+		socket.emit('edit-room', { roomId, roomName, password, userIntraId: getCookie("intra_id")})
+	}, [roomId, roomName, password, navigate]);
 
 	return (
 	<>
@@ -79,12 +65,6 @@ export default function EditButton() {
 				<ModalCloseButton />
 				<ModalBody>
 					<FormControl onSubmit={onEditRoom}>
-						<FormLabel as='legend'>방 제목</FormLabel>
-							<Input
-								type='text'
-								placeholder='최대 20자 입력 가능합니다.'
-								onChange={(e) => setTitleValue(e.target.value)}
-							/>
 						<FormLabel as='legend' marginTop={3}>비밀번호</FormLabel>
 						<Input 
 							type='text'
@@ -100,7 +80,6 @@ export default function EditButton() {
 					onClick={() => {
 						onEditRoom();
 						onClose();
-						setTitleValue("");
 						setPassword("");}}>
 						방 설정 변경
 					</Button>

@@ -9,7 +9,7 @@ import { Equal } from "typeorm";
 import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
 import { FriendRepository } from "src/friend/friend.repository";
-import { GamesGateway } from "src/games/games.gateway";
+import * as bcrypt from 'bcryptjs';
 
 interface MessagePayload {
 	userIntraId: string;
@@ -119,14 +119,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			const room = this.chatRepository.create({title: roomName, host: user});
 			if (password) {
-				room.password = password;
+				var bcrypt = require('bcryptjs');
+				var salt = bcrypt.genSaltSync(10);
+				var hash = bcrypt.hashSync(password, salt);
+				room.password = hash;
 				room.is_private = true;
 			}
-			await this.chatRepository.insert(room);
-			await this.chatUserRepository.addUser(room, user);
-			socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
+				await this.chatRepository.insert(room);
+				await this.chatUserRepository.addUser(room, user);
+				socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
 
-			return { success: true, payload: room.id };
+				return { success: true, payload: room.id };
 		}
 
 	@SubscribeMessage('join-room')
@@ -140,14 +143,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			this.logger.log(`chat joinRoom user는 ${user.nickname}입니다`);
 		}
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
-		socket.join(String(room.id)); // join room
-		if (password && (password !== room.password)) {
+		if (password) {
+			if (!bcrypt.compareSync(password, room.password))
 			return { success: false };
 		}
 		const find: ChatUser = await this.chatUserRepository.findRow(room, user);
 		if (find) {
 			return { success: true, payload: room.id };
 		}
+		socket.join(String(room.id)); // join room
 		const chatuser: ChatUser = this.chatUserRepository.create({
 			chat_id: room,
 			user_id: user,
@@ -191,24 +195,24 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('edit-room')
 	async handleEditRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() {roomName, password, userIntraId}: MessagePayload
+		@MessageBody() {password, userIntraId}: MessagePayload
 		) {
 			// roomname -> 새로 바꿀 방 이름
 			// password -> 새로 바꿀 방의 패스워드
 			const user = await this.userRepository.findByIntraId(userIntraId);
 			const targetRoom = await this.chatService.getWhereAreYou(user.nickname);
-			const overlapRoom = await this.chatRepository.findOneByRoomname(roomName);
-			if (overlapRoom) {
-				return { success: false, payload: `${roomName} : 이미 선점된 방입니다.` };
-			}
-			targetRoom.title = roomName;
-			if (password) {
-				targetRoom.password = password;
+			if (!password) {
+				targetRoom.password = null;
+				targetRoom.is_private = false;
+			} else {
+				var bcrypt = require('bcryptjs');
+				var salt = bcrypt.genSaltSync(10);
+				var hash = bcrypt.hashSync(password, salt);
+				targetRoom.password = hash;
 				targetRoom.is_private = true;
 			}
 			await this.chatRepository.save(targetRoom);
-
-			return { success: true, payload: roomName };
+			return { success: true }
 		}
 
 	@SubscribeMessage('kick-room')
