@@ -15,6 +15,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
+import ICreateRoomResponse from '../interface/IChatProps';
 import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
 
@@ -29,16 +30,23 @@ function Chatting(props: any) {
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
 	const [message, setMessage] = useState<string>('');
-	const [, setImHere] = useState<boolean>(true);
+	const [roomName, setRoomName] = useState<string>('');
 	const [name, setNickname] = useState<string>('');
 	const chatContainerEl = useRef<HTMLDivElement>(null);
 
-	const { roomName } = useParams<'roomName'>();
+	const roomId = Number(useParams<'roomName'>().roomName);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		socket.emit('save-socket', { userIntraId: getCookie("intra_id") });
 	}, [socket]);
+
+	useEffect(() => {
+		socket.on('setting-room', (response: ICreateRoomResponse) => {
+			if (response.success)
+				setRoomName(response.payload);
+		});
+	}, [socket])
 
 	// 채팅이 길어지면(chats.length) 스크롤이 생성되므로, 스크롤의 위치를 최근 메시지에 위치시키기 위함
 	useEffect(() => {
@@ -93,19 +101,19 @@ function Chatting(props: any) {
 
 			// socket.emit()에서 첫 번째 인자에는 이벤트 이름을, 두 번째 인자에는 전송할 데이터를,
 			// 세 번째 인자에는 콜백 함수로 서버에서 응답이 오면 실행할 함수를 넣어준다. 콜백 함수의 인자로는 서버에서 보내준 데이터가 들어온다.
-			socket.emit('message', { roomName, message, name, userIntraId: getCookie("intra_id") }, (chat: IChat) => {
+			socket.emit('message', { roomId, roomName, message, name, userIntraId: getCookie("intra_id") }, (chat: IChat) => {
 				setChats((prevChats) => [...prevChats, chat]);
 				setMessage('');
 			});
-		}, [message, roomName]
+		}, [message, roomId, roomName]
 	);
 
 	const onLeaveRoom = useCallback(() => {
-		socket.emit('leave-room', { roomName, userIntraId: getCookie("intra_id") }, () => {
+		socket.emit('leave-room', { roomId, roomName, userIntraId: getCookie("intra_id") }, () => {
 			navigate('/chatting');
 		});
 		queryClient.invalidateQueries('roomuser');
-	}, [navigate, roomName]);
+	}, [navigate, roomId, roomName]);
 
 	return (
 		<div>

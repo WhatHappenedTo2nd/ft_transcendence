@@ -12,6 +12,7 @@ import { FriendRepository } from "src/friend/friend.repository";
 
 interface MessagePayload {
 	userIntraId: string;
+	roomId: number;
 	roomName: string;
 	password: string;
 	message: string;
@@ -58,7 +59,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('message')
 	async handleMessage(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomName, message, name, userIntraId }: MessagePayload
+		@MessageBody() { roomId, message, name, userIntraId }: MessagePayload
 	) {
 		const socket_id = socket.id;
 		const user = await this.userRepository.findByIntraId(userIntraId);
@@ -67,7 +68,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			this.logger.log(`${mutedUser.user_id.intra_id}는 뮤트됨`);
 		} else {
 			// socket.broadcast.to(roomName).except().emit('message', { name, message });
-			const room = await this.chatRepository.findOneByRoomname(roomName);
+			const room = await this.chatRepository.findOneById(roomId);
 			// 채팅방에 속한 모든 유저 목록을 가져옴
 			const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
 			// 채팅방에 속한 유저들 중 나를 차단한 사람 목록을 가져옴
@@ -75,7 +76,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 			if (whoBlockedMe.length === 0) {
 				this.logger.log('block한 사람이 없어');
-				socket.broadcast.to(roomName).emit('message', { name, message });
+				socket.broadcast.to(String(roomId)).emit('message', { name, message });
 			} else {
 				// 채팅방에 있는 모든 사람들 중에
 				for (let e of chatUsers) {
@@ -121,11 +122,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			await this.chatRepository.insert(room);
 			await this.chatUserRepository.addUser(room, user);
-			socket.join(roomName); // 기존에 없던 room으로 join하면 room이 생성됨
-			this.nsp.emit('create-room', roomName); // 대기실 방 생성
+			socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
+			this.nsp.emit('setting-room', roomName); // 대기실 방 생성
 
-			return { success: true, payload: roomName };
+			return { success: true, payload: room.id };
 		}
+
+		@SubscribeMessage('setting-room')
+		async handleSettingRoom(
+			@ConnectedSocket() socket: Socket,
+			@MessageBody() {roomName}: MessagePayload
+			) {
+				console.log("test im here");
+				return { success: true, payload: roomName };
+			}
 
 	@SubscribeMessage('join-room')
 	async handleJoinRoom(
@@ -137,14 +147,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		{
 			this.logger.log(`chat joinRoom user는 ${user.nickname}입니다`);
 		}
-		socket.join(roomName); // join room
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
+		socket.join(String(room.id)); // join room
 		if (password && (password !== room.password)) {
 			return { success: false };
 		}
 		const find: ChatUser = await this.chatUserRepository.findRow(room, user);
 		if (find) {
-			return { success: true };
+			return { success: true, payload: room.id };
 		}
 		const chatuser: ChatUser = this.chatUserRepository.create({
 			chat_id: room,
@@ -156,21 +166,21 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		} catch(error) {
 			throw new InternalServerErrorException();
 		}
-		return { success: true };
+		return { success: true, payload: room.id };
 	}
 
 	@SubscribeMessage('leave-room')
 	async handleLeaveRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() {roomName, userIntraId}: MessagePayload
+		@MessageBody() { roomId, roomName, userIntraId}: MessagePayload
 	) {
-		socket.leave(roomName); // leave room
+		socket.leave(String(roomId)); // leave room
 		const user = await this.userRepository.findByIntraId(userIntraId);
 		if (user)
 		{
 			this.logger.log(`chat leaveRoom user는 ${user.nickname}입니다`);
 		}
-		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
+		const room: Chat = await this.chatRepository.findOneById(roomId);
 		await this.chatUserRepository.deleteUser(room, user);
 		const check = await this.chatUserRepository.find({
 			where: {
@@ -178,7 +188,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 		});
 		if (!check.length) {
-			await this.chatRepository.deleteRoom(roomName);
+			await this.chatRepository.deleteRoom(room.title);
 		} else {
 			const newHost = await this.chatUserRepository.findNextHost(room);
 			await this.chatRepository.succedingHost(room, newHost);

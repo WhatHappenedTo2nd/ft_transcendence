@@ -34,6 +34,21 @@ export class ChatRepository extends Repository<Chat> {
 		return room;
 	}
 
+	async findOneById(id: number): Promise<Chat> {
+		const room: Chat = await this.findOne({
+			relations: {
+				host: true,
+			},
+			where: {
+				id
+			}
+		});
+		if (!room) {
+			return null;
+		}
+		return room;
+	}
+
 	async deleteRoom(title: string): Promise<void> {
 		try {
 			await this.delete({
