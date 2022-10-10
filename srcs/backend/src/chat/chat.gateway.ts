@@ -9,6 +9,7 @@ import { Equal } from "typeorm";
 import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
 import { FriendRepository } from "src/friend/friend.repository";
+import * as bcrypt from 'bcryptjs';
 
 interface MessagePayload {
 	userIntraId: string;
@@ -117,14 +118,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			const room = this.chatRepository.create({title: roomName, host: user});
 			if (password) {
-				room.password = password;
+				var bcrypt = require('bcryptjs');
+				var salt = bcrypt.genSaltSync(10);
+				var hash = bcrypt.hashSync(password, salt);
+				room.password = hash;
 				room.is_private = true;
 			}
-			await this.chatRepository.insert(room);
-			await this.chatUserRepository.addUser(room, user);
-			socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
+				await this.chatRepository.insert(room);
+				await this.chatUserRepository.addUser(room, user);
+				socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
 
-			return { success: true, payload: room.id };
+				return { success: true, payload: room.id };
 		}
 
 	@SubscribeMessage('join-room')
@@ -139,8 +143,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
 		socket.join(String(room.id)); // join room
-		if (password && (password !== room.password)) {
-			return { success: false };
+		if (password) {
+			if (!bcrypt.compareSync(password, room.password))
+				return { success: false };
 		}
 		const find: ChatUser = await this.chatUserRepository.findRow(room, user);
 		if (find) {
@@ -201,7 +206,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			targetRoom.title = roomName;
 			if (password) {
-				targetRoom.password = password;
+				var bcrypt = require('bcryptjs');
+				var salt = bcrypt.genSaltSync(10);
+				var hash = bcrypt.hashSync(password, salt);
+				targetRoom.password = hash;
 				targetRoom.is_private = true;
 			}
 			await this.chatRepository.save(targetRoom);
