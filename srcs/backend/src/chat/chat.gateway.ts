@@ -142,15 +142,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			this.logger.log(`chat joinRoom user는 ${user.nickname}입니다`);
 		}
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomName);
-		socket.join(String(room.id)); // join room
 		if (password) {
 			if (!bcrypt.compareSync(password, room.password))
-				return { success: false };
+			return { success: false };
 		}
 		const find: ChatUser = await this.chatUserRepository.findRow(room, user);
 		if (find) {
 			return { success: true, payload: room.id };
 		}
+		socket.join(String(room.id)); // join room
 		const chatuser: ChatUser = this.chatUserRepository.create({
 			chat_id: room,
 			user_id: user,
@@ -194,18 +194,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('edit-room')
 	async handleEditRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() {roomId, roomName, password, userIntraId}: MessagePayload
+		@MessageBody() {password, userIntraId}: MessagePayload
 		) {
 			// roomname -> 새로 바꿀 방 이름
 			// password -> 새로 바꿀 방의 패스워드
 			const user = await this.userRepository.findByIntraId(userIntraId);
 			const targetRoom = await this.chatService.getWhereAreYou(user.nickname);
-			const overlapRoom = await this.chatRepository.findOneByRoomname(roomName);
-			if (overlapRoom) {
-				return { success: false, payload: roomName };
-			}
-			targetRoom.title = roomName;
-			if (password) {
+			if (!password) {
+				targetRoom.password = null;
+				targetRoom.is_private = false;
+			} else {
 				var bcrypt = require('bcryptjs');
 				var salt = bcrypt.genSaltSync(10);
 				var hash = bcrypt.hashSync(password, salt);
@@ -213,9 +211,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				targetRoom.is_private = true;
 			}
 			await this.chatRepository.save(targetRoom);
-			console.log(targetRoom);
-			this.nsp.emit('edit-room', {roomName});
-			return { success: true, payload: roomName };
+			return { success: true }
 		}
 
 	@SubscribeMessage('kick-room')

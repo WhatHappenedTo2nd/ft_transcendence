@@ -4,6 +4,7 @@ import { UnlockIcon, LockIcon } from '@chakra-ui/icons'
 import { socket } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import CheckPassword from './CheckPassword';
+import ICreateRoomResponse from '../interface/IChatProps';
 import { getCookie } from '../../api/cookieFunc';
 
 function ChatListItem(props: any) {
@@ -11,7 +12,9 @@ function ChatListItem(props: any) {
 	const navigate = useNavigate();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const onJoinRoom = (roomName: string) => () => {
-		socket.emit('join-room', {roomName, userIntraId: getCookie("intra_id")}, () => {
+		socket.emit('join-room', {roomName, userIntraId: getCookie("intra_id")}, (response: ICreateRoomResponse) => {
+			if (!response.success)
+			return alert("error");
 			navigate(`/room/${chat.id}`);
 		});
 	};
