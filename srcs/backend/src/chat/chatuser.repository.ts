@@ -45,7 +45,7 @@ export class ChatUserRepository extends Repository<ChatUser> {
 			},
 			where: {
 				user_id: {id: Equal(user.id)},
-				chat_id: {id: Equal(room.id)},				
+				chat_id: {id: Equal(room.id)},
 			},
 		})
 		return result;
@@ -58,7 +58,7 @@ export class ChatUserRepository extends Repository<ChatUser> {
 				chat_id: true,
 			},
 			where: {
-				user_id: {id: Equal(user.id)},			
+				user_id: {id: Equal(user.id)},
 			},
 		})
 		return result;

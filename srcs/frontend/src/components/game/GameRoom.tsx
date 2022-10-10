@@ -9,20 +9,20 @@ import styled from 'styled-components';
 import PlayerInfo from './GamePlayerInfo';
 import { IRoom } from '../interface/IGameProps';
 
-const GameRoomliStyleC = styled.li`
+const GameRoomliStyleC = styled.div`
 	margin: 30px;
 	padding: 20px;
-	border: 2px solid blue;
+	border: 2px solid white;
 	width: 600px;
 	text-align: center;
 `;
 
-// const SpectateButtonSyteldC = styled.button`
-// 	margin-top: 10px;
-// 	border: none;
-// 	color: red;
-// 	background-color: black;
-// `;
+const SpectateButtonStyleC = styled.button`
+	margin-top: 10px;
+	border: none;
+	color: white;
+	background-color: black;
+`;
 
 interface IGameRoomProps {
 	gameRooms: IRoom[];
@@ -34,19 +34,18 @@ const GameRoomListStyledC = styled.ul`
 `;
 
 function GameRooms({ gameRooms, socket }: IGameRoomProps) {
-	// const onEnterGameRoom = ( event: React.MouseEvent<HTMLButtonElement>) => {
-	// 	socket.emit('spectateRoom', event.currentTarget.value);
-	// };
-	// console.log("===========GameRoom 생성 함수 입니다!============");
-	// console.log("GameRoom의 데이터는 ", gameRooms);
+	const onEnterGameRoom = (event: React.MouseEvent<HTMLButtonElement>) => {
+		socket.emit('spectateRoom', event.currentTarget.value);
+	};
 	return (
 		<GameRoomListStyledC>
 			{
 				gameRooms.map((gameRoom) => {
 				return (
 					<GameRoomliStyleC key={gameRoom.roomId}>
-						{/* <SpectateButtonSyteldC onClick={onEnterGameRoom} type='button' value={gameRoom.roomId}>
-						</SpectateButtonSyteldC> */}
+						<SpectateButtonStyleC onClick={onEnterGameRoom} type="button" value={gameRoom.roomId}>
+							SPECTATE
+						</SpectateButtonStyleC>
 						<PlayerInfo leftPlayer={gameRoom.paddleOne} rightPlayer={gameRoom.paddleTwo} />
 					</GameRoomliStyleC>
 				);

@@ -41,7 +41,18 @@ const Button = styled.button`
 	border: 2px solid white;
 	border-radius: 3px;
 	display: block;
+	margin-left: auto;
+	margin-right: auto;
 `;
+
+const GameQueue = styled.div`
+	min-height: 400px;
+	height: 100%;
+	min-width: 600px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+`
 
 /**
  * Game Main Function
@@ -149,12 +160,10 @@ function Game() {
 	}
 
 	return (
-		<div>
+		<GameQueue>
 			{isDisplayGame ?
 				(
-					<>
-						<GameScreen socketProps={socket} roomDataProps={room} userDataProps={userData} />
-					</>
+					<GameScreen socketProps={socket} roomDataProps={room} userDataProps={userData} />
 				) :
 				(
 					<>
@@ -174,10 +183,10 @@ function Game() {
 								</Button>
 							</div>
 						)}
-						{/* <GameRooms gameRooms={gameRooms} socket={socket} /> */}
+						<GameRooms gameRooms={gameRooms} socket={socket} />
 					</>
 				)}
-		</div>
+		</GameQueue>
 	);
 }
 

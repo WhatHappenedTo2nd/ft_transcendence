@@ -1,6 +1,7 @@
 import { Grid, GridItem, Divider } from '@chakra-ui/react';
 import MyProfile from '../mypage/MyProfile';
-import History from "../mypage/History";
+import SideBar from "../sidebar/SideBar";
+import History from '../mypage/History';
 
 function MyProfilePage (){
 	return (
