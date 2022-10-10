@@ -123,6 +123,20 @@ export class ChatService {
 	async getWhereAreYou(targetname: string): Promise<Chat> {
 		const target: User = await this.userRepository.findByNickname(targetname);
 		const targetroom: ChatUser = await this.chatUserRepository.findRowJustUser(target);
-		return targetroom.chat_id;
+		if (targetroom)
+			return targetroom.chat_id;
+		else {
+			return null;
+		}
+	}
+
+	async getWhereAreYouByIntraId(intra_id: string): Promise<Chat> {
+		const target: User = await this.userRepository.findByIntraId(intra_id);
+		const targetroom: ChatUser = await this.chatUserRepository.findRowJustUser(target);
+		if (targetroom)
+			return targetroom.chat_id;
+		else {
+			return null;
+		}
 	}
 }

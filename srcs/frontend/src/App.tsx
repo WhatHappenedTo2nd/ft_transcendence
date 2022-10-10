@@ -16,9 +16,7 @@ function App() {
     if (!getCookie("accessToken")) {
       setLogin(false);
     }
-    return () => {
-      socket.disconnect();
-    };
+    return () => {};
   }, []);
 
   return (

@@ -31,6 +31,12 @@ export class ChatController {
 		return room;
 	}
 
+	@Get('/find/intra/:target')
+	async getWhereAreYouByIntraId(@Param('target') target: string): Promise<Chat> {
+		const room = await this.chatService.getWhereAreYouByIntraId(target);
+		return room;
+	}
+
 	@Patch('/mute/:roomid/:targetname')
 	async muteUser(@Param('roomid') roomid: string, @Param('targetname') targetname: string): Promise<void> {
 		await this.chatService.muteUser(roomid ,targetname);
