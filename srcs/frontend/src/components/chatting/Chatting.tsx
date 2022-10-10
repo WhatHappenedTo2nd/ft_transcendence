@@ -15,6 +15,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
+import ICreateRoomResponse from '../interface/IChatProps';
 import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
 import IChatListProps from '../interface/IChatListProps';
@@ -78,6 +79,15 @@ function Chatting(props: any) {
 			navigate('/chatting');
 		});
 	})
+
+	useEffect(() => {
+		const roomNameHandler = (name: string) => setRoomName(name);
+		socket.on('edit-room', roomNameHandler);
+
+		return () => {
+			socket.off('edit-room', roomNameHandler);
+		}
+	}, [])
 
 	const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
 		if (Mydata?.nickname) setNickname(Mydata.nickname);

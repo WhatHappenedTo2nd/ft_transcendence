@@ -189,7 +189,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('edit-room')
 	async handleEditRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() {roomName, password, userIntraId}: MessagePayload
+		@MessageBody() {roomId, roomName, password, userIntraId}: MessagePayload
 		) {
 			// roomname -> 새로 바꿀 방 이름
 			// password -> 새로 바꿀 방의 패스워드
@@ -197,7 +197,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			const targetRoom = await this.chatService.getWhereAreYou(user.nickname);
 			const overlapRoom = await this.chatRepository.findOneByRoomname(roomName);
 			if (overlapRoom) {
-				return { success: false, payload: `${roomName} : 이미 선점된 방입니다.` };
+				return { success: false, payload: roomName };
 			}
 			targetRoom.title = roomName;
 			if (password) {
@@ -205,7 +205,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				targetRoom.is_private = true;
 			}
 			await this.chatRepository.save(targetRoom);
-
+			console.log(targetRoom);
+			this.nsp.emit('edit-room', {roomName});
 			return { success: true, payload: roomName };
 		}
 
