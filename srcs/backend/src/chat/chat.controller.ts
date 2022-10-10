@@ -31,11 +31,6 @@ export class ChatController {
 		return room;
 	}
 
-	@Patch('/kick/:roomname/:targetname')
-	async kickUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
-		await this.chatService.kickUser(roomname ,targetname);
-	}
-
 	@Patch('/mute/:roomname/:targetname')
 	async muteUser(@Param('roomname') roomname: string, @Param('targetname') targetname: string): Promise<void> {
 		await this.chatService.muteUser(roomname ,targetname);

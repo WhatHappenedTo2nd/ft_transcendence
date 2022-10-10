@@ -12,6 +12,7 @@ import RemoveFriendMenu from "./UI/RemoveFriendMenu";
 import MuteMenu from "./UI/MuteMenu";
 import HostApproveMenu from "./UI/HostApproveMenu";
 import GameSpectactorMenu from "./UI/GameSpectactorMenu";
+import KickMenu from "./UI/KickMenu";
 
 export type UserContextMenuType = 'friend' | 'chat' | 'online';
 
@@ -154,7 +155,10 @@ export default function UserContextMenu({
 							<MenuDivider />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT_KICK}>
-							<MenuItem>추방하기</MenuItem>
+						<KickMenu
+							label="추방 하기"
+							target={name} 
+							/>
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT_MUTE}>
 							<MuteMenu
