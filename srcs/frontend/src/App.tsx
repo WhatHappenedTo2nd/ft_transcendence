@@ -16,7 +16,9 @@ function App() {
     if (!getCookie("accessToken")) {
       setLogin(false);
     }
-    return () => {};
+    return () => {
+      
+    };
   }, []);
 
   return (
