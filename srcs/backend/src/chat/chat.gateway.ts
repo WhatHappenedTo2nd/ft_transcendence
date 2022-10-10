@@ -10,7 +10,6 @@ import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
 import { FriendRepository } from "src/friend/friend.repository";
 import * as bcrypt from 'bcryptjs';
-import { last } from "rxjs";
 
 interface MessagePayload {
 	userIntraId: string;
@@ -207,7 +206,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			targetRoom.title = roomName;
 			if (password) {
-				targetRoom.password = password;
+				var bcrypt = require('bcryptjs');
+				var salt = bcrypt.genSaltSync(10);
+				var hash = bcrypt.hashSync(password, salt);
+				targetRoom.password = hash;
 				targetRoom.is_private = true;
 			}
 			await this.chatRepository.save(targetRoom);
