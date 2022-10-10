@@ -28,6 +28,7 @@ function Chatting(props: any) {
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
 	const [message, setMessage] = useState<string>('');
+	const [, setImHere] = useState<boolean>(true);
 	const [name, setNickname] = useState<string>('');
 	const chatContainerEl = useRef<HTMLDivElement>(null);
 
@@ -60,6 +61,12 @@ function Chatting(props: any) {
 			socket.off('message', messageHandler);
 		};
 	}, []);
+
+	useEffect(() => {
+		socket.on('kick-room', () => {
+			navigate('/chatting');
+		});
+	})
 
 	const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
 		if (Mydata?.nickname) setNickname(Mydata.nickname);

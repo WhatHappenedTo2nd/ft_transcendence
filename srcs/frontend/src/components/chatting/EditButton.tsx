@@ -11,7 +11,6 @@ import {
 	useDisclosure,
 	FormControl,
 	FormLabel,
-	Flex,
 	Input
 } from '@chakra-ui/react';
 import { socket } from '../../App';
@@ -35,22 +34,18 @@ export default function EditButton() {
 			socket.emit('edit-room', { roomName: titleValue, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				if (!response.success)
 				return alert(response.payload);
-				navigate(`/room/${response.payload}`);
 		})}
 	}, [titleValue, password, navigate]);
 
 	useEffect(() => {
-		const roomListHandler = (rooms: string[]) => {
-			setRooms(rooms);
-		};
-		const createRoomHandler = (newRoom: string) => {
+		const EditRoomHandler = (newRoom: string) => {
 			setRooms((prevRooms) => [...prevRooms, newRoom]);
 		};
 
-		socket.on('edit-room', createRoomHandler);
+		socket.on('edit-room', EditRoomHandler);
 
 		return () => {
-			socket.off('edit-room', createRoomHandler);
+			socket.off('edit-room', EditRoomHandler);
 		};
 	}, []);
 
