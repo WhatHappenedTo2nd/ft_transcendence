@@ -123,19 +123,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			await this.chatRepository.insert(room);
 			await this.chatUserRepository.addUser(room, user);
 			socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
-			this.nsp.emit('setting-room', roomName); // 대기실 방 생성
 
 			return { success: true, payload: room.id };
 		}
-
-		@SubscribeMessage('setting-room')
-		async handleSettingRoom(
-			@ConnectedSocket() socket: Socket,
-			@MessageBody() {roomName}: MessagePayload
-			) {
-				console.log("test im here");
-				return { success: true, payload: roomName };
-			}
 
 	@SubscribeMessage('join-room')
 	async handleJoinRoom(
@@ -172,7 +162,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('leave-room')
 	async handleLeaveRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomId, roomName, userIntraId}: MessagePayload
+		@MessageBody() { roomId, userIntraId}: MessagePayload
 	) {
 		socket.leave(String(roomId)); // leave room
 		const user = await this.userRepository.findByIntraId(userIntraId);
