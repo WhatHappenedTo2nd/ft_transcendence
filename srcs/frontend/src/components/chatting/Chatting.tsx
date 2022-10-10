@@ -10,7 +10,7 @@ import {
 	MessageForm,
   } from '../../styles/chat.styles';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getLoginUserData } from '../../api/api';
+import { getLoginUserData, getWhereAreYou } from '../../api/api';
 import { useQuery, useQueryClient } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
@@ -18,6 +18,7 @@ import IChat from '../interface/IChatProps';
 import ICreateRoomResponse from '../interface/IChatProps';
 import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
+import IChatListProps from '../interface/IChatListProps';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -29,8 +30,9 @@ function Chatting(props: any) {
 	const queryClient = useQueryClient();
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
+	const { data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
 	const [message, setMessage] = useState<string>('');
-	const [roomName, setRoomName] = useState<string>('');
+	const [roomName, setRoomName] = useState<string>((chat ? chat.title : ''));
 	const [name, setNickname] = useState<string>('');
 	const chatContainerEl = useRef<HTMLDivElement>(null);
 
@@ -42,7 +44,7 @@ function Chatting(props: any) {
 	}, [socket]);
 
 	useEffect(() => {
-		socket.on('setting-room', (response: ICreateRoomResponse) => {
+		socket.on('edit-room', (response: ICreateRoomResponse) => {
 			if (response.success)
 				setRoomName(response.payload);
 		});
