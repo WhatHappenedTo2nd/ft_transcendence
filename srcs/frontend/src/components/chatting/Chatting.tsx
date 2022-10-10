@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import {
+	ChatRoomName,
 	ChatName,
 	ChatContainer,
 	LeaveButton,
@@ -101,8 +102,10 @@ function Chatting(props: any) {
 
 	return (
 		<div>
-		<ChatName>{roomName}</ChatName>
-		<LeaveButton onClick={onLeaveRoom}>방 나가기</LeaveButton>
+			<ChatRoomName>
+				<ChatName>{roomName}</ChatName>
+				<LeaveButton onClick={onLeaveRoom}>방 나가기</LeaveButton>
+			</ChatRoomName>
 		<ChatContainer ref={chatContainerEl}>
 			{chats.map((chat, index) => (
 				<MessageBox

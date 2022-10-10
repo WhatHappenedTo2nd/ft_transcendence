@@ -214,7 +214,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		) {
 			// roomname -> 새로 바꿀 방 이름
 			// password -> 새로 바꿀 방의 패스워드
-			// 
+			//
 			const user = await this.userRepository.findByIntraId(userIntraId);
 			const targetRoom = await this.chatService.getWhereAreYou(user.nickname);
 			const overlapRoom = await this.chatRepository.findOneByRoomname(roomName);
@@ -230,4 +230,101 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 			return { success: true, payload: roomName };
 		}
+
+	/**
+	 * Game-related
+	 */
+	// @SubscribeMessage('userGameStatus')
+	// async handleUserGameStatus(@ConnectedSocket() client: Socket, @MessageBody() { isPlaying }: { isPlaying: boolean }) {
+	// 	const user = this.chatUsers.getUser(client.id);
+
+	// 	if (user) {
+	// 		if (isPlaying) {
+	// 		user.setUserStatus(UserStatus.PLAYING);
+	// 		} else {
+	// 		user.setUserStatus(UserStatus.ONLINE);
+	// 		}
+	// 		this.server.emit('updateUserStatus', {
+	// 		userId: user.id,
+	// 		status: UserStatus[user.status],
+	// 		});
+	// 	}
+	// }
+
+	// @SubscribeMessage('spectateRoom')
+	// async handlespectateRoom(@ConnectedSocket() client: Socket, @MessageBody() roomId: string) {
+	// 	const memoryUser = this.chatUsers.getUser(client.id);
+	// 	if ((await this.pongGateway.pushSpectatorToRoom(memoryUser.id, roomId)) === false) {
+	// 	 this.server.to(client.id).emit('listeningSpectateRoom', {
+	// 	   func: 'listeningChannelInfo',
+	// 	   code: 400,
+	// 	   message: `게임중에는 관전이 불가능합니다.`,
+	// 	 });
+	// 	} else {
+	// 	 this.server.to(client.id).emit('listeningSpectateRoom', {
+	// 	   func: 'listeningChannelInfo',
+	// 	   code: 200,
+	// 	   message: `관전 성공`,
+	// 	 });
+	// 	}
+	// 	return this.returnMessage('spectateRoom', 200, '게임 관전 성공했습니다.');
+	// }
+	//  /**
+	//   * 게임 초대 후 수락할 때 초대한 사람이 못기다리고 나가버리면... 오류
+	//   * @param client
+	//   * @param param1
+	//   */
+	//  @SubscribeMessage('acceptPongInvite')
+	//  async handleAcceptPongInvite(
+	//    @ConnectedSocket() client: Socket,
+	//    @MessageBody() { roomId, messageId }: { roomId: string; messageId: number },
+	//  ) {
+	//    try {
+	// 	 /** 게임 확인 */
+	// 	 const room = this.pongGateway.setInviteRoomToReady(roomId);
+
+	// 	 /** 수락 후 */
+	// 	 await this.messageService.setType(messageId, 'text');
+
+	// 	 return this.returnMessage('acceptPongInvite', 200, '게임 초대를 수락했습니다.');
+	//    } catch (e) {
+	// 	 this.server.to(client.id).emit('chatError', e.message);
+	//    }
+	//  }
+
+
+
+	//  @SubscribeMessage('sendPongInvite')
+	//  async handleSendPongInvite(@ConnectedSocket() client: Socket, @MessageBody() { anotherId }: { anotherId: number }) {
+	//    try {
+	// 	 const memorySender = this.chatUsers.getUser(client.id);
+	// 	 const memoryReceiver = this.chatUsers.getUserById(anotherId);
+
+	// 	 /** 게임 방이 존재하는지 확인 */
+	// 	 /** 상대방이 게임중이면 chatError */
+	// 	 this.pongGateway.roomAlreadyExists(memorySender.id, anotherId);
+
+	// 	 /** 초대방 만들기 */
+	// 	 const roomId = await this.pongGateway.createInviteRoom(
+	// 	   { id: memorySender.id, nickname: memorySender.nickname } as User,
+	// 	   anotherId,
+	// 	 );
+	// 	 this.logger.log(`sendPongInvite: createInviteRoom: ${roomId}`);
+
+	// 	 /** DM 보내기 */
+	// 	 const dm: any = await this.handleCreateDm(client, { anotherId });
+	// 	 await this.handleDmSubmit(client, {
+	// 	   DMId: dm.data,
+	// 	   authorId: memorySender.id,
+	// 	   message: '게임에 초대했습니다.',
+	// 	   type: 'invite',
+	// 	   roomId: roomId,
+	// 	 });
+
+	// 	 return this.returnMessage('sendPongInvite', 200, '게임 초대를 보냈습니다.');
+	//    } catch (e) {
+	// 	 console.log(e);
+	// 	 this.server.to(client.id).emit('chatError', e.message);
+	//    }
+	//  }
 }
