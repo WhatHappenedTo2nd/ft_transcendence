@@ -1,10 +1,18 @@
 import styled from '@emotion/styled';
 
+const ChatRoomName = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	margin-bottom: 20px;
+`
+
 const ChatName = styled.div`
 	display: inline-block;
 	color: black;
 	font-size: 1em;
 	margin: 0 30px;
+	margin-bottom: 10px;
 	padding: 0.25em 1em;
 	border: 2px solid #53B7BA;
 	border-radius: 3px;
@@ -63,7 +71,8 @@ const Message = styled.span`
 
 const MessageForm = styled.form`
 	display: flex;
-	margin-top: 24px;
+	margin: 30px;
+	margin-top: 20px;
 	color: #53B7BA;
 
 	input {
@@ -73,4 +82,4 @@ const MessageForm = styled.form`
 	}
 `;
 
-export { ChatName, LeaveButton, ChatContainer, MessageBox, Message, MessageForm };
+export { ChatRoomName, ChatName, LeaveButton, ChatContainer, MessageBox, Message, MessageForm };

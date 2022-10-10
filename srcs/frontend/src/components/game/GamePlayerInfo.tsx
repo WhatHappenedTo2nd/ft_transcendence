@@ -52,6 +52,7 @@ const PlayerDataPStyleC = styled.p`
 	text-overflow: ellipsis;
 	overflow: hidden;
 	margin-top: 10px;
+	color: white;
 `;
 
 /**
@@ -70,10 +71,6 @@ interface IPlayerInfo {
  * @param rightPlayer
  */
 function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
-	// console.log("왼쪽 플레이어의 이긴 횟수 : ", leftPlayer.gameuser.wins);
-	// console.log("왼쪽 플레이어의 진 횟수 : ", leftPlayer.gameuser.wins);
-	// console.log("왼쪽 플레이어의 이긴 횟수 : ", rightPlayer.gameuser.wins);
-	// console.log("왼쪽 플레이어의 진 횟수 : ", rightPlayer.gameuser.wins);
 	return (
 		<PlayerInfoDivStyleC>
 			<PlayerInfoStyleC>
@@ -87,9 +84,7 @@ function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
 						<Link to={`/profile/${leftPlayer.gameuser.nickname}`}>{leftPlayer.gameuser.nickname}</Link>
 					</PlayerDataPStyleC>
 					<PlayerDataPStyleC>
-						<>승리 {leftPlayer.gameuser.wins}</>
-						<>패배 {leftPlayer.gameuser.losses}</>
-						승률 {leftPlayer.gameuser.ratio}
+						승리 {leftPlayer.gameuser.wins} 패배 {leftPlayer.gameuser.losses} 승률 {leftPlayer.gameuser.ratio}%
 					</PlayerDataPStyleC>
 				</PlayerDataDivStyleC>
 			</PlayerInfoStyleC>
@@ -104,9 +99,7 @@ function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
 						<Link to={`/profile/${rightPlayer.gameuser.nickname}`}>{rightPlayer.gameuser.nickname}</Link>
 					</PlayerDataPStyleC>
 					<PlayerDataPStyleC>
-						승리 {rightPlayer.gameuser.wins}
-						패배 {rightPlayer.gameuser.losses}
-						승률 {rightPlayer.gameuser.ratio}
+						승리 {rightPlayer.gameuser.wins} 패배 {rightPlayer.gameuser.losses} 승률 {rightPlayer.gameuser.ratio}%
 					</PlayerDataPStyleC>
 				</PlayerDataDivStyleC>
 			</PlayerInfoStyleC>

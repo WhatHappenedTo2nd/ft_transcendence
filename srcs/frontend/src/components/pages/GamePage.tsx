@@ -17,9 +17,7 @@ const MainWrapper = styled.div`
   background: white;
 `
 const GameBox = styled.div`
-	height: 400px;
 	box-sizing: border-box;
-	width: 50%;
 	padding: 5px;
 	background: black;
 	margin: 0 auto;
