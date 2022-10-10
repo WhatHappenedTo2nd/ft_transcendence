@@ -44,7 +44,7 @@ function GameRooms({ gameRooms, socket }: IGameRoomProps) {
 				return (
 					<GameRoomliStyleC key={gameRoom.roomId}>
 						<SpectateButtonStyleC onClick={onEnterGameRoom} type="button" value={gameRoom.roomId}>
-							SPECTATE
+							관전하기
 						</SpectateButtonStyleC>
 						<PlayerInfo leftPlayer={gameRoom.paddleOne} rightPlayer={gameRoom.paddleTwo} />
 					</GameRoomliStyleC>

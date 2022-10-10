@@ -38,7 +38,6 @@ export default function HomePage() {
 			<Route path="/profile/:nickname" element={<UserProfile />} />
 			<Route path="/chatting" element={<ChattingRoomPage />} />
 			<Route path="/room/:roomName" element={<GamePage />} />
-			<Route path="/game" element={<GamePage />} />
 			<Route path="/*" element={<NotFound />} />
 		</Routes>
 		</>

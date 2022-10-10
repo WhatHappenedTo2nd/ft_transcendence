@@ -29,21 +29,20 @@ export class GamesController {
 
 	@Get(':id')
 	async findByGameUser(@Param('id') id: number): Promise<Games[]> {
-		// const games = await this.gamesService.findAll();
 		const games = await this.gamesService.findGame(id);
 
 		let response = [];
-
-		for (let i = 0; i < games.length; i++) {
-			const winnerId = games[i].winner_id;
-			const loserId = games[i].loser_id;
-			const winner = games[i].players.find((value) => value.id === winnerId);
-			const loser = games[i].players.find((value) => value.id === loserId);
-			const win_score = games[i].win_score;
-			const lose_score = games[i].lose_score;
+		let count = games.length - 1;
+		for (count; count >= 0; count--) {
+			const winnerId = games[count].winner_id;
+			const loserId = games[count].loser_id;
+			const winner = games[count].players.find((value) => value.id === winnerId);
+			const loser = games[count].players.find((value) => value.id === loserId);
+			const win_score = games[count].win_score;
+			const lose_score = games[count].lose_score;
 
 			response.push({
-				id:games[i].id,
+				id:games[count].id,
 				me: id,
 				winner: winner,
 				loser: loser,
@@ -53,7 +52,6 @@ export class GamesController {
 		}
 		return response;
 	}
-
 
 	@Get('/all')
 	async getAllGame(): Promise<Games[]> {

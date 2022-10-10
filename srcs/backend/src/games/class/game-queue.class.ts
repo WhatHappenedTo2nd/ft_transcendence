@@ -75,13 +75,15 @@ export default class Queue {
 		let secondPlayerId: number = 0;
 		// let difference: number = Math.abs(firstPlayer.ratio - this.queue[0].ratio);
 
-		for (let i = 1; i < this.size(); i++) {
+		for (let i = 0; i < this.size(); i++) {
 			// if (firstPlayer.mode === this.queue[i].mode && Math.abs(firstPlayer.ratio - this.queue[i].ratio) < difference)
-			if (firstPlayer.mode === this.queue[i].mode)
-				secondPlayerId = i;
-		}
 
-		if (firstPlayer.mode !==  this.queue[secondPlayerId].mode) {
+			if (firstPlayer.mode === this.queue[i].mode && firstPlayer.roomNo === this.queue[i].roomNo)
+			{
+				secondPlayerId = i;
+			}
+		}
+		if (firstPlayer.mode !==  this.queue[secondPlayerId].mode || firstPlayer.roomNo !== this.queue[secondPlayerId].roomNo) {
 			this.queue.splice(1, 0, firstPlayer);
 			return players;
 		}

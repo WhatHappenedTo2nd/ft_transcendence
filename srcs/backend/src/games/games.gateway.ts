@@ -36,13 +36,15 @@ import { Server, Socket } from 'socket.io';
 import { GameConnectedUser } from './class/game-connected-user.class';
 import Room from './class/game-room.class';
 import Queue from './class/game-queue.class';
-import { Logger } from '@nestjs/common';
+import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { GamesService } from './games.service';
 import { GameUser } from './class/game-user.class';
 import { GameMode, GameState, UserStatus } from './enum/games.enum';
 import { SET_INTERVAL_MILISECONDS } from './constant/games.constant';
 import { UserService } from 'src/user/user.service';
 import { Games } from './games.entity';
+import { ChatService } from 'src/chat/chat.service';
+import { Chat } from 'src/chat/chat.entity';
 
 /**
  * websocket은 프로토콜 server.io는 라이브러리
@@ -74,8 +76,8 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	constructor(
 		private readonly gamesService: GamesService,
 		private readonly usersService: UserService,
-		// @Inject(forwardRef(() => ChatGateway))
-		// private readonly chatGateway: ChatGateWay,
+		@Inject(forwardRef(() => ChatService))
+		private readonly chatsService: ChatService,
 	) {}
 	@WebSocketServer()
 	server: Server;
@@ -101,6 +103,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	 * @param players
 	 */
 	createNewRoom(players: Array<GameUser>): void {
+		this.logger.log(`createNewRoom 함수입니다.`);
 		const roomId: string = `${players[0].nickname}&${players[1].nickname}`;
 		const room: Room = new Room(roomId, players, { mode: players[0].mode } );
 
@@ -120,6 +123,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		 * 일정 시간 간격을 두고 함수를 실행
 		 * delay: 실행 전 대기 시간으로, 단위는 밀리초(millisecond, 1000밀리초 = 1초)이며 기본값은 0
 		 */
+		this.logger.log('afterInit 함수 입니다.');
 		setInterval(() => {
 			if (this.queue.size() > 1) {
 				const players: Array<GameUser> = this.queue.matchPlayers();
@@ -231,6 +235,10 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		}
 		/** GameUser 생성*/
 		let newGameUser: GameUser = this.gameconnetedUsers.getUserById(gameuser.id);
+		const chat = await this.chatsService.getWhereAreYou(gameuser.nickname);
+		// console.log("handleUserConnect에서 불러온 chat의 정보를 확인합니다. ");
+		// console.log(chat);
+		// console.log("handleUserConnect에서 불러온 chat의 방번호는 ", chat.id);
 		/**
 		 * newGameUser가 gameconnectedUser에 없으면 db에 있는 유저로 만든다. -> 친구로 설정한 사람과 연결을 할것인가? 전체유저로 해야하는가?
 		 * withoutFriend : 친구 요청 중, 친구, 차단된 친구 상태가 아닌 유저의 데이터만을 의미! -> 전체 유저를 의미
@@ -240,14 +248,16 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		if (!newGameUser) {
 			const dbUser = await this.usersService.getUserById(gameuser.id);
 			newGameUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar, dbUser.wins, dbUser.losses, dbUser.ratio, client.id);
-			// const dbUser = await this.usersService.getUserWithoutFriends(gameuser.id);
 		}
 		else {
 			newGameUser.setSocketId(client.id);
 			newGameUser.setNickname(gameuser.nickname);
 		}
 		newGameUser.setUserStatus(UserStatus.IN_HUB);
-		this.logger.log(`handleUserConnect: 소켓에 연결되었고 현재상태는 ${newGameUser.status}입니다.`);
+		newGameUser.setRoomNo(chat.id);
+		// this.logger.log(`handleUserConnect: 유저의 정보를 확인합니다.`);
+		// console.log(newGameUser);
+		// this.logger.log(`handleUserConnect: 소켓에 연결되었고 유저가 접속한 방의 번호는 ${newGameUser.roomNo}입니다.`);
 
 		/**
 		 * 플레이어가 게임에 있지 않은지 확인
@@ -305,9 +315,11 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	 * @returns
 	 */
 	@SubscribeMessage('joinQueue')
-	handleJoinQueue(@ConnectedSocket() client: Socket, @MessageBody() mode: string): Object {
+	async handleJoinQueue(@ConnectedSocket() client: Socket, @MessageBody() mode: string): Promise<Object> {
 		/** 소켓에 접속한 유저의 client.id를 검색해서 게임에 접속한 유저 데이터를 가져온다 */
 		const gameuser: GameUser = this.gameconnetedUsers.getUserBySocketId(client.id);
+		const chat = await this.chatsService.getWhereAreYou(gameuser.nickname);
+
 		if (!gameuser) {
 			return this.returnMessage('handleUserConnect', 400, '유저 데이터가 없습니다.');
 		}
@@ -449,11 +461,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 원이 나갔습니다. 현재 게임상태는 ${room.gameState}입니다.`);
 				this.saveGame(room, false);
 				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 원이 나갔습니다. 저장 후 게임상태는 ${room.gameState}입니다.`);
-				// this.rooms.delete(room.roomId);
-				// const roomIndex: number = this.currentGames.findIndex((toRemove) => toRemove.roomId === room.roomId);
-				// if (roomIndex !== -1) {
-				// 	this.currentGames.splice(roomIndex, 1);
-				// }
 				this.server.emit('updateCurrentGames', this.currentGames);
 			}
 			else if (memoryUser === room.paddleTwo.gameuser &&(room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN) && room.gameState !== GameState.GAME_SAVED_ONE_OUT && room.gameState !== GameState.GAME_SAVED_TWO_OUT) {
@@ -461,11 +468,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 투가 나갔습니다. 현재 게임상태는 ${room.gameState}입니다.`);
 				this.saveGame(room, false);
 				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 투가 나갔습니다. 저장 후 게임상태는 ${room.gameState}입니다.`);
-				// this.rooms.delete(room.roomId);
-				// const roomIndex: number = this.currentGames.findIndex((toRemove) => toRemove.roomId === room.roomId);
-				// if (roomIndex !== -1) {
-				// 	this.currentGames.splice(roomIndex, 1);
-				// }
 				this.server.emit('updateCurrentGames', this.currentGames);
 			}
 		}
@@ -741,6 +743,9 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	@SubscribeMessage('spectateRoom')
 	handleSpectateRoom(@ConnectedSocket() client: Socket, @MessageBody() roomId: string) {
 		this.logger.log(`spectateRoom: 관전하기 버튼을 눌러 관전 소켓 처리 함수로 들어 왔습니다.`);
+		this.logger.log(`spectateRoom: 클라이언트 id는 ${client.id}입니다.`);
+		this.logger.log(`spectateRoom: 방 ID는 ${roomId}입니다.`);
+
 		/** 관전할 방이 없음 */
 		const room: Room = this.rooms.get(roomId);
 		if (!room) {
@@ -749,11 +754,20 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
 		/** 관전 방에 게임 유저가 없음 */
 		const gameuser = this.gameconnetedUsers.getUserBySocketId(client.id);
+		this.logger.log(`spectateRoom: 클라이언트 id의 관전자 유저는 ${gameuser.nickname}입니다.`);
+
+		console.log("방의 플레이어의 닉네임과 방번호는 ", room.paddleOne.gameuser.nickname, " 과 ", room.paddleOne.gameuser.roomNo, "입니다.");
+
+		console.log("관전하는 사람의 방번호는 ", gameuser.roomNo, " 입니다.");
 		if (!gameuser) {
 			return this.returnMessage('spectateRoom', 400, '현재 게임 유저가 없습니다.');
 		} //내가 게임중일 때는 관전할 수 없다.
 		else if (gameuser.status === UserStatus.PLAYING) {
 			throw new Error('게임 중에는 관전할 수 없습니다.');
+		}
+		else if (room.paddleOne.gameuser.roomNo !== gameuser.roomNo || room.paddleTwo.gameuser.roomNo !== gameuser.roomNo) {
+			this.logger.log('spectateRoom: 방 정보가 달라 관전할 수 없습니다.');
+			throw new Error('방 번호가 달라 관전할 수 없습니다.');
 		}
 
 		/** user가 관전자가 아니라면 관전자로 추가 */
@@ -810,8 +824,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		}
 		return this.returnMessage('spectateRoom', 200, '방 정보 전송 성공');
 	}
-
-	/**
+/**
 	 * ! 게임 초대
 	 */
 	setInviteRoomToReady(roomId: string) {
@@ -825,59 +838,59 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
 	/** 방이 이미 존재 */
 	roomAlreadyExists(senderId: number, receiverId: number): boolean {
-		/**
-		 * sender: 게임 초대 보낸 사람
-		 * reciver: 게임 초대 받는 사람
-		 */
-		const sender = this.gameconnetedUsers.getUserById(senderId);
-		const receiver = this.gameconnetedUsers.getUserById(receiverId);
+	/**
+	 * sender: 게임 초대 보낸 사람
+	 * reciver: 게임 초대 받는 사람
+	 */
+	const sender = this.gameconnetedUsers.getUserById(senderId);
+	const receiver = this.gameconnetedUsers.getUserById(receiverId);
 
-		/** 유저가 없다면 */
-		if (!sender || !receiver) {
-			return true;
-		}
-
-		/** 초대를 보낸사람과 안보낸 사람이 게임 방에 접속해 있는지 확인 */
-		this.rooms.forEach((room: Room) => {
-			if (room.isAPlayer(sender)) {
-				throw Error('게임 방에 접속해 있습니다.');
-			}
-			if (room.isAPlayer(receiver)) {
-				throw Error('게임 방에 접속해 있습니다');
-			}
-		});
+	/** 유저가 없다면 */
+	if (!sender || !receiver) {
+		return true;
 	}
+
+	/** 초대를 보낸사람과 안보낸 사람이 게임 방에 접속해 있는지 확인 */
+	this.rooms.forEach((room: Room) => {
+		if (room.isAPlayer(sender)) {
+			throw Error('게임 방에 접속해 있습니다.');
+		}
+		if (room.isAPlayer(receiver)) {
+			throw Error('게임 방에 접속해 있습니다');
+		}
+	});
+}
 
 	/** 초대해서 방 생성 */
 	async createInviteRoom(sender: GameUser, receiverId: number) {
-		/** 유저관리 */
-		// const receiverData = await this.usersService.getUserWithoutFriends(receiverId);
-		const receiverData = await this.usersService.getUserById(receiverId);
-		const firstPlayer: GameUser = await this.createSpectateUser(sender.id, sender.nickname);
-		const secondPlayer: GameUser = await this.createSpectateUser(receiverData.id, receiverData.nickname);
+	/** 유저관리 */
+	// const receiverData = await this.usersService.getUserWithoutFriends(receiverId);
+	const receiverData = await this.usersService.getUserById(receiverId);
+	const firstPlayer: GameUser = await this.createSpectateUser(sender.id, sender.nickname);
+	const secondPlayer: GameUser = await this.createSpectateUser(receiverData.id, receiverData.nickname);
 
-		/** 게임 초대 */
-		if (this.roomAlreadyExists(sender.id, receiverId)) {
-			throw new Error('이미 게임이 존재합니다.');
-		}
-		if (secondPlayer && secondPlayer.status === UserStatus.SPECTATING) {
-			throw new Error('상대방이 관전 중입니다.');
-		}
-		if (firstPlayer && firstPlayer.status === UserStatus.SPECTATING) {
-			throw new Error('관전 중에는 초대할 수 없습니다. LeaveRoom을 눌러주세요');
-		}
-
-		/** 게임 방 생성 */
-		const roomId: string = `${firstPlayer.nickname}&${secondPlayer.nickname}`;
-		let room: Room = new Room(roomId, [firstPlayer, secondPlayer]);
-		room.gameState = GameState.WAITING;
-		this.rooms.set(roomId, room);
-		this.currentGames.push(room);
-
-		/** 게임방 생성 후 클라이언트에 알리기 */
-		this.server.emit('updateCurrentGames', this.currentGames);
-		return roomId;
+	/** 게임 초대 */
+	if (this.roomAlreadyExists(sender.id, receiverId)) {
+		throw new Error('이미 게임이 존재합니다.');
 	}
+	if (secondPlayer && secondPlayer.status === UserStatus.SPECTATING) {
+		throw new Error('상대방이 관전 중입니다.');
+	}
+	if (firstPlayer && firstPlayer.status === UserStatus.SPECTATING) {
+		throw new Error('관전 중에는 초대할 수 없습니다. LeaveRoom을 눌러주세요');
+	}
+
+	/** 게임 방 생성 */
+	const roomId: string = `${firstPlayer.nickname}&${secondPlayer.nickname}`;
+	let room: Room = new Room(roomId, [firstPlayer, secondPlayer]);
+	room.gameState = GameState.WAITING;
+	this.rooms.set(roomId, room);
+	this.currentGames.push(room);
+
+	/** 게임방 생성 후 클라이언트에 알리기 */
+	this.server.emit('updateCurrentGames', this.currentGames);
+	return roomId;
+}
 }
 
 /**
