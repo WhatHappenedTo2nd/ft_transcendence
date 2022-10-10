@@ -113,34 +113,34 @@ function Chatting(props: any) {
 				<ChatName>{roomName}</ChatName>
 				<LeaveButton onClick={onLeaveRoom}>방 나가기</LeaveButton>
 			</ChatRoomName>
-		<ChatContainer ref={chatContainerEl}>
-			{chats.map((chat, index) => (
-				<MessageBox
-					key={index}
-					className={classNames({
-						my_message: socket.id === chat.socket_id,
-						alarm: !chat.name,
-					})}
-				>
-				<UserContextMenu
-				userId={chat.id}
-				name={chat.name}
-				mode='chat'
-				>
-					{chat.name
-					? socket.id === chat.socket_id
-						? ''
-						: chat.name
-					: ''}
-				</UserContextMenu>
-				<Message className="message">{chat.message}</Message>
-				</MessageBox>
-			))}
-		</ChatContainer>
-		<MessageForm onSubmit={onSendMessage}>
-			<input type="text" onChange={onChange} value={message} />
-			<button>보내기</button>
-		</MessageForm>
+			<ChatContainer ref={chatContainerEl}>
+				{chats.map((chat, index) => (
+					<MessageBox
+						key={index}
+						className={classNames({
+							my_message: socket.id === chat.socket_id,
+							alarm: !chat.name,
+						})}
+					>
+					<UserContextMenu
+					userId={chat.id}
+					name={chat.name}
+					mode='chat'
+					>
+						{chat.name
+						? socket.id === chat.socket_id
+							? ''
+							: chat.name
+						: ''}
+					</UserContextMenu>
+					<Message className="message">{chat.message}</Message>
+					</MessageBox>
+				))}
+			</ChatContainer>
+			<MessageForm onSubmit={onSendMessage}>
+				<input type="text" onChange={onChange} value={message} />
+				<button>보내기</button>
+			</MessageForm>
 		</div>
 	);
 
