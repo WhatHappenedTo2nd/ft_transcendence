@@ -141,6 +141,14 @@ export class ChatUserRepository extends Repository<ChatUser> {
 		}
 	}
 
+	async kickUser(room: Chat, targetUser: User): Promise<void> {
+		try {
+			await this.deleteUser(room, targetUser);
+		} catch (error) {
+			throw new InternalServerErrorException();
+		}
+	}
+
 	async getAllChatUsers(room: Chat): Promise<ChatUser[]> {
 		const chatUsers = await this.find({
 			relations: {
