@@ -8,9 +8,6 @@ import { ChatUserRepository } from "./chatuser.repository";
 import { Equal } from "typeorm";
 import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
-import { GetUser } from "src/user/get.user.decorator";
-import { User } from "src/user/user.entity";
-import { UserIdDto } from "src/user/dto/user-id.dto";
 import { FriendRepository } from "src/friend/friend.repository";
 
 interface MessagePayload {
@@ -38,24 +35,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	) {}
 
 	private logger = new Logger('ChatGateWay');
-
-	// 초기화 이후에 실행
-	// afterInit() {
-	// 	this.nsp.adapter.on('delete-room', (room) => {
-	// 		const deletedRoom = createdRooms.find(
-	// 			(createdRoom) => createdRoom === room,
-	// 		);
-	// 		if (!deletedRoom) return;
-
-
-	// 		this.nsp.emit('delete-room', deletedRoom);
-	// 		createdRooms = createdRooms.filter(
-	// 			(createdRoom) => createdRoom !== deletedRoom,
-	// 		); // 유저가 생성한 room 목록 중에 삭제되는 room 있으면 제거
-	// 	});
-
-	// 	this.logger.log('웹소켓 서버 초기화');
-	// }
 
 	// 소켓이 연결되면 실행
 	handleConnection(@ConnectedSocket() socket: Socket) {
@@ -215,7 +194,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		) {
 			// roomname -> 새로 바꿀 방 이름
 			// password -> 새로 바꿀 방의 패스워드
-			// 
 			const user = await this.userRepository.findByIntraId(userIntraId);
 			const targetRoom = await this.chatService.getWhereAreYou(user.nickname);
 			const overlapRoom = await this.chatRepository.findOneByRoomname(roomName);
@@ -230,5 +208,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			await this.chatRepository.save(targetRoom);
 
 			return { success: true, payload: roomName };
+		}
+
+	@SubscribeMessage('kick-room')
+	async handleKickRoom(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() {roomName, userIntraId}: MessagePayload
+		) {
+			// roomname -> 새로 바꿀 방 이름
+			// userIntraId -> 여기서는 targetName입니다 :)
+			const user = await this.userRepository.findByNickname(userIntraId);
+			await this.chatService.kickUser(roomName, userIntraId);
+			this.nsp.to(user.socket_id).emit('kick-room');
+			this.nsp.in(user.socket_id).socketsLeave(roomName);
+			return { success: true }
 		}
 }

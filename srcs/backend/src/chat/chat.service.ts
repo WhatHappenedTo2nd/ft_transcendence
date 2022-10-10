@@ -69,6 +69,8 @@ export class ChatService {
 	async kickUser(roomname: string, targetname: string): Promise<void> {
 		const target: User = await this.userRepository.findByNickname(targetname);
 		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+
+		await this.chatUserRepository.kickUser(room, target);
 	}
 
 	async muteUser(roomname: string, targetname: string): Promise<void> {
