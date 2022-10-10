@@ -41,7 +41,7 @@ export class ChatService {
 	async getRoomUserList(path: string): Promise<ChatUserDefaultDto[]> {
 		const id: number = Number(path);
 		const room = await this.chatRepository.findOneById(id);
-		console.log(room);
+		// console.log(room);
 		const roomuser = await this.chatUserRepository.find({
 			relations: {
 				user_id: true,
