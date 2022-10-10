@@ -17,7 +17,7 @@ function CheckPassword(props: any) {
 	const onJoinRoom = useCallback(() => {
 		socket.emit('join-room', { roomName: chatTitle, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 			if (!response.success)
-			return alert(response.payload);
+			return alert("비밀번호가 틀렸습니다.");
 			navigate(`/room/${response.payload}`);
 		});
 	}, [chatTitle, password, navigate]);
