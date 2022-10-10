@@ -1,29 +1,36 @@
-import { MenuItem, Text, useDisclosure, useToast } from '@chakra-ui/react';
-import { useQuery, useQueryClient } from "react-query";
+import { MenuItem, Text } from '@chakra-ui/react';
+import { useQuery } from "react-query";
 import { useNavigate } from 'react-router-dom';
 import { getWhereAreYou } from '../../../../api/api';
 import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
-import CheckPassword from '../../../chatting/CheckPassword';
+import useWarningAlert from '../../../../hooks/useWarnigAlert';
 import IChatListProps from '../../../interface/IChatListProps';
 
 export default function GameSpectactorMenu({label, target}: {label: string; target: string;}) {
 	const navigate = useNavigate();
+	const { setError, WarningDialogComponent } = useWarningAlert();
 	const { data: chat } = useQuery<IChatListProps>(['findroom', target], () => getWhereAreYou(target));
-	const { isOpen, onOpen, onClose } = useDisclosure();
+
 	const onJoinRoom = (roomName?: string) => () => {
-		socket.emit('join-room', {roomName, userIntraId: getCookie("intra_id")}, () => {
-			navigate(`/room/${chat?.id}`);
-		});
+		if (chat?.is_private) {
+			setError({
+				headerMessage: '입장 실패',
+				bodyMessage: '비밀방은 입장할 수 없습니다.'
+			})
+		} else {
+			socket.emit('join-room', {roomName, userIntraId: getCookie("intra_id")}, () => {
+				navigate(`/room/${chat?.id}`);
+			});
+		}
 	};
 
 	return (
 		<>
-		<MenuItem onClick={chat?.is_private? onOpen : onJoinRoom(chat?.title)}>
+		<MenuItem onClick={onJoinRoom(chat?.title)}>
 			<Text>{label}</Text>
 		</MenuItem>
-		{chat?.is_private ? <CheckPassword chatPassword={chat.password} chatTitle={chat.title}
-					isOpen={isOpen} onClose={onClose} />:null}
+		{WarningDialogComponent}
 		</>
 	);
 }
