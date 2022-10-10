@@ -147,3 +147,8 @@ function Chatting(props: any) {
 }
 
 export default Chatting;
+
+/**
+ * 2022/10/10
+ * 채방방 css 수정
+ */

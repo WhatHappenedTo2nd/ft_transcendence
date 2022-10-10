@@ -75,7 +75,6 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	 *
 	 * !!우리가 UserData 저장이 어떻게 되어있는지 확인하고 어떻게 가져올 것인지 수정이 필요하다.
 	 */
-	// const userData: IUser = JSON.parse(localStorage.getItem('user') || '{}');
 	let room: IRoom = roomDataProps;
 	const isPlayer: boolean = (userData.id === room.paddleOne.gameuser.id || userData.id === room.paddleTwo.gameuser.id);
 
@@ -137,7 +136,8 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		gameState: GameState,
 		gameData: GameData,
 	) => {
-		if (gameState === GameState.PLAYER_ONE_WIN || gameState === GameState.GAME_SAVED_TWO_OUT) {
+		console.log('게임결과를 출력합니다. 게임상태는 ', gameState, '입니다.');
+		if (gameState === GameState.PLAYER_ONE_WIN || gameState === GameState.GAME_SAVED_TWO_OUT || gameState === GameState.GAME_SAVED_ONE_WIN) {
 			gameData.drawCenteredTexture(
 				`${playerOneName} Won!`,
 				gameData.screenWidth / 2,
@@ -146,7 +146,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 				'white'
 				);
 			}
-		else if (gameState === GameState.PLAYER_TWO_WIN || gameState === GameState.GAME_SAVED_ONE_OUT) {
+		else if (gameState === GameState.PLAYER_TWO_WIN || gameState === GameState.GAME_SAVED_ONE_OUT || gameState === GameState.GAME_SAVED_TWO_WIN) {
 			gameData.drawCenteredTexture(
 				`${playerTwoName} Won!`,
 				gameData.screenWidth / 2,
@@ -178,6 +178,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		 * 게임의 상태를 확인하여 각 이벤트를 처리하면서 게임 루프를 계속해서 돌린다.
 		 */
 		const gameLoop = () => {
+			console.log('게임 상태를 확인합니다.', room.gameState);
 			if (room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN && isPlayer)
 				socket.emit('requestUpdate', room.roomId);
 			drawGame(gameData, room);
@@ -193,7 +194,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			else if (room.gameState === GameState.RESUMED) {
 				gameData.drawStartCountDown('READY');
 			}
-			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState ===  GameState.GAME_SAVED_ONE_OUT || room.gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.GAME_SAVED_TWO_OUT) {
+			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState ===  GameState.GAME_SAVED_ONE_OUT || room.gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.GAME_SAVED_TWO_OUT || room.gameState === GameState.GAME_SAVED_ONE_WIN || room.gameState === GameState.GAME_SAVED_TWO_WIN) {
 				gameData.clear();
 				gameEnd(room.roomId, room.paddleOne.gameuser.nickname, room.paddleTwo.gameuser.nickname, room.gameState, gameData);
 			}
@@ -223,10 +224,12 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 
 	return (
 		<div>
+			<>
 			<LeaveButton onClick={leaveRoom} type="button">
 				게임 방 나가기
 			</LeaveButton>
 			<PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} />
+			</>
 			<Canvas id="pong-canvas" width="1920" height="1080" />
 		</div>
 	);
