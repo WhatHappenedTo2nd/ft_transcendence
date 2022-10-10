@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import WaitingRoom from "../chatting/WaitingRoom";
 import UserProfile from "../mypage/UserProfile";
 import SideBar from "../sidebar/SideBar";
 import ChattingRoomPage from "./ChattingRoomPage";
@@ -24,7 +23,6 @@ export default function HomePage() {
 			<Route path="/chatting" element={<ChattingRoomPage />} />
 			<Route path="/room/:roomName" element={<GamePage />} />
 			<Route path="/game" element={<GamePage />} />
-			<Route path="/waiting" element={<WaitingRoom />} />
 			<Route path="/*" element={<NotFound />} />
 		</Routes>
 		</>

@@ -1,7 +1,7 @@
 import { MenuItem, Text, useToast } from '@chakra-ui/react';
 import axios from "axios";
 import { useQueryClient } from "react-query";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { getCookie } from '../../../../api/cookieFunc';
 import useWarningAlert from "../../../../hooks/useWarnigAlert";
 
@@ -10,12 +10,12 @@ export default function MuteMenu({label, target}: {label: string; target: string
 	const { setError, WarningDialogComponent } = useWarningAlert();
 	const toast = useToast();
 	const location = useLocation();
-	const roomname = location.pathname.substring(6);
+	const roomid = location.pathname.substring(6);
 	const onClickHandler = () => {
 		const url =
 		label === '음소거'
-		? `/chat/mute/${roomname}/${target}`
-		: `/chat/unmute/${roomname}/${target}`
+		? `/chat/mute/${roomid}/${target}`
+		: `/chat/unmute/${roomid}/${target}`
 		axios({
 			method: "PATCH",
 			headers: {

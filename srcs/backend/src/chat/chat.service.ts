@@ -75,23 +75,23 @@ export class ChatService {
 		await this.chatUserRepository.kickUser(room, target);
 	}
 
-	async muteUser(roomname: string, targetname: string): Promise<void> {
+	async muteUser(roomId: string, targetname: string): Promise<void> {
 		const target: User = await this.userRepository.findByNickname(targetname);
-		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+		const room: Chat = await this.chatRepository.findOneById(Number(roomId));
 
 		await this.chatUserRepository.muteUser(room, target);
 	}
 
-	async unMuteUser(roomname: string, targetname: string): Promise<void> {
+	async unMuteUser(roomId: string, targetname: string): Promise<void> {
 		const target: User = await this.userRepository.findByNickname(targetname);
-		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+		const room: Chat = await this.chatRepository.findOneById(Number(roomId));
 
 		await this.chatUserRepository.unMuteUser(room, target);
 	}
 
-	async moveHostUser(roomname: string, targetname: string): Promise<void> {
+	async moveHostUser(roomId: string, targetname: string): Promise<void> {
 		const target: User = await this.userRepository.findByNickname(targetname);
-		const room: Chat = await this.chatRepository.findOneByRoomname(roomname);
+		const room: Chat = await this.chatRepository.findOneById(Number(roomId));
 
 		await this.chatRepository.succedingHost(room, target);
 	}

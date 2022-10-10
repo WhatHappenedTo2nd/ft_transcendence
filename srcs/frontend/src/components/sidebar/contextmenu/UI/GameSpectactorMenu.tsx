@@ -13,7 +13,7 @@ export default function GameSpectactorMenu({label, target}: {label: string; targ
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const onJoinRoom = (roomName?: string) => () => {
 		socket.emit('join-room', {roomName, userIntraId: getCookie("intra_id")}, () => {
-			navigate(`/room/${roomName}`);
+			navigate(`/room/${chat?.id}`);
 		});
 	};
 
