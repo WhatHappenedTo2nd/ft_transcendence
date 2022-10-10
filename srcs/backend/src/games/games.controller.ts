@@ -53,7 +53,6 @@ export class GamesController {
 		return response;
 	}
 
-
 	@Get('/all')
 	async getAllGame(): Promise<Games[]> {
 		const games = await this.gamesService.findAllGame();

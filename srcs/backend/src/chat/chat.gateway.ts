@@ -33,7 +33,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		private chatUserRepository: ChatUserRepository,
 		private userRepository: UserRepository,
 		private chatService: ChatService,
-		private friendRepository: FriendRepository
+		private friendRepository: FriendRepository,
+		private gameGateway: GamesGateway,
 	) {}
 
 	private logger = new Logger('ChatGateWay');
@@ -226,5 +227,56 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			this.nsp.to(user.socket_id).emit('kick-room');
 			this.nsp.in(user.socket_id).socketsLeave(roomName);
 			return { success: true }
-		}
+	}
+
+	/** Game */
+	// @SubscribeMessage('acceptPongInvite')
+	// async handleAcceptPongInvite(
+	// 	@ConnectedSocket() client: Socket,
+	// 	@MessageBody() { roomId, messageId }: { roomId: string; messageId: number },
+	// ) {
+	// 	try {
+	// 	/** 게임 확인 */
+	// 	const room = this.gameGateway.setInviteRoomToReady(roomId);
+
+	// 	/** 수락 후 */
+	// 	await this.messageService.setType(messageId, 'text');
+
+	// 	return this.returnMessage('acceptPongInvite', 200, '게임 초대를 수락했습니다.');
+	// 	} catch (e) {
+	// 	this.server.to(client.id).emit('chatError', e.message);
+	// 	}
+	// }
+
+	// @SubscribeMessage('sendPongInvite')
+	// async handleSendPongInvite(@ConnectedSocket() client: Socket, @MessageBody() { anotherId }: { anotherId: number }) {
+	// try {
+	// 	const memorySender = this.chatUsers.getUser(client.id);
+	// 	const memoryReceiver = this.chatUsers.getUserById(anotherId);
+
+	// 	/** 게임 방이 존재하는지 확인 */
+	// 	/** 상대방이 게임중이면 chatError */
+	// 	this.gameGateway.roomAlreadyExists(memorySender.id, anotherId);
+
+	// 	/** 초대방 만들기 */
+	// 	const roomId = await this.gameGateway.createInviteRoom(
+	// 	{ id: memorySender.id, nickname: memorySender.nickname } as User, anotherId,);
+	// 	this.logger.log(`sendPongInvite: createInviteRoom: ${roomId}`);
+
+	// 	/** DM 보내기 */
+	// 	// const dm: any = await this.handleCreateDm(client, { anotherId });
+	// 	// await this.handleDmSubmit(client, {
+	// 	// 	DMId: dm.data,
+	// 	// 	authorId: memorySender.id,
+	// 	// 	message: '게임에 초대했습니다.',
+	// 	// 	type: 'invite',
+	// 	// 	roomId: roomId,
+	// 	// });
+
+	// 	return this.returnMessage('sendPongInvite', 200, '게임 초대를 보냈습니다.');
+	// 	} catch (e) {
+	// 		console.log(e);
+	// 		this.server.to(client.id).emit('chatError', e.message);
+	// 	}
+	// }
 }
