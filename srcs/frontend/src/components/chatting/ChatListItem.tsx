@@ -28,7 +28,7 @@ function ChatListItem(props: any) {
 				<Button marginLeft="auto" onClick={chat.is_private?onOpen :onJoinRoom(chat.title)} fontFamily='WelcomeRegular'>
 					Join
 				</Button>
-				{chat.is_private? <CheckPassword chatPassword={chat.password} chatTitle={chat.title}
+				{chat.is_private? <CheckPassword chatTitle={chat.title}
 					isOpen={isOpen} onClose={onClose} />:null}
 			</Box>
 		</Container>

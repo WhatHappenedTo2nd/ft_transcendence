@@ -7,7 +7,6 @@ import ICreateRoomResponse from '../interface/IChatProps';
 import { getCookie } from "../../api/cookieFunc";
 
 function CheckPassword(props: any) {
-	const { chatPassword } = props;
 	const { chatTitle } = props;
 	const { isOpen } = props;
 	const { onClose } = props;
@@ -16,15 +15,11 @@ function CheckPassword(props: any) {
 	const handleClick = () => setShow(!show);
 	const [password, setPassword] = useState('');
 	const onJoinRoom = useCallback(() => {
-		if (!(password === chatPassword))
-			alert('비밀번호를 다시 입력해주세요.');
-		if (password === chatPassword) {
-			socket.emit('join-room', { roomName: chatTitle, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
-				if (!response.success)
-				return alert(response.payload);
-				navigate(`/room/${response.payload}`);
-			});
-		}
+		socket.emit('join-room', { roomName: chatTitle, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
+			if (!response.success)
+			return alert(response.payload);
+			navigate(`/room/${response.payload}`);
+		});
 	}, [chatTitle, password, navigate]);
 
 	return (
