@@ -57,8 +57,6 @@ export class GamesController {
 
 	@Get('/all')
 	async getAllGame(): Promise<Games[]> {
-		console.log("GameController:: api 접근을 했습니다.");
-		this.logger.log('GameController:: api 접근을 했습니다. log');
 		const games = await this.gamesService.findAllGame();
 		console.log(games);
 		return games;

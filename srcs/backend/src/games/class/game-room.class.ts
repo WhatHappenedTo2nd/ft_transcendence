@@ -75,7 +75,7 @@ export default class Room implements IRoom {
 	roomId: string;
 	gameState: GameState;
 	players: GameUser[];
-	// spectators: GameUser[]; //관중
+	spectators: GameUser[]; //관중
 	paddleOne: Paddle;
 	paddleTwo: Paddle;
 	ball: Ball;
@@ -96,7 +96,7 @@ export default class Room implements IRoom {
 		this.roomId = roomId;
 		this.gameState = GameState.STARTING;
 		this.players = [];
-		// this.spectators = [];
+		this.spectators = [];
 		this.paddleOne = new Paddle(gameusers[0], 10, customisation.mode);
 		this.paddleTwo = new Paddle(gameusers[1], CANVAS_WIDTH - 40, customisation.mode);
 		this.ball = new Ball(customisation.mode);
@@ -124,24 +124,24 @@ export default class Room implements IRoom {
 	 * @param gameusers
 	 * @returns
 	 */
-	// isASpectator(gameusers: GameUser): boolean {
-	// 	/**
-	// 	 * @func findIndex: 주어진 판별 함수를 만족하는 배열의 첫 번째 요소에 대한 인덱스를 반환합니다. 만족하는 요소가 없으면 -1을 반환합니다.
-	// 	 * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
-	// 	 * 배열의 요소에서 value 속성 값이 gameusers.id인 배열의 요소를 반환
-	// 	 */
-	// 	/**
-	// 	 * 관전자 배열에 유저가 있는지 확인
-	// 	 * 배열 안에 관전자로 있다면 true, 없다면 false
-	// 	 */
-	// 	const index = this.spectators.findIndex((value) => {
-	// 		return value.id === gameusers.id;
-	// 	});
-	// 	if (index === -1) {
-	// 		return false;
-	// 	}
-	// 	return true;
-	// }
+	isASpectator(gameusers: GameUser): boolean {
+		/**
+		 * @func findIndex: 주어진 판별 함수를 만족하는 배열의 첫 번째 요소에 대한 인덱스를 반환합니다. 만족하는 요소가 없으면 -1을 반환합니다.
+		 * @see https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex
+		 * 배열의 요소에서 value 속성 값이 gameusers.id인 배열의 요소를 반환
+		 */
+		/**
+		 * 관전자 배열에 유저가 있는지 확인
+		 * 배열 안에 관전자로 있다면 true, 없다면 false
+		 */
+		const index = this.spectators.findIndex((value) => {
+			return value.id === gameusers.id;
+		});
+		if (index === -1) {
+			return false;
+		}
+		return true;
+	}
 
 	findOne(gameuser: GameUser): number {
 		return this.players.findIndex((element) => element.id === gameuser.id);
@@ -161,16 +161,17 @@ export default class Room implements IRoom {
 			this.players.splice(userIndex, 1);
 		}
 	}
-	// addSpectator(gameuser: GameUser) {
-	// 	this.spectators.push(gameuser);
-	// }
 
-	// removeSpectator(gameuser: GameUser) {
-	// 	const userIndex: number = this.spectators.findIndex((value) => value.nickname === gameuser.nickname);
-	// 	if (userIndex !== -1) {
-	// 		this.spectators.splice(userIndex, 1);
-	// 	}
-	// }
+	addSpectator(gameuser: GameUser) {
+		this.spectators.push(gameuser);
+	}
+
+	removeSpectator(gameuser: GameUser) {
+		const userIndex: number = this.spectators.findIndex((value) => value.nickname === gameuser.nickname);
+		if (userIndex !== -1) {
+			this.spectators.splice(userIndex, 1);
+		}
+	}
 
 	getDuration(): number {
 		let duration: number = Date.now() - this.timestampStart;
