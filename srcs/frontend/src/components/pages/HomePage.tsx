@@ -20,14 +20,14 @@ export default function HomePage() {
 	const { data: chat } = useQuery<IChatListProps>(['findroombyintra', intra_id], () => getWhereAreYouByIntraId(intra_id));
 	const location = useLocation();
 	console.log(chat);
-	if (chat) {
-		console.log("test");
-		const roomId = chat.id;
-		const roomName = chat.title;
-		if (!location.pathname.includes('room') || !location.pathname.includes('chat')) {
-			socket.emit('leave-room', { roomId, roomName, userIntraId: getCookie("intra_id") }, () => {});
-		}
-	}
+	// if (chat) {
+	// 	console.log("test");
+	// 	const roomId = chat.id;
+	// 	const roomName = chat.title;
+	// 	if (!location.pathname.includes('room') || !location.pathname.includes('chat')) {
+	// 		socket.emit('leave-room', { roomId, roomName, userIntraId: getCookie("intra_id") }, () => {});
+	// 	}
+	// }
 
 	return (
 		<>
