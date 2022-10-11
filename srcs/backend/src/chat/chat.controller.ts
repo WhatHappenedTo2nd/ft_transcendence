@@ -52,4 +52,14 @@ export class ChatController {
 		await this.chatService.moveHostUser(roomid, targetname);
 	}
 
+	@Patch('/addadmin/:roomid/:targetname')
+	async addAdminUser(@Param('roomid') roomid: string, @Param('targetname') targetname: string): Promise<void> {
+		await this.chatService.addAdminUser(roomid, targetname);
+	}
+
+	@Patch('/removeadmin/:roomid/:targetname')
+	async removeAdminUser(@Param('roomid') roomid: string, @Param('targetname') targetname: string): Promise<void> {
+		await this.chatService.removeAdminUser(roomid, targetname);
+	}
+
 }

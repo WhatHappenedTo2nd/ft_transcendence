@@ -10,12 +10,19 @@ import AddFriendMenu from "./UI/AddFriendMenu";
 import BlockMenu from "./UI/BlockMenu";
 import RemoveFriendMenu from "./UI/RemoveFriendMenu";
 import MuteMenu from "./UI/MuteMenu";
-import HostApproveMenu from "./UI/HostApproveMenu";
 import GameSpectactorMenu from "./UI/GameSpectactorMenu";
 import KickMenu from "./UI/KickMenu";
+import AddAdminMenu from "./UI/AddAdminMenu";
+import RemoveAdminMenu from "./UI/RemoveAdminMenu";
 import GameInviteMenu from "./UI/GameInviteMenu";
 
 export type UserContextMenuType = 'friend' | 'chat' | 'online';
+
+enum Role {
+	HOST = 'HOST',
+	MEMBER = 'MEMBER',
+	ADMIN = 'ADMIN',
+};
 
 const ChildView = styled.div`
   width: 100%;
@@ -45,8 +52,9 @@ enum UserContextMenuFlag {
 	CHAT_KICK = 1 << 7, // 채팅에서 내쫒기, mode가 host일 때
 	CHAT_MUTE = 1 << 8, // 채팅에서 뮤트 시키기
 	CHAT_UNMUTE = 1 << 9, // 채팅에서 뮤트 해제
-	ADMIN_APPROVE = 1 << 10, // 관리자 이전
-
+	ADMIN_APPROVE = 1 << 10, // 관리자 임명
+	ADMIN_UNAPPROVE = 1 << 10, // 관리자 해제
+  
 	FRIEND = FRIEND_ADD | FRIEND_REMOVE | BLOCK_ADD | BLOCK_REMOVE,
 	GAME = GAME_INVITE | GAME_SPECTACTOR,
 	CHAT = CHAT_KICK |
@@ -61,7 +69,8 @@ export default function UserContextMenu({
 	mode, // 현재 우클릭하는 창의 상태 (online 유저 띄우는 창, 친구창, 방 접속인원 창)
 	game, // target now game
 	muted,
-	myrole, // my role (host or member)
+	targetrole,
+	myrole, // my role (host or member or admin)
 	children,
 }: {
 	userId: number; // target user의 id
@@ -69,7 +78,8 @@ export default function UserContextMenu({
 	muted?: boolean; // target의 mute 상태
 	game?: boolean;
 	mode: UserContextMenuType;
-	myrole?: boolean;
+	targetrole?: Role;
+	myrole?: Role;
 	children: React.ReactNode;
 }) {
 	const friends = useFriends();
@@ -80,9 +90,19 @@ export default function UserContextMenu({
 		const isBlocked = blocks?.filter((b) => b.id === userId).length;
 		if (mode === 'chat') {
 			flag |= UserContextMenuFlag.GAME_INVITE;
-			if (myrole === true) {
-				flag |= UserContextMenuFlag.ADMIN_APPROVE;
+			if (myrole === Role.HOST) {
+				if (targetrole === Role.ADMIN) {
+					flag |= UserContextMenuFlag.ADMIN_UNAPPROVE;
+				} else {
+					flag |= UserContextMenuFlag.ADMIN_APPROVE;
+				}
 				flag |= UserContextMenuFlag.CHAT_KICK;
+				if (muted === true) {
+					flag |= UserContextMenuFlag.CHAT_UNMUTE;
+				} else {
+					flag |= UserContextMenuFlag.CHAT_MUTE;
+				}
+			} else if (myrole === Role.ADMIN) {
 				if (muted === true) {
 					flag |= UserContextMenuFlag.CHAT_UNMUTE;
 				} else {
@@ -176,8 +196,13 @@ export default function UserContextMenu({
 							target={name} />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.ADMIN_APPROVE}>
-							<HostApproveMenu
+							<AddAdminMenu
 							label="운영자 임명"
+							target={name} />
+						</UserContextMenuItem>
+						<UserContextMenuItem flag={UserContextMenuFlag.ADMIN_UNAPPROVE}>
+							<RemoveAdminMenu
+							label="운영자 임명 해제"
 							target={name} />
 						</UserContextMenuItem>
 					</MenuList>
@@ -197,4 +222,6 @@ export default function UserContextMenu({
 UserContextMenu.defaultProps = {
 	muted: false,
 	game: false,
+	targetrole: Role.MEMBER,
+	myrole: Role.MEMBER,
 }

@@ -3,7 +3,7 @@ import { ChatRepository } from './chat.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChatUserRepository } from './chatuser.repository';
 import { Equal } from 'typeorm';
-import { ChatUserDefaultDto } from './dto/chatuser-default.dto';
+import { ChatUserDefaultDto, Role } from './dto/chatuser-default.dto';
 import { ChatDto } from './dto/chat.dto';
 import { ChatListDto } from './dto/chat.list.dto';
 import { UserRepository } from 'src/user/user.repository';
@@ -58,9 +58,11 @@ export class ChatService {
 			user.avatar = e.user_id.avatar;
 			user.is_muted = e.is_muted;
 			if (room.host.id === e.user_id.id) {
-				user.is_host = true;
+				user.role = Role.HOST;
+			} else if (e.is_admin) {
+				user.role = Role.ADMIN;
 			} else {
-				user.is_host = false;
+				user.role = Role.MEMBER;
 			}
 			roomUserList.push(user);
 		});
@@ -93,6 +95,20 @@ export class ChatService {
 		const room: Chat = await this.chatRepository.findOneById(Number(roomId));
 
 		await this.chatRepository.succedingHost(room, target);
+	}
+
+	async addAdminUser(roomId: string, targetname: string): Promise<void> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const room: Chat = await this.chatRepository.findOneById(Number(roomId));
+
+		await this.chatUserRepository.addAdmin(room, target);
+	}
+
+	async removeAdminUser(roomId: string, targetname: string): Promise<void> {
+		const target: User = await this.userRepository.findByNickname(targetname);
+		const room: Chat = await this.chatRepository.findOneById(Number(roomId));
+
+		await this.chatUserRepository.removeAdmin(room, target);
 	}
 
 	/**

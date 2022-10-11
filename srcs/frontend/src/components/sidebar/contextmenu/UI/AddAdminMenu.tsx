@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { getCookie } from '../../../../api/cookieFunc';
 import useWarningAlert from "../../../../hooks/useWarnigAlert";
 
-export default function HostApproveMenu({label, target}: {label: string; target: string;}) {
+export default function AddAdminMenu({label, target}: {label: string; target: string;}) {
 	const queryClient = useQueryClient();
 	const { setError, WarningDialogComponent } = useWarningAlert();
 	const toast = useToast();
@@ -17,13 +17,13 @@ export default function HostApproveMenu({label, target}: {label: string; target:
 			headers: {
 				Authorization: 'Bearer ' + getCookie("accessToken")
 			},
-			url: `/chat/host/${roomname}/${target}`
+			url: `/chat/addadmin/${roomname}/${target}`
 		})
 		.then(() => {
 			queryClient.invalidateQueries('roomuser');
 			toast({
 				title: `${label}`,
-				description: `${target} 님에게 운영자 권한을 양도하였습니다.`,
+				description: `${target} 님에게 운영자 권한을 주었습니다.`,
 				status: 'success',
 				duration: 1000,
 				isClosable: true,
@@ -32,12 +32,12 @@ export default function HostApproveMenu({label, target}: {label: string; target:
 		.catch((err) => {
 			if (err.response) {
 				setError({
-					headerMessage: '계승 실패',
+					headerMessage: '권한 주기 실패',
 					bodyMessage: err.response.data.message,
 				});
 			} else {
 				setError({
-					headerMessage: '계승 실패',
+					headerMessage: '권한 주기 실패',
 					bodyMessage: err.message,
 				});
 			}
