@@ -30,7 +30,6 @@ export default function GameSpectactorMenu({label, target}: {label: string; targ
 			})
 		}
 		else if (blockCheck){
-			console.log("blockCheck의 값은? ", blockCheck);
 			setError({
 				headerMessage: '입장 실패',
 				bodyMessage: '차단한 사람의 방은 입장할 수 없습니다.'

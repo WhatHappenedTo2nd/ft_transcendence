@@ -136,6 +136,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() { roomName, password, userIntraId }: MessagePayload
 	) {
+		this.logger.log(`join-room을 실행합니다.`);
+		this.logger.log(`roomName: ${roomName}, password: ${password}, userIntraId: ${userIntraId}`);
 		const user = await this.userRepository.findByIntraId(userIntraId);
 		if (user)
 		{
@@ -167,7 +169,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('leave-room')
 	async handleLeaveRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomId, userIntraId}: MessagePayload
+		@MessageBody() { roomId, userIntraId }: MessagePayload
 	) {
 		socket.leave(String(roomId)); // leave room
 		const user = await this.userRepository.findByIntraId(userIntraId);
@@ -226,5 +228,22 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			this.nsp.to(user.socket_id).emit('kick-room');
 			this.nsp.in(user.socket_id).socketsLeave(roomName);
 			return { success: true }
+	}
+
+	@SubscribeMessage("invite-room")
+	async handleInviteRoom(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() {roomName, name }: MessagePayload
+		) {
+			// roomname -> 새로 바꿀 방 이름
+			// userIntraId -> 여기서는 targetName입니다 :)
+			this.logger.log(`name: ${name}`);
+			const user = await this.userRepository.findByNickname(name);
+			this.logger.log(`user nickname: ${user.nickname}, id :${user.id}, intra: ${user.intra_id}`);
+			await this.chatService.kickUser(roomName, name);
+			this.nsp.in(user.socket_id).socketsLeave(roomName);
+			this.nsp.to(user.socket_id).emit('invite-room', {roomName: roomName, payload: user.intra_id});
+			this.logger.log(`roomName: ${roomName}, payload: ${user.intra_id}`);
+			return { success: true, payload: user.intra_id, roomName: roomName }
 	}
 }

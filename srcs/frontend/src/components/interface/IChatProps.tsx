@@ -8,4 +8,5 @@ export default interface IChat {
 export default interface ICreateRoomResponse {
 	success: boolean;
 	payload: string;
+	roomName: string;
 };
