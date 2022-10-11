@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import {
@@ -40,10 +40,10 @@ function MyPageModal() {
 	const [inputPhoto, setInputPhoto] = useState('');
 	const queryClient = useQueryClient();
 
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<UserProps>('me', getLoginUserData);
+	const { data: Mydata } = useQuery<UserProps>('me', getLoginUserData);
 
 	useEffect(() => {
-		if (Mydata?.avatar) setPreviewPhoto(Mydata.avatar); 
+		if (Mydata?.avatar) setPreviewPhoto(Mydata.avatar);
 	}, []);
 
 	const handleFile = (e: any) => {
@@ -93,7 +93,7 @@ function MyPageModal() {
 				<Image borderRadius='full' boxSize='150px' marginLeft='auto' marginRight='auto' src={previewPhoto}/>
 				<FormControl onSubmit={handleSubmit}>
 					<FormLabel>아바타 변경</FormLabel>
-					<Input 
+					<Input
 						type='file'
 						accept="image/*"
 						onChange={(e) => {

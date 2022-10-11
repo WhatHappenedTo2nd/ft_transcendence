@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { MutableRefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { useEventListener, Portal, Menu, MenuButton, PortalProps, MenuButtonProps, MenuProps } from '@chakra-ui/react';
 

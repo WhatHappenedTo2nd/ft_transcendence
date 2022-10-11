@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
 	Modal,
 	ModalOverlay,
@@ -14,7 +14,6 @@ import {
 	Input
 } from '@chakra-ui/react';
 import { socket } from '../../App';
-import ICreateRoomResponse from '../interface/IChatProps';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from "../../api/cookieFunc";
 import { useQuery } from "react-query";
@@ -26,11 +25,11 @@ export default function EditButton() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
+	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData);
 	const { data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
 	const roomId = chat?.id;
 	const roomName = chat?.title;
-	
+
 	const onEditRoom = useCallback(() => {
 		socket.emit('edit-room', { roomId, roomName, password, userIntraId: getCookie("intra_id")})
 	}, [roomId, roomName, password, navigate]);
@@ -66,7 +65,7 @@ export default function EditButton() {
 				<ModalBody>
 					<FormControl onSubmit={onEditRoom}>
 						<FormLabel as='legend' marginTop={3}>비밀번호</FormLabel>
-						<Input 
+						<Input
 							type='text'
 							placeholder='영문, 숫자로 최대 20자까지 입력 가능합니다.'
 							onChange={(e) => setPassword(e.target.value)}

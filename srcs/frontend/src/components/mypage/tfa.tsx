@@ -1,6 +1,6 @@
 import { Button, Flex, Modal, ModalOverlay, ModalBody, ModalContent, ModalCloseButton, FormControl, FormLabel, Input, ModalHeader, useDisclosure, ModalFooter } from '@chakra-ui/react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import { CheckIcon, EmailIcon } from '@chakra-ui/icons';
@@ -101,7 +101,7 @@ export default function CheckTFA() {
 	return (
 		<>
 		{(!Mydata?.tfaAuthorized) ? <Button variant='outline' colorScheme='teal' marginLeft={'3'} onClick={onOpen}>{<EmailIcon />}</Button> : <Button alignSelf={'flex-start'} marginLeft={'3'} color="green.300" w={10} h={10} onClick={()=>{tfaBack()}}>{<CheckIcon />}</Button>}
-		
+
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent>
@@ -131,7 +131,7 @@ export default function CheckTFA() {
 					<FormControl onSubmit={codeSubmit} isRequired>
 					<FormLabel as='legend'>인증 코드 입력</FormLabel>
 					<Flex>
-						<Input 
+						<Input
 							type='text'
 							placeholder='2차인증 코드를 입력해주세요.'
 							onChange={(e) => setInputValue(e.target.value)}

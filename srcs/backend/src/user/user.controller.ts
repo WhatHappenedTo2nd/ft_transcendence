@@ -1,5 +1,5 @@
 import { multerOptions } from '../profile/multerOption';
-import { Controller, Get, Param, Patch, UseGuards, Logger, Req, Body, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Param, Patch, UseGuards, Logger, Req, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -99,8 +99,8 @@ export class UserController {
 
 	/**
 	 * 2차 인증 코드 입력
-	 * @param req 
-	 * @returns 
+	 * @param req
+	 * @returns
 	 */
 	@Patch('/me/cancleTFA')
 	async cancleTFA(@Req() req) {

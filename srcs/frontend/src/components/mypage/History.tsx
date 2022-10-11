@@ -13,6 +13,7 @@ const GameMatchBox = styled.div`
 	text-align: center;
 	grid-gap: 1rem;
 	place-items: center;
+	overflow: scroll;
 `;
 
 const InnerDiv = styled.div`

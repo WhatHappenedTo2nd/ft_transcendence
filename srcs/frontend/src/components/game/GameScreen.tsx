@@ -1,7 +1,7 @@
 /**
  * Game Screen: 게임화면 설정 및 띄위기
  */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import styled from 'styled-components';
 

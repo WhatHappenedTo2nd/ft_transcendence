@@ -11,7 +11,6 @@
  *  리액트 라우터에서 페이지 이동할 때는 Link 컴포넌트를 사용하면 내가 이동하고자 하는 경로(URL)로 이동할 수 있다.
  *  Link 컴포넌트를 사용하면 브라우저의 주소만 바꿀뿐, 페이지를 새로 불러오지는 않는다.
  */
-import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 

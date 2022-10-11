@@ -15,7 +15,6 @@ import { useQuery, useQueryClient } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
-import ICreateRoomResponse from '../interface/IChatProps';
 import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
 import IChatListProps from '../interface/IChatListProps';
@@ -30,26 +29,26 @@ import { history } from "../../hooks/useHistory";
 function Chatting(props: any) {
 	const queryClient = useQueryClient();
 	const [chats, setChats] = useState<IChat[]>([]);
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
+	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData);
 	const { isLoading: titleLoading, data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
 	const [message, setMessage] = useState<string>('');
 	const [roomName, setRoomName] = useState<string>((chat ? chat.title : ''));
 	const [name, setNickname] = useState<string>('');
 	const chatContainerEl = useRef<HTMLDivElement>(null);
-	
+
 	const roomId = Number(useParams<'roomName'>().roomName);
 	const navigate = useNavigate();
-	
-	useEffect(() => {	  
+
+	useEffect(() => {
 		const unlistenHistoryEvent = history.listen(({ action }) => {
 			if (action === "POP") {
 				onLeaveRoom();
 			}
 		});
-	  
+
 		return unlistenHistoryEvent;
 		}, []);
-	
+
 
 	useEffect(() => {
 		socket.emit('save-socket', { userIntraId: getCookie("intra_id") });

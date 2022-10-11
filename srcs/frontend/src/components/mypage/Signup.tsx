@@ -1,23 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image, Container, Flex, Stack, Text, Button } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { getLoginUserData } from '../../api/api';
-import styled from 'styled-components';
 import IUserProps from '../interface/IUserProps'
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate } from 'react-router';
 import MyPageModal from './MyPageModal';
 import axios from 'axios';
 import { getCookie } from '../../api/cookieFunc';
 
-
-type Props = {
-	data: IUserProps;
-};
-
 function SignUp() {
 	const [isFirst, setisFirst] = useState(true);
 	const navigate = useNavigate();
-	
+
 	const {data: Mydata} = useQuery<IUserProps>('me', getLoginUserData);
 
 	const handleSubmit = async () => {
