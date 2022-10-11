@@ -1,3 +1,9 @@
+export enum Role {
+	HOST = 'HOST',
+	MEMBER = 'MEMBER',
+	ADMIN = 'ADMIN',
+}
+
 export default interface IUserChatProps {
 	id: number;
 	intra_id: string;
@@ -11,6 +17,6 @@ export default interface IUserChatProps {
 	wins: number;
 	losses: number;
 	ratio: string;
-	is_host: boolean;
 	is_muted: boolean;
+	role: Role;
 };

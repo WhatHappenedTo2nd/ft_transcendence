@@ -24,8 +24,8 @@ export default function RoomUserList() {
 				}
 				else { return null; }
 			})}
-			{role?.is_host && data?.length && data?.length > 1 ? <Divider borderColor="black" /> : null}
-			{role?.is_host ? <EditButton /> : null }
+			{role?.role === "HOST" && data?.length && data?.length > 1 ? <Divider borderColor="black" /> : null}
+			{role?.role === "HOST" ? <EditButton /> : null }
 		</div>
 	);
 }
