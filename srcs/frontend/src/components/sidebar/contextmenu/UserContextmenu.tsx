@@ -15,14 +15,9 @@ import KickMenu from "./UI/KickMenu";
 import AddAdminMenu from "./UI/AddAdminMenu";
 import RemoveAdminMenu from "./UI/RemoveAdminMenu";
 import GameInviteMenu from "./UI/GameInviteMenu";
+import { Role } from "../../interface/IUserChatProps";
 
 export type UserContextMenuType = 'friend' | 'chat' | 'online';
-
-enum Role {
-	HOST = 'HOST',
-	MEMBER = 'MEMBER',
-	ADMIN = 'ADMIN',
-};
 
 const ChildView = styled.div`
   width: 100%;
@@ -53,7 +48,7 @@ enum UserContextMenuFlag {
 	CHAT_MUTE = 1 << 8, // 채팅에서 뮤트 시키기
 	CHAT_UNMUTE = 1 << 9, // 채팅에서 뮤트 해제
 	ADMIN_APPROVE = 1 << 10, // 관리자 임명
-	ADMIN_UNAPPROVE = 1 << 10, // 관리자 해제
+	ADMIN_UNAPPROVE = 1 << 11, // 관리자 해제
   
 	FRIEND = FRIEND_ADD | FRIEND_REMOVE | BLOCK_ADD | BLOCK_REMOVE,
 	GAME = GAME_INVITE | GAME_SPECTACTOR,
@@ -91,12 +86,12 @@ export default function UserContextMenu({
 		if (mode === 'chat') {
 			flag |= UserContextMenuFlag.GAME_INVITE;
 			if (myrole === Role.HOST) {
+				flag |= UserContextMenuFlag.CHAT_KICK;
 				if (targetrole === Role.ADMIN) {
 					flag |= UserContextMenuFlag.ADMIN_UNAPPROVE;
 				} else {
 					flag |= UserContextMenuFlag.ADMIN_APPROVE;
 				}
-				flag |= UserContextMenuFlag.CHAT_KICK;
 				if (muted === true) {
 					flag |= UserContextMenuFlag.CHAT_UNMUTE;
 				} else {
@@ -105,11 +100,11 @@ export default function UserContextMenu({
 			} else if (myrole === Role.ADMIN) {
 				if (targetrole !== Role.HOST) {
 					flag |= UserContextMenuFlag.CHAT_KICK;
-				}
-				if (muted === true) {
-					flag |= UserContextMenuFlag.CHAT_UNMUTE;
-				} else {
-					flag |= UserContextMenuFlag.CHAT_MUTE;
+					if (muted === true) {
+						flag |= UserContextMenuFlag.CHAT_UNMUTE;
+					} else {
+						flag |= UserContextMenuFlag.CHAT_MUTE;
+					}
 				}
 			}
 		}
@@ -127,7 +122,7 @@ export default function UserContextMenu({
 			flag |= UserContextMenuFlag.BLOCK_ADD;
 		}
 		return flag;
-	}, [friends, blocks, mode, muted, myrole, userId])
+	}, [targetrole, friends, blocks, mode, muted, myrole, userId, Role])
 
 	return (
 		<flagContext.Provider value={menuFlag}>
@@ -225,6 +220,4 @@ export default function UserContextMenu({
 UserContextMenu.defaultProps = {
 	muted: false,
 	game: false,
-	targetrole: Role.MEMBER,
-	myrole: Role.MEMBER,
 }

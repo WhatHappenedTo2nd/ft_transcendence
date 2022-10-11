@@ -21,7 +21,7 @@ export default function GameInviteMenu({label, target}: {label: string; target: 
 			blockCheck = true;
 	}
 
-	console.log("label: ", label, "target: ", target);
+	// console.log("label: ", label, "target: ", target);
 	const onJoinRoom = (roomName?: string) => () => {
 		console.log("게임 초대버튼입니다.");
 		if (blockCheck){

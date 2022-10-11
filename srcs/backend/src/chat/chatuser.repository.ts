@@ -49,6 +49,8 @@ export class ChatUserRepository extends Repository<ChatUser> {
 				chat_id: {id: Equal(room.id)},
 			},
 		})
+		if (!result)
+			return null;
 		return result;
 	}
 

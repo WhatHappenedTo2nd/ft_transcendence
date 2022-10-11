@@ -5,7 +5,7 @@ import { getLoginUserData,  getRoomUser } from '../../api/api';
 import EditButton from '../chatting/EditButton';
 import IUserChatProps from '../interface/IUserChatProps';
 import IUserProps from '../interface/IUserProps';
-import UserItem from './UserItem';
+import RoomUserItem from './RoomUserItem';
 
 export default function RoomUserList() {
 	const location = useLocation();
@@ -20,7 +20,7 @@ export default function RoomUserList() {
 		<div>
 			{data?.map((user) => {
 				if (Mydata?.id !== user.id) {
-					return (<UserItem key={user.id} user={user} mode='chat' targetrole={user.role} myrole={role?.role} muted={user.is_muted} />);
+					return (<RoomUserItem key={user.id} user={user} mode='chat' targetrole={user.role} myrole={role?.role} muted={user.is_muted} />);
 				}
 				else { return null; }
 			})}
