@@ -49,7 +49,7 @@ enum UserContextMenuFlag {
 	CHAT_UNMUTE = 1 << 9, // 채팅에서 뮤트 해제
 	ADMIN_APPROVE = 1 << 10, // 관리자 임명
 	ADMIN_UNAPPROVE = 1 << 11, // 관리자 해제
-  
+
 	FRIEND = FRIEND_ADD | FRIEND_REMOVE | BLOCK_ADD | BLOCK_REMOVE,
 	GAME = GAME_INVITE | GAME_SPECTACTOR,
 	CHAT = CHAT_KICK |
