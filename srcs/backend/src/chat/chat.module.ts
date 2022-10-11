@@ -7,8 +7,6 @@ import { ChatGateway } from './chat.gateway';
 import { ChatUserRepository } from './chatuser.repository';
 import { UserRepository } from 'src/user/user.repository';
 import { FriendRepository } from 'src/friend/friend.repository';
-import { GamesRepository } from 'src/games/games.repository';
-import { GamesModule } from 'src/games/games.module';
 
 @Module({
   imports: [
@@ -17,9 +15,7 @@ import { GamesModule } from 'src/games/games.module';
       ChatUserRepository,
       UserRepository,
       FriendRepository,
-      GamesRepository,
     ]),
-    forwardRef(() => GamesModule),
   ],
   providers: [ChatService, ChatGateway],
   controllers: [ChatController],
