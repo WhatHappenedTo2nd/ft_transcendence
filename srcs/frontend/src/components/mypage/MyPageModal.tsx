@@ -44,7 +44,7 @@ function MyPageModal() {
 
 	useEffect(() => {
 		if (Mydata?.avatar) setPreviewPhoto(Mydata.avatar);
-	}, []);
+	}, [Mydata?.avatar]);
 
 	const handleFile = (e: any) => {
 		setInputPhoto(e.target.files[0]);
