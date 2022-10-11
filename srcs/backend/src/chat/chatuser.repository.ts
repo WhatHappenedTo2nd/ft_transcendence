@@ -18,6 +18,8 @@ export class ChatUserRepository extends Repository<ChatUser> {
 			chat_id: room,
 			is_muted: false,
 		});
+		if (room.host.id === user.id)
+			enter.is_admin = true;
 		try {
 			await this.insert(enter);
 		} catch (error) {
@@ -159,5 +161,17 @@ export class ChatUserRepository extends Repository<ChatUser> {
 			},
 		});
 		return chatUsers;
+	}
+
+	async addAdmin(room: Chat, user: User): Promise<void> {
+		const target: ChatUser = this.findTargetUser(room, user);
+		target.is_admin = true;
+		await this.save(target);
+	}
+
+	async removeAdmin(room: Chat, user: User): Promise<void> {
+		const target: ChatUser = this.findTargetUser(room, user);
+		target.is_admin = false;
+		await this.save(target);
 	}
 }

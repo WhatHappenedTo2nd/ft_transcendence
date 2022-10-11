@@ -4,7 +4,6 @@ WORKDIR /usr/app
 
 COPY	. .
 
-RUN		npm i --save socket.io-client @types/socket.io-client
 RUN		npm install
 RUN		npm run build
 
