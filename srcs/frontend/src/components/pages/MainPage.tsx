@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import LoginButton from "../login/Login";
 import { Container, Spacer } from '@chakra-ui/react';
 
@@ -8,7 +7,7 @@ const login = () => {
 
 /**
  * 메인 페이지
- * 
+ *
  * @returns 로고와 로그인 버튼을 묶고 있는 Container
  */
 function MainPage() {

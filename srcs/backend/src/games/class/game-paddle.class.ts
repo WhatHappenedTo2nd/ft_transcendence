@@ -64,8 +64,6 @@ export class Paddle implements IPaddle {
 	}
 
 	update(secondPassed: number): void {
-		const falsh_distance = 0.5;
-
 		if (this.up && !this.down) {
 			// if (!this.up) {
 			// 	this.y -= this.speed * 0;

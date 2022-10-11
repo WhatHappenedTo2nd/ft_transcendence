@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
 	Modal,
 	ModalOverlay,
@@ -11,7 +11,6 @@ import {
 	useDisclosure,
 	FormControl,
 	FormLabel,
-	Flex,
 	Input
 } from '@chakra-ui/react';
 import { socket } from '../../App';
@@ -95,7 +94,7 @@ function CreateButton() {
 								onChange={(e) => setTitleValue(e.target.value)}
 							/>
 						<FormLabel as='legend' marginTop={3}>비밀번호</FormLabel>
-						<Input 
+						<Input
 							type='text'
 							placeholder='영문, 숫자로 최대 20자까지 입력 가능합니다.'
 							onChange={(e) => setPassword(e.target.value)}

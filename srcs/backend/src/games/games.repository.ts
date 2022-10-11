@@ -1,7 +1,6 @@
 import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { Repository } from "typeorm";
 import { Games } from './games.entity';
-import { GameCreateDto } from "./dto/game-create.dto";
 
 /**
  * Repository 생성(필요한) 이유

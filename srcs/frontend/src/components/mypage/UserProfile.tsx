@@ -1,4 +1,3 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { Image, Container, SimpleGrid, Flex, Stack, Text } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { getUserByNickname, getLoginUserData } from '../../api/api';
@@ -19,7 +18,7 @@ function UserProfile() {
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
 
-	if (Userdata?.nickname == Mydata?.nickname)
+	if (Userdata?.nickname === Mydata?.nickname)
 		navigate("/profile");
 
 	return (

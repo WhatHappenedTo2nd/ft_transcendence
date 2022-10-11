@@ -1,4 +1,3 @@
-import { Container } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Chatting from "../chatting/Chatting";
 import Game from "../game/Game";
