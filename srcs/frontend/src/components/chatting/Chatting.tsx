@@ -19,6 +19,7 @@ import ICreateRoomResponse from '../interface/IChatProps';
 import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
 import IChatListProps from '../interface/IChatListProps';
+import { history } from "../../hooks/useHistory";
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -38,6 +39,16 @@ function Chatting(props: any) {
 	
 	const roomId = Number(useParams<'roomName'>().roomName);
 	const navigate = useNavigate();
+	
+	useEffect(() => {	  
+		const unlistenHistoryEvent = history.listen(({ action }) => {
+			if (action === "POP") {
+				onLeaveRoom();
+			}
+		});
+	  
+		return unlistenHistoryEvent;
+		}, []);
 	
 
 	useEffect(() => {
