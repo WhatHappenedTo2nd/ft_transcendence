@@ -5,40 +5,37 @@ import { getBlockList, getWhereAreYou } from '../../../../api/api';
 import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
 import useWarningAlert from '../../../../hooks/useWarnigAlert';
+import CreateButton from '../../../chatting/CreateButton';
 import IChatListProps from '../../../interface/IChatListProps';
 import IFriendProps from '../../../interface/IFriendProps';
 
-export default function GameSpectactorMenu({label, target}: {label: string; target: string;}) {
+export default function GameInviteMenu({label, target}: {label: string; target: string;}) {
 	const navigate = useNavigate();
 	const { setError, WarningDialogComponent } = useWarningAlert();
 	const { data: chat } = useQuery<IChatListProps>(['findroom', target], () => getWhereAreYou(target));
 	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList);
-
 	let blockCheck = false;
+
 	for (let i = 0; i < block!.length; i++)
 	{
-		console.log("블락된 유저를 확인합니다.", block![i]);
 		if (target === block![i].nickname)
 			blockCheck = true;
 	}
 
+	console.log("label: ", label, "target: ", target);
 	const onJoinRoom = (roomName?: string) => () => {
-		if (chat?.is_private) {
-			setError({
-				headerMessage: '입장 실패',
-				bodyMessage: '비밀방은 입장할 수 없습니다.'
-			})
-		}
-		else if (blockCheck){
+		console.log("게임 초대버튼입니다.");
+		if (blockCheck){
 			console.log("blockCheck의 값은? ", blockCheck);
 			setError({
 				headerMessage: '입장 실패',
-				bodyMessage: '차단한 사람의 방은 입장할 수 없습니다.'
-			});
+				bodyMessage: '차단한 사람은 게임에 초대할 수 없습니다.'
+			})
 		}
 		else {
-			socket.emit('join-room', {roomName, userIntraId: getCookie("intra_id")}, () => {
-				navigate(`/room/${chat?.id}`);
+			console.log("게임 초대 버튼으로 게임 방을 만듭니다.");
+			socket.emit('create-room', { roomName: target, target, userIntraId: getCookie("intra_id") }, () => {
+				navigate(`room/${target}`);
 			});
 		}
 	};

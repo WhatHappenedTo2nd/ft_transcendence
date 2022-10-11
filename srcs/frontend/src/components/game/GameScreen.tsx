@@ -23,19 +23,6 @@ interface IGameScreenProps {
 	userDataProps: any;
 }
 
-const LeaveRoomStyleC = styled.button`
-	/* border: none; */
-	/* border-bottom: 1px solid white */
-	height: 50px;
-	width: 100%;
-	/* background-color: black; */
-	/* color: white; */
-	&:hover {
-		background-color: rgba(0, 0, 0, 0.1);
-		color: white;
-	}
-`;
-
 const LeaveButton = styled.button`
 	display: inline-block;
 	color: white;

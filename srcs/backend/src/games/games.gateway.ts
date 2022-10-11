@@ -676,7 +676,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				room.paddleOne.up = false;
 				room.paddleOne.down = true;
 			}
-			else if (data.key === 'q') {
+			else if (data.key === 'q' || data.key === 'Q') {
 				if (room.gameState === GameState.PLAYING)
 					room.pause();
 				else if (room.gameState === GameState.PAUSED)
@@ -692,7 +692,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				room.paddleTwo.up = false;
 				room.paddleTwo.down = true;
 			}
-			else if (data.key === 'q') {
+			else if (data.key === 'q' || data.key === 'Q') {
 				if (room.gameState === GameState.PLAYING)
 					room.pause();
 				else if (room.gameState === GameState.PAUSED)
@@ -754,21 +754,21 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
 		/** 관전 방에 게임 유저가 없음 */
 		const gameuser = this.gameconnetedUsers.getUserBySocketId(client.id);
-		this.logger.log(`spectateRoom: 클라이언트 id의 관전자 유저는 ${gameuser.nickname}입니다.`);
+		// this.logger.log(`spectateRoom: 클라이언트 id의 관전자 유저는 ${gameuser.nickname}입니다.`);
 
-		console.log("방의 플레이어의 닉네임과 방번호는 ", room.paddleOne.gameuser.nickname, " 과 ", room.paddleOne.gameuser.roomNo, "입니다.");
+		// console.log("방의 플레이어의 닉네임과 방번호는 ", room.paddleOne.gameuser.nickname, " 과 ", room.paddleOne.gameuser.roomNo, "입니다.");
 
-		console.log("관전하는 사람의 방번호는 ", gameuser.roomNo, " 입니다.");
+		// console.log("관전하는 사람의 방번호는 ", gameuser.roomNo, " 입니다.");
 		if (!gameuser) {
 			return this.returnMessage('spectateRoom', 400, '현재 게임 유저가 없습니다.');
 		} //내가 게임중일 때는 관전할 수 없다.
 		else if (gameuser.status === UserStatus.PLAYING) {
 			throw new Error('게임 중에는 관전할 수 없습니다.');
 		}
-		else if (room.paddleOne.gameuser.roomNo !== gameuser.roomNo || room.paddleTwo.gameuser.roomNo !== gameuser.roomNo) {
-			this.logger.log('spectateRoom: 방 정보가 달라 관전할 수 없습니다.');
-			throw new Error('방 번호가 달라 관전할 수 없습니다.');
-		}
+		// else if (room.paddleOne.gameuser.roomNo !== gameuser.roomNo || room.paddleTwo.gameuser.roomNo !== gameuser.roomNo) {
+		// 	// this.logger.log('spectateRoom: 방 정보가 달라 관전할 수 없습니다.');
+		// 	throw new Error('방 번호가 달라 관전할 수 없습니다.');
+		// }
 
 		/** user가 관전자가 아니라면 관전자로 추가 */
 		if (!room.isASpectator(gameuser)) {
@@ -777,120 +777,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		this.server.to(client.id).emit('newRoom', room);
 		return this.returnMessage('spectateRoom', 200, '방 정보 전송 성공');
 	}
-
-	/**
-	 * ! 게임 관전 유저 생성
-	 * 게임 메모리에 유저가 존재하는지 확인하고 없으면 생성
-	 * @param id
-	 * @param username
-	 */
-	async createSpectateUser(id: number, username?: string) {
-		let newUser: GameUser = this.gameconnetedUsers.getUserById(id);
-		if (!newUser) {
-			this.gameconnetedUsers.addUser(newUser);
-			const dbUser = await this.usersService.getUserById(id);
-			newUser = new GameUser(dbUser.id, dbUser.nickname, dbUser.avatar, dbUser.wins, dbUser.losses, dbUser.ratio);
-		}
-		return newUser;
-	}
-
-	/**
-	 * 방에 관전자를 추가
-	 * @param id
-	 * @param roomId
-	 * @returns
-	 */
-	async pushSpectatorToRoom(id: number, roomId: string) {
-		/** 관전할 방이 없음 */
-		const room: Room = this.rooms.get(roomId);
-		if (!room) {
-			return this.returnMessage('spectateRoom', 400, '방이 없습니다.');
-		}
-		/** createSpectateUser를 통해서 소켓에 접속한 유저 배열에 해당 id 유저가 있는지 확인하고
-		 * 있다면 그 유저를 반환
-		 * 없다면 db에서 찾아서 유저 정보를 가져와서 반환
-		 */
-		const gameuser = await this.createSpectateUser(id);
-
-		/** 전체 게임 방에서 찾은 유저가 게임 플레이어인지 확인 */
-		this.rooms.forEach((room: Room) => {
-			if (room.isAPlayer(gameuser))
-				return ;
-		});
-
-		/** 게임 플레이어가 아니라면 관전자로 추가 */
-		if (!room.isAPlayer(gameuser)) {
-			room.addSpectator(gameuser);
-		}
-		return this.returnMessage('spectateRoom', 200, '방 정보 전송 성공');
-	}
-/**
-	 * ! 게임 초대
-	 */
-	setInviteRoomToReady(roomId: string) {
-		const room = this.rooms.get(roomId);
-		if (!room) {
-			throw new Error('Game is over');
-		}
-		room.changeGameState(GameState.STARTING);
-		return room;
-	}
-
-	/** 방이 이미 존재 */
-	roomAlreadyExists(senderId: number, receiverId: number): boolean {
-	/**
-	 * sender: 게임 초대 보낸 사람
-	 * reciver: 게임 초대 받는 사람
-	 */
-	const sender = this.gameconnetedUsers.getUserById(senderId);
-	const receiver = this.gameconnetedUsers.getUserById(receiverId);
-
-	/** 유저가 없다면 */
-	if (!sender || !receiver) {
-		return true;
-	}
-
-	/** 초대를 보낸사람과 안보낸 사람이 게임 방에 접속해 있는지 확인 */
-	this.rooms.forEach((room: Room) => {
-		if (room.isAPlayer(sender)) {
-			throw Error('게임 방에 접속해 있습니다.');
-		}
-		if (room.isAPlayer(receiver)) {
-			throw Error('게임 방에 접속해 있습니다');
-		}
-	});
-}
-
-	/** 초대해서 방 생성 */
-	async createInviteRoom(sender: GameUser, receiverId: number) {
-	/** 유저관리 */
-	// const receiverData = await this.usersService.getUserWithoutFriends(receiverId);
-	const receiverData = await this.usersService.getUserById(receiverId);
-	const firstPlayer: GameUser = await this.createSpectateUser(sender.id, sender.nickname);
-	const secondPlayer: GameUser = await this.createSpectateUser(receiverData.id, receiverData.nickname);
-
-	/** 게임 초대 */
-	if (this.roomAlreadyExists(sender.id, receiverId)) {
-		throw new Error('이미 게임이 존재합니다.');
-	}
-	if (secondPlayer && secondPlayer.status === UserStatus.SPECTATING) {
-		throw new Error('상대방이 관전 중입니다.');
-	}
-	if (firstPlayer && firstPlayer.status === UserStatus.SPECTATING) {
-		throw new Error('관전 중에는 초대할 수 없습니다. LeaveRoom을 눌러주세요');
-	}
-
-	/** 게임 방 생성 */
-	const roomId: string = `${firstPlayer.nickname}&${secondPlayer.nickname}`;
-	let room: Room = new Room(roomId, [firstPlayer, secondPlayer]);
-	room.gameState = GameState.WAITING;
-	this.rooms.set(roomId, room);
-	this.currentGames.push(room);
-
-	/** 게임방 생성 후 클라이언트에 알리기 */
-	this.server.emit('updateCurrentGames', this.currentGames);
-	return roomId;
-}
 }
 
 /**

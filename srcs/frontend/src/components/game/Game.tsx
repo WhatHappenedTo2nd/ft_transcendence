@@ -47,6 +47,22 @@ const GameQueue = styled.div`
 	justify-content: center;
 `
 
+const GameKey = styled.div`
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	color: white;
+	text-align: center;
+`
+const GameTitle = styled.div`
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	font-size: 40px;
+	color: #53B7BA;
+	margin-bottom: 50px;
+`
+
 /**
  * Game Main Function
  */
@@ -162,18 +178,31 @@ function Game() {
 					<>
 						{queue ?
 						(
+							<div>
 							<Button type="button" onClick={leaveQueue}>
 								게임 대기열 나가기
 							</Button>
+							<GameKey>
+								이동 : 화살표<br />
+								일시정지 : q
+							</GameKey>
+							</div>
 						) :
 						(
 							<div>
+								<GameTitle>
+									Pong Game
+								</GameTitle>
 								<Button type="button" onClick={joinQueue} value="HARD">
 									ACTIVE MODE
 								</Button>
 								<Button type="button" onClick={joinQueue} value="DEFAULT">
 									BASIC MODE
 								</Button>
+								<GameKey>
+									이동 : 화살표<br />
+									일시정지 : q
+								</GameKey>
 							</div>
 						)}
 						<GameRooms gameRooms={gameRooms} socket={socket} />
