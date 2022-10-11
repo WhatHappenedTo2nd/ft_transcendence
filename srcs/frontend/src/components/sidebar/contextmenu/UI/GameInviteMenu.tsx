@@ -5,7 +5,6 @@ import { getBlockList, getWhereAreYou } from '../../../../api/api';
 import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
 import useWarningAlert from '../../../../hooks/useWarnigAlert';
-import CreateButton from '../../../chatting/CreateButton';
 import IChatListProps from '../../../interface/IChatListProps';
 import IFriendProps from '../../../interface/IFriendProps';
 
