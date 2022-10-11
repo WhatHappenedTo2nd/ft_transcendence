@@ -103,7 +103,9 @@ export default function UserContextMenu({
 					flag |= UserContextMenuFlag.CHAT_MUTE;
 				}
 			} else if (myrole === Role.ADMIN) {
-				if (!targetrole)
+				if (targetrole !== Role.HOST) {
+					flag |= UserContextMenuFlag.CHAT_KICK;
+				}
 				if (muted === true) {
 					flag |= UserContextMenuFlag.CHAT_UNMUTE;
 				} else {
