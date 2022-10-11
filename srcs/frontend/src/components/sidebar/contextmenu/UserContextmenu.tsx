@@ -100,11 +100,11 @@ export default function UserContextMenu({
 			} else if (myrole === Role.ADMIN) {
 				if (targetrole !== Role.HOST) {
 					flag |= UserContextMenuFlag.CHAT_KICK;
-				}
-				if (muted === true) {
-					flag |= UserContextMenuFlag.CHAT_UNMUTE;
-				} else {
-					flag |= UserContextMenuFlag.CHAT_MUTE;
+					if (muted === true) {
+						flag |= UserContextMenuFlag.CHAT_UNMUTE;
+					} else {
+						flag |= UserContextMenuFlag.CHAT_MUTE;
+					}
 				}
 			}
 		}
