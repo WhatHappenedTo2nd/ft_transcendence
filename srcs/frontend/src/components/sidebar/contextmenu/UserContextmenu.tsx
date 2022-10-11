@@ -13,6 +13,7 @@ import MuteMenu from "./UI/MuteMenu";
 import HostApproveMenu from "./UI/HostApproveMenu";
 import GameSpectactorMenu from "./UI/GameSpectactorMenu";
 import KickMenu from "./UI/KickMenu";
+import GameInviteMenu from "./UI/GameInviteMenu";
 
 export type UserContextMenuType = 'friend' | 'chat' | 'online';
 
@@ -45,7 +46,7 @@ enum UserContextMenuFlag {
 	CHAT_MUTE = 1 << 8, // 채팅에서 뮤트 시키기
 	CHAT_UNMUTE = 1 << 9, // 채팅에서 뮤트 해제
 	ADMIN_APPROVE = 1 << 10, // 관리자 이전
-  
+
 	FRIEND = FRIEND_ADD | FRIEND_REMOVE | BLOCK_ADD | BLOCK_REMOVE,
 	GAME = GAME_INVITE | GAME_SPECTACTOR,
 	CHAT = CHAT_KICK |
@@ -120,12 +121,12 @@ export default function UserContextMenu({
 							<MenuDivider />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.FRIEND_ADD}>
-							<AddFriendMenu 
+							<AddFriendMenu
 							label="친구추가"
 							target={name}/>
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.FRIEND_REMOVE}>
-							<RemoveFriendMenu 
+							<RemoveFriendMenu
 							label="친구해제"
 							target={name}/>
 						</UserContextMenuItem>
@@ -143,12 +144,16 @@ export default function UserContextMenu({
 							<MenuDivider />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.GAME_INVITE}>
-							<MenuItem>게임 초대하기</MenuItem>
+							{/* <MenuItem>게임 초대하기</MenuItem> */}
+							<GameInviteMenu
+							label="게임 초대하기"
+							target={name}
+							/>
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.GAME_SPECTACTOR}>
 							<GameSpectactorMenu
 							label="게임 관전하기"
-							target={name} 
+							target={name}
 							/>
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT}>
@@ -157,7 +162,7 @@ export default function UserContextMenu({
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT_KICK}>
 						<KickMenu
 							label="추방 하기"
-							target={name} 
+							target={name}
 							/>
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.CHAT_MUTE}>
