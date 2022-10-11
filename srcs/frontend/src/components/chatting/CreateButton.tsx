@@ -20,19 +20,17 @@ import { getCookie } from "../../api/cookieFunc";
 
 function CreateButton() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [rooms, setRooms] = useState<string[]>([]);
+	const [, setRooms] = useState<string[]>([]);
 	const [titleValue, setTitleValue] = useState('');
 	const [password, setPassword] = useState('');
 	const navigate = useNavigate();
 
 	const onCreateRoom = useCallback(() => {
-		console.log("됨?");
 		if (!titleValue)
 		{
 			alert('방 제목 입력은 필수입니다!!');
 		}
 		if (titleValue) {
-			console.log("여기는?");
 			socket.emit('create-room', { roomName: titleValue, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				if (!response.success)
 				return alert(response.payload);

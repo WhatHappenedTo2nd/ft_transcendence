@@ -125,6 +125,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 				await this.chatRepository.insert(room);
 				await this.chatUserRepository.addUser(room, user);
+
 				socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
 
 				return { success: true, payload: room.id };

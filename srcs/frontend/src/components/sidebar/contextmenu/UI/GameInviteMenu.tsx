@@ -6,7 +6,6 @@ import { getBlockList, getWhereAreYou } from '../../../../api/api';
 import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
 import useWarningAlert from '../../../../hooks/useWarnigAlert';
-import ICreateRoomResponse from '../../../interface/IChatProps';
 import IChatListProps from '../../../interface/IChatListProps';
 import IFriendProps from '../../../interface/IFriendProps';
 
@@ -26,7 +25,7 @@ export default function GameInviteMenu({label, target}: {label: string; target: 
 			blockCheck = true;
 	}
 
-	console.log("label: ", label, "target: ", target);
+	// console.log("label: ", label, "target: ", target);
 	const onJoinRoom = (roomName?: string) => () => {
 		if (blockCheck){
 			setError({

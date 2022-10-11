@@ -26,5 +26,8 @@ import { Chat } from "./chat.entity";
 	 // 음소거된 유저인지 여부
 	 @Column({ default: false })
 	 is_muted: boolean;
+
+	 @Column({ default: false })
+	 is_admin: boolean;
  }
  

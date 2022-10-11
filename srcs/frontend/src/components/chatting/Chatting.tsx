@@ -47,7 +47,7 @@ function Chatting(props: any) {
 		});
 
 		return unlistenHistoryEvent;
-		}, []);
+	}, []);
 
 
 	useEffect(() => {
