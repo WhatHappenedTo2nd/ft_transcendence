@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param, Req, Res } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
 
 @Controller('profilePicture')

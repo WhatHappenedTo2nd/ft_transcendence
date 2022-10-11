@@ -1,7 +1,7 @@
 /**
  * Game Screen: 게임화면 설정 및 띄위기
  */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import styled from 'styled-components';
 
@@ -22,19 +22,6 @@ interface IGameScreenProps {
 	roomDataProps: any;
 	userDataProps: any;
 }
-
-const LeaveRoomStyleC = styled.button`
-	/* border: none; */
-	/* border-bottom: 1px solid white */
-	height: 50px;
-	width: 100%;
-	/* background-color: black; */
-	/* color: white; */
-	&:hover {
-		background-color: rgba(0, 0, 0, 0.1);
-		color: white;
-	}
-`;
 
 const LeaveButton = styled.button`
 	display: inline-block;

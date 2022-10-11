@@ -39,12 +39,10 @@ import Queue from './class/game-queue.class';
 import { forwardRef, Inject, Logger } from '@nestjs/common';
 import { GamesService } from './games.service';
 import { GameUser } from './class/game-user.class';
-import { GameMode, GameState, UserStatus } from './enum/games.enum';
+import { GameState, UserStatus } from './enum/games.enum';
 import { SET_INTERVAL_MILISECONDS } from './constant/games.constant';
 import { UserService } from 'src/user/user.service';
-import { Games } from './games.entity';
 import { ChatService } from 'src/chat/chat.service';
-import { Chat } from 'src/chat/chat.entity';
 
 /**
  * websocket은 프로토콜 server.io는 라이브러리
@@ -318,7 +316,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	async handleJoinQueue(@ConnectedSocket() client: Socket, @MessageBody() mode: string): Promise<Object> {
 		/** 소켓에 접속한 유저의 client.id를 검색해서 게임에 접속한 유저 데이터를 가져온다 */
 		const gameuser: GameUser = this.gameconnetedUsers.getUserBySocketId(client.id);
-		const chat = await this.chatsService.getWhereAreYou(gameuser.nickname);
 
 		if (!gameuser) {
 			return this.returnMessage('handleUserConnect', 400, '유저 데이터가 없습니다.');

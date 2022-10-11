@@ -1,5 +1,5 @@
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
-import { Equal, In, Repository } from "typeorm";
+import { Equal, Repository } from "typeorm";
 import { CustomRepository } from "../typeorm-ex/typeorm-ex.decorator";
 import { User } from "../user/user.entity";
 import { Friend } from "./friend.entity";
@@ -70,7 +70,7 @@ export class FriendRepository extends Repository<Friend> {
 	async blockUser(requerster: User, reciver: User): Promise<void> {
 		const result = await this.findRow(requerster, reciver);
 
-		// 이미 관계성이 있는 경우 (이미 차단 or 친구) 
+		// 이미 관계성이 있는 경우 (이미 차단 or 친구)
 		if (result !== null) {
 			if (result.block === true) {
 				throw new BadRequestException(['이미 차단한 유저입니다.']);
@@ -139,7 +139,7 @@ export class FriendRepository extends Repository<Friend> {
 			},
 			where: {
 				user_id: {id: Equal(requester.id)},
-				another_id: {id: Equal(reciver.id)},				
+				another_id: {id: Equal(reciver.id)},
 			},
 		})
 		return result;

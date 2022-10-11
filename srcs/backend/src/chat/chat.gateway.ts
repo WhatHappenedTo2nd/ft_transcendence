@@ -10,7 +10,6 @@ import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
 import { FriendRepository } from "src/friend/friend.repository";
 import * as bcrypt from 'bcryptjs';
-import { GamesGateway } from "src/games/games.gateway";
 
 interface MessagePayload {
 	userIntraId: string;
@@ -35,7 +34,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		private userRepository: UserRepository,
 		private chatService: ChatService,
 		private friendRepository: FriendRepository,
-		private gameGateway: GamesGateway,
 	) {}
 
 	private logger = new Logger('ChatGateWay');

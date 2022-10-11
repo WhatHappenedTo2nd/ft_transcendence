@@ -1,8 +1,6 @@
 import { MenuItem, Text, useToast } from '@chakra-ui/react';
-import axios from "axios";
 import { useQueryClient } from "react-query";
 import { useLocation } from 'react-router-dom';
-import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
 import useWarningAlert from "../../../../hooks/useWarnigAlert";
 import ICreateRoomResponse from "../../../interface/IChatProps";

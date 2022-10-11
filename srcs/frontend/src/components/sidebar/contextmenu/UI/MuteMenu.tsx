@@ -1,7 +1,7 @@
 import { MenuItem, Text, useToast } from '@chakra-ui/react';
 import axios from "axios";
 import { useQueryClient } from "react-query";
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { getCookie } from '../../../../api/cookieFunc';
 import useWarningAlert from "../../../../hooks/useWarnigAlert";
 

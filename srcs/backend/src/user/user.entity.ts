@@ -1,5 +1,5 @@
 import { Games } from "src/games/games.entity";
-import { BaseEntity, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 /**
  * User 테이블. 유저의 회원 정보를 저장함.
