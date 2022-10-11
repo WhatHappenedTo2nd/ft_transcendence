@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getBlockList, getWhereAreYou } from '../../../../api/api';
 import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
+import ICreateRoomResponse from '../../../interface/IChatProps';
 import useWarningAlert from '../../../../hooks/useWarnigAlert';
 import IChatListProps from '../../../interface/IChatListProps';
 import IFriendProps from '../../../interface/IFriendProps';
