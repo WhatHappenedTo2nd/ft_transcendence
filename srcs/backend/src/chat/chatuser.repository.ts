@@ -164,13 +164,13 @@ export class ChatUserRepository extends Repository<ChatUser> {
 	}
 
 	async addAdmin(room: Chat, user: User): Promise<void> {
-		const target: ChatUser = this.findTargetUser(room, user);
+		const target: ChatUser = await this.findTargetUser(room, user);
 		target.is_admin = true;
 		await this.save(target);
 	}
 
 	async removeAdmin(room: Chat, user: User): Promise<void> {
-		const target: ChatUser = this.findTargetUser(room, user);
+		const target: ChatUser = await this.findTargetUser(room, user);
 		target.is_admin = false;
 		await this.save(target);
 	}
