@@ -163,4 +163,13 @@ export class ChatService {
 		console.log(room.id);
 		return room.id + 1;
 	}
+
+	async isBlockedMe(blockerList: User[], user: User): Promise<boolean> {
+		for (let e of blockerList) {
+			if (e === user) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

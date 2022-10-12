@@ -20,13 +20,17 @@ const DirectMSG = styled.button`
 
 export default function DirectMessage({target}: {target: string;}) {
 	const { setError, WarningDialogComponent } = useWarningAlert();
-	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList, {refetchInterval: 1000});
+	const { isLoading, data: block } = useQuery<IFriendProps[]>('block', getBlockList);
+
+	if (isLoading) return <div>Loading</div>
 
 	let blockCheck = false;
-	for (let i = 0; i < block!.length; i++)
-	{
-		if (target === block![i].nickname)
-			blockCheck = true;
+	if (block && block.length) {
+		for (let i = 0; i < block.length; i++)
+		{
+			if (target === block[i].nickname)
+				blockCheck = true;
+		}
 	}
 
 	const joinDM = () => {

@@ -30,7 +30,7 @@ function Chatting(props: any) {
 	const queryClient = useQueryClient();
 	const [chats, setChats] = useState<IChat[]>([]);
 	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData, {refetchInterval: 1000});
-	const { isLoading: titleLoading, data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname), {refetchInterval: 1000});
+	const { isLoading: titleLoading, data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname),{enabled: !!Mydata?.nickname,});
 	const [message, setMessage] = useState<string>('');
 	const [roomName, setRoomName] = useState<string>((chat ? chat.title : ''));
 	const [name, setNickname] = useState<string>('');

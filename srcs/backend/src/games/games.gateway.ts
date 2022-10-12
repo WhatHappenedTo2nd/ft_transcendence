@@ -91,7 +91,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
 	/** 각 동작에서 에러 및 필요한 메시지 반환 함수 */
 	returnMessage(func: string, code: number, message: string, data?: Object[] | Object): Object {
-		this.logger.log(`${func} [${code}]: ${message}, ${data}`);
 		return { func, code, message, data };
 	}
 
@@ -135,7 +134,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	 * @param client 소켓에 접속한 클라이언트
 	 */
 	handleConnection(@ConnectedSocket() client: Socket) {
-		this.logger.log(`handleConnection: 소켓과 연결했습니다. 접속한 유저의 socket id는 ${client.id} 입니다`);
 	}
 
 	/**
@@ -525,8 +523,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		const loser = await this.usersService.getUserById(loser_id);
 		await this.usersService.updateStatus(winner, true);
 		await this.usersService.updateStatus(loser, false);
-
-		this.logger.log(`winner: ${winner.nickname}, loser: ${loser.nickname}, winner_id: ${winner_id}, loser_id: ${loser_id}, win_score: ${win_score}, lose_score: ${lose_score}, mode: ${room.mode}`);
 
 		const game = this.gamesService.create({
 			players: [winner, loser],

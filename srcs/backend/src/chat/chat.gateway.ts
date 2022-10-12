@@ -40,12 +40,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	// 소켓이 연결되면 실행
 	handleConnection(@ConnectedSocket() socket: Socket) {
-		this.logger.log(`${socket.id} 소켓 연결`);
 	}
 
 	// 소켓 연결이 끊기면 실행
 	handleDisconnect(@ConnectedSocket() socket: Socket) {
-		this.logger.log(`${socket.id} 소켓 연결 해제`);
 	}
 
 	@SubscribeMessage('save-socket')
@@ -53,8 +51,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() { userIntraId }: MessagePayload
 	) {
-		this.logger.log(`현재 socket id: ${socket.id}`);
 		await this.userRepository.saveSocketId(socket.id, userIntraId);
+		const chat: Chat = await this.chatService.getWhereAreYouByIntraId(userIntraId);
+		if (chat) {
+			socket.join(String(chat.id));
+		}
 	}
 
 	@SubscribeMessage('message')
@@ -66,7 +67,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		const user = await this.userRepository.findByIntraId(userIntraId);
 		const mutedUser = await this.chatUserRepository.isMutedUser(user);
 		if (mutedUser && mutedUser.is_muted === true) {
-			this.logger.log(`${mutedUser.user_id.intra_id}는 뮤트됨`);
 		} else {
 			const room = await this.chatRepository.findOneById(roomId);
 			// 채팅방에 속한 모든 유저 목록을 가져옴
@@ -74,32 +74,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			// 채팅방에 속한 유저들 중 나를 차단한 사람 목록을 가져옴
 			const whoBlockedMe = await this.chatService.findWhoBlockedMe(user, room);
 
-			if (!whoBlockedMe) {
-				this.logger.log(`block한 사람이 없어 : ${String(roomId)}`);
+			if (whoBlockedMe.length === 0) {
 				socket.broadcast.to(String(roomId)).emit('message', { name, message });
 			} else {
 				// 채팅방에 있는 모든 사람들 중에
 				for (let e of chatUsers) {
 					// 날 블락한 사람들 목록에 들어가있는 사람이 있는지 확인
-					if (whoBlockedMe.includes(e.user_id)) {
+					if (await this.chatService.isBlockedMe(whoBlockedMe, e.user_id)) {
 						this.logger.log(`${e.user_id.intra_id}가 나 블락함`);
 					} else {
 						this.logger.log(`${e.user_id.intra_id}는 나 블락 안 함. 메세지를 보내주자`);
 						socket.to(e.user_id.socket_id).emit('message', { name, message });
 					}
-
-					// for (let i of whoBlockedMe) {
-					// 	// Friend 테이블에서 user_id가 날 블락한 사람이고, another_id가 나인 row 찾음.
-					// 	const row = await this.friendRepository.findRow(i, user);
-					// 	// 만약 찾으면 거기서 block이 true이면 i가 날 차단한 것
-					// 	if (row && row.block === true) {
-					// 		this.logger.log(`${row.user_id.intra_id}가 나 블락함`);
-					// 	} else {
-					// 		this.logger.log(`${e.user_id.intra_id}는 나 블락 안 함`);
-					// 		// 날 차단하지 않은 유저의 소켓에만 메세지 전송.
-					// 		socket.to(e.user_id.socket_id).emit('message', { name, message });
-					// 	}
-					// }
 				}
 			}
 		}
