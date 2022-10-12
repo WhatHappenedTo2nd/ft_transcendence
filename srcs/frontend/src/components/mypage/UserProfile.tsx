@@ -7,6 +7,7 @@ import { getGameHistory } from '../../api/api';
 import { IMatch } from '../interface/IGameProps'
 import styled from 'styled-components';
 import './styles.css';
+import DirectMessage from './DM';
 
 const GameMatchBox = styled.div`
 	grid-area: matchDiv;
@@ -29,6 +30,7 @@ const InnerDiv = styled.div`
 	'matchImgA winA vs winB matchImgB'
 	'matchNicknameA matchScoreA . matchScoreB matchNicknameB';
 `;
+
 /**
  * 다른 유저 정보 리턴
  * profile/내닉네임 링크에 들어갈 경우 마이페이지(profile)로 리디렉션
@@ -131,6 +133,9 @@ function UserProfile() {
 										{Userdata?.wins}승 {Userdata?.losses}패
 									</Text>
 									</Flex>
+										<DirectMessage
+										target={Userdata!.nickname}
+										/>
 								</Stack>
 							</SimpleGrid>
 						</Container>

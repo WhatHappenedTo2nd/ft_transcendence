@@ -173,15 +173,6 @@ export default class Room implements IRoom {
 		}
 	}
 
-	getDuration(): number {
-		let duration: number = Date.now() - this.timestampStart;
-
-		this.pauseTime.forEach((pause) => {
-			duration -= pause.pause - pause.resume - 3500;
-		});
-		return duration;
-	}
-
 	/**
 	 *
 	 * @param newGameState
@@ -217,13 +208,6 @@ export default class Room implements IRoom {
 		this.ball.reset(this.mode);
 	}
 
-	updateTimer() {
-		let time: number = Date.now() - this.timestampStart;
-		this.pauseTime.forEach((pause) => {
-			time += pause.pause - pause.resume - 3500;
-		});
-		this.timer = time;
-	}
 	/**
 	 * 골이 들어갔을 때(점수가 났을 때) 실행
 	 */

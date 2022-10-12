@@ -159,8 +159,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 			// if (room.isAPlayer(gameuser)) {
 			if (room.isAPlayer(gameuser)) {
 				if (gameuser === room.paddleOne.gameuser){
-					if (room.gameState === GameState.PLAYER_ONE_WIN ||
-						room.gameState === GameState.PLAYER_TWO_WIN)
+					if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN)
 					{
 						this.logger.log(`handleDisconnect: 플레이어 원이 이겼지만 방을 나갔습니다.`);
 						this.saveGame(room, true);
