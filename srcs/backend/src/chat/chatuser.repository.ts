@@ -77,6 +77,14 @@ export class ChatUserRepository extends Repository<ChatUser> {
 				chat_id: {id: Equal(room.id)}
 			},
 		});
+		if (newHost.is_muted) {
+			newHost.is_muted = false;
+			try {
+				await this.insert(newHost);
+			} catch (error) {
+				throw new InternalServerErrorException();
+			}
+		}
 		return newHost.user_id;
 	}
 
