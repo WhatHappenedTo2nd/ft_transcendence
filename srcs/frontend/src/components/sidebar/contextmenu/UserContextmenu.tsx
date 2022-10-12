@@ -106,9 +106,11 @@ export default function UserContextMenu({
 						flag |= UserContextMenuFlag.CHAT_MUTE;
 					}
 				}
-				flag |= UserContextMenuFlag.GAME_INVITE;
+				if (!game)
+					flag |= UserContextMenuFlag.GAME_INVITE;
 			} else {
-				flag |= UserContextMenuFlag.GAME_INVITE;
+				if (!game)
+					flag |= UserContextMenuFlag.GAME_INVITE;
 			}
 		}
 		if (!isFriend) {
