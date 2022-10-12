@@ -43,11 +43,7 @@ function ChattingRoomPage() {
 						<CreateButton />
 					</GridItem>
 					<GridItem area={'chattingroom'}>
-						<ChattingRoom
-							onClick={() => {
-								navigate("/chattingroom");
-							}}
-							/>
+						<ChattingRoom />
 					</GridItem>
 				</Grid>
 			</GridItem>
