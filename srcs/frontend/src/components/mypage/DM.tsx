@@ -5,6 +5,7 @@ import { getCookie } from "../../api/cookieFunc";
 import { socket } from "../../App";
 import useWarningAlert from "../../hooks/useWarnigAlert";
 import IFriendProps from "../interface/IFriendProps";
+import ICreateRoomResponse from '../interface/IChatProps'
 
 const DirectMSG = styled.button`
 	color: black;
@@ -33,8 +34,7 @@ export default function DirectMessage({target}: {target: string;}) {
 		}
 	}
 
-	const joinDM = () => {
-		console.log("blockCheck의 값은 : ", blockCheck);
+	const JoinDM = () => () => {
 		if (blockCheck){
 			setError({
 				headerMessage: '입장 실패',
@@ -42,9 +42,16 @@ export default function DirectMessage({target}: {target: string;}) {
 			})
 		}
 		else {
-			socket.emit('invite-DM', { name: target, userIntraId: getCookie("intra_id")}, () => {});
+			socket.emit('invite-DM', { name: target, userIntraId: getCookie("intra_id")}, (response: ICreateRoomResponse) => {
+				if (!response.success){
+					setError({
+						headerMessage: '입장 실패',
+						bodyMessage: '현재 상대에게 DM을 보낼 수 없습니다.'
+					})
+				}
+			});
 		}
-	}
+	};
 
 	return (
 		<>

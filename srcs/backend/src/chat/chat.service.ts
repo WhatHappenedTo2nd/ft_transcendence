@@ -166,7 +166,7 @@ export class ChatService {
 
 	async isBlockedMe(blockerList: User[], user: User): Promise<boolean> {
 		for (let e of blockerList) {
-			if (e === user) {
+			if (e.id === user.id) {
 				return true;
 			}
 		}

@@ -80,7 +80,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				// 채팅방에 있는 모든 사람들 중에
 				for (let e of chatUsers) {
 					// 날 블락한 사람들 목록에 들어가있는 사람이 있는지 확인
-					if (await this.chatService.isBlockedMe(whoBlockedMe, e.user_id)) {
+					const block: boolean = await this.chatService.isBlockedMe(whoBlockedMe, e.user_id);
+					if (block) {
 						this.logger.log(`${e.user_id.intra_id}가 나 블락함`);
 					} else {
 						this.logger.log(`${e.user_id.intra_id}는 나 블락 안 함. 메세지를 보내주자`);

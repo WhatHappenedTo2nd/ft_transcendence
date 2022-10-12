@@ -48,7 +48,7 @@ const Canvas = styled.canvas`
 function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenProps) {
 	const socket: Socket = socketProps;
 	const userData: IUser = userDataProps;
-	const room = useRef<IRoom>(roomDataProps);
+	// const room = useRef<IRoom>(roomDataProps);
 	/**
 	 * JSON.parse
 	 *  JSON을 객체로 바꿔준다.
@@ -63,7 +63,8 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	 *
 	 * !!우리가 UserData 저장이 어떻게 되어있는지 확인하고 어떻게 가져올 것인지 수정이 필요하다.
 	 */
-	const isPlayer: boolean = (userData.id === room.current.paddleOne.gameuser.id || userData.id === room.current.paddleTwo.gameuser.id);
+	let room : IRoom = roomDataProps;
+	const isPlayer: boolean = (userData.id === room.paddleOne.gameuser.id || userData.id === room.paddleTwo.gameuser.id);
 
 	/**
 	 * 게임화면 그리기
@@ -115,7 +116,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		//Key Arrow Down Event
 		const keyDownEvent = (event: KeyboardEvent) => {
 			const keyData: IKey = {
-				roomId: room.current.roomId,
+				roomId: room.roomId,
 				key: event.key,
 				id: userData.id,
 			};
@@ -126,7 +127,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		//Key Arrow UP Event
 		const keyUpEvent = (event: KeyboardEvent) => {
 			const keyData: IKey = {
-				roomId: room.current.roomId,
+				roomId: room.roomId,
 				key: event.key,
 				id: userData.id,
 			};
@@ -134,7 +135,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			socket.emit('keyUp', keyData);
 		};
 
-		const gameData = new GameData(room.current);
+		const gameData = new GameData(room);
 		if (isPlayer) {
 			window.addEventListener('keyup', keyUpEvent);
 			window.addEventListener('keydown', keyDownEvent);
@@ -147,31 +148,31 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		 */
 		socket.on('updateRoom', (updatedRoom: string) => {
 			const roomData: IRoom = JSON.parse(updatedRoom);
-			room.current = roomData;
+			room = roomData;
 		});
 
 		/**
 		 * 게임의 상태를 확인하여 각 이벤트를 처리하면서 게임 루프를 계속해서 돌린다.
 		 */
 		const gameLoop = () => {
-			if (room.current.gameState !== GameState.PLAYER_ONE_WIN && room.current.gameState !== GameState.PLAYER_TWO_WIN && isPlayer)
-				socket.emit('requestUpdate', room.current.roomId);
-			drawGame(gameData, room.current);
-			if (room.current.gameState === GameState.WAITING) {
+			if (room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN && isPlayer)
+				socket.emit('requestUpdate', room.roomId);
+			drawGame(gameData, room);
+			if (room.gameState === GameState.WAITING) {
 				gameData.drawWaiting();
 			}
-			else if (room.current.gameState === GameState.STARTING) {
+			else if (room.gameState === GameState.STARTING) {
 				gameData.drawStartCountDown('READY');
 			}
-			else if (room.current.gameState === GameState.PAUSED) {
+			else if (room.gameState === GameState.PAUSED) {
 				gameData.drawPasuesState();
 			}
-			else if (room.current.gameState === GameState.RESUMED) {
+			else if (room.gameState === GameState.RESUMED) {
 				gameData.drawStartCountDown('READY');
 			}
-			else if (room.current.gameState === GameState.PLAYER_ONE_WIN || room.current.gameState ===  GameState.GAME_SAVED_ONE_OUT || room.current.gameState === GameState.PLAYER_TWO_WIN || room.current.gameState === GameState.GAME_SAVED_TWO_OUT || room.current.gameState === GameState.GAME_SAVED_ONE_WIN || room.current.gameState === GameState.GAME_SAVED_TWO_WIN) {
+			else if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState ===  GameState.GAME_SAVED_ONE_OUT || room.gameState === GameState.PLAYER_TWO_WIN || room.gameState === GameState.GAME_SAVED_TWO_OUT || room.gameState === GameState.GAME_SAVED_ONE_WIN || room.gameState === GameState.GAME_SAVED_TWO_WIN) {
 				gameData.clear();
-				gameEnd(room.current.roomId, room.current.paddleOne.gameuser.nickname, room.current.paddleTwo.gameuser.nickname, room.current.gameState, gameData);
+				gameEnd(room.roomId, room.paddleOne.gameuser.nickname, room.paddleTwo.gameuser.nickname, room.gameState, gameData);
 			}
 			animationFrameId = window.requestAnimationFrame(gameLoop);
 		}
@@ -194,7 +195,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 	}, [isPlayer, socket, userData.id]);
 
 	const leaveRoom = () => {
-		socket.emit('leaveRoom', room.current.roomId);
+		socket.emit('leaveRoom', room.roomId);
 	};
 
 	return (
@@ -203,7 +204,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 			<LeaveButton onClick={leaveRoom} type="button">
 				게임 방 나가기
 			</LeaveButton>
-			<PlayerInfo leftPlayer={room.current.paddleOne} rightPlayer={room.current.paddleTwo} />
+			<PlayerInfo leftPlayer={room.paddleOne} rightPlayer={room.paddleTwo} />
 			</>
 			<Canvas id="pong-canvas" width="1920" height="1080" />
 		</div>
