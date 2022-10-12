@@ -39,31 +39,19 @@ export default function GameInviteMenu({label, target}: {label: string; target: 
 			socket.emit('leave-room', { roomId, roomName, userIntraId: getCookie("intra_id") }, () => {
 				console.log("기존에 있던 방을 나왔습니다.");
 			});
-			setPassword(target);
-			console.log("password를 확인합니다.", password);
 			socket.emit('create-room', { roomName: target, password, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				console.log("새로운 방을 만듭니다.");
 				if (!response.success)
 				return alert(response.payload);
 				navigate(`/room/${response.payload}`);
 			});
-			console.log("새로 만든 방에 들어왔습니다.");
-			console.log("==========================");
-			socket.emit('invite-room', { roomId, roomName, name: target }, (response: ICreateRoomResponse) => {
+			console.log("=========방은 만들었습니다==========");
+
+			socket.emit('invite-room', { roomName, name: target, userIntraId: getCookie("intra_id") }, (response: ICreateRoomResponse) => {
 				console.log("타겟이 기존에 있던 방을 나왔습니다.");
 				if (!response.success)
 				return alert(response.payload);
-				setUserRes(response.payload);
 				console.log("invite room 확인", response.payload);
-			});
-
-			console.log("userRes를 확인합니다.", userRes);
-			socket.emit('join-room', {roomName, userIntraId: userRes}, (response: ICreateRoomResponse) => {
-				console.log('join-room를 실행합니다.');
-				if (!response.success)
-				return alert(response.payload);
-				console.log("joinRoom: payload", response.payload);
-				navigate(`/room/${response.payload}`);
 			});
 		}
 	};

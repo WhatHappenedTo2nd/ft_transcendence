@@ -125,7 +125,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 				await this.chatRepository.insert(room);
 				await this.chatUserRepository.addUser(room, user);
-
 				socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
 
 				return { success: true, payload: room.id };
@@ -136,8 +135,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() { roomName, password, userIntraId }: MessagePayload
 	) {
-		this.logger.log(`join-room을 실행합니다.`);
-		this.logger.log(`roomName: ${roomName}, password: ${password}, userIntraId: ${userIntraId}`);
 		const user = await this.userRepository.findByIntraId(userIntraId);
 		if (user)
 		{
@@ -233,15 +230,25 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage("invite-room")
 	async handleInviteRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() {roomName, name }: MessagePayload
+		@MessageBody() { roomName, name, userIntraId }: MessagePayload
 		) {
-			// roomname -> 새로 바꿀 방 이름
-			// userIntraId -> 여기서는 targetName입니다 :)
-			this.logger.log(`name: ${name}`);
+			this.logger.log(`invite-room::: name: ${name}, intra: ${userIntraId}`);
 			const user = await this.userRepository.findByNickname(name);
-			this.logger.log(`user nickname: ${user.nickname}, id :${user.id}, intra: ${user.intra_id}`);
+			this.logger.log(`targer user nickname: ${user.nickname}, id :${user.id}, intra: ${user.intra_id}, roomName: ${roomName}`);
 			await this.chatService.kickUser(roomName, name);
 			this.nsp.in(user.socket_id).socketsLeave(roomName);
+
+			const inviter = await this.userRepository.findByIntraId(userIntraId);
+			this.logger.log(`inviter user nickname: ${inviter.nickname}, id :${inviter.id}, intra: ${inviter.intra_id}`);
+			console.log(inviter);
+			console.log(user);
+			const newRoom = await this.chatRepository.findOneById(inviter.id);
+			this.logger.log(`inviter의 방정보를 확인합니다.`);
+			console.log(newRoom);
+			const nickRoom = await this.chatRepository.findOneByRoomname(user.intra_id);
+			this.logger.log(`nickname과 동일한 방의 방정보를 확인합니다.`);
+			console.log(nickRoom);
+
 			this.nsp.to(user.socket_id).emit('invite-room', {roomName: roomName, payload: user.intra_id});
 			this.logger.log(`roomName: ${roomName}, payload: ${user.intra_id}`);
 			return { success: true, payload: user.intra_id, roomName: roomName }
