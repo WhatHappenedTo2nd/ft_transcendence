@@ -256,4 +256,33 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			this.nsp.to(targetuser.socket_id).emit('invite-room-end', {payload: newroom.id});
 			return { success: true, payload: newroom.id }
 	}
+
+	@SubscribeMessage("DM-room")
+	async handleDMRoom(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() { name, userIntraId }: MessagePayload
+		) {
+			// name -> targetname
+			// userIntraId -> 본인!
+			const targetuser = await this.userRepository.findByNickname(name);
+			const me = await this.userRepository.findByIntraId(userIntraId);
+			
+			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
+			await this.chatUserRepository.deleteUser(prevroom, targetuser);
+			await this.chatUserRepository.deleteUser(prevroom, me);
+			socket.leave(String(prevroom.id));
+			this.nsp.in(targetuser.socket_id).socketsLeave(String(prevroom.id));
+			var bcrypt = require('bcryptjs');
+			var salt = bcrypt.genSaltSync(10);
+			var hash = bcrypt.hashSync(name, salt);
+			const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
+			await this.chatRepository.insert(newroom);
+			await this.chatUserRepository.addUser(newroom, targetuser);
+			await this.chatUserRepository.addUser(newroom, me);
+			socket.join(String(newroom.id));
+			this.nsp.in(targetuser.socket_id).socketsJoin(String(newroom.id));
+			socket.emit('invite-room-end', {payload: newroom.id});
+			this.nsp.to(targetuser.socket_id).emit('invite-room-end', {payload: newroom.id});
+			return { success: true, payload: newroom.id }
+	}
 }
