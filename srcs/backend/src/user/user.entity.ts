@@ -1,65 +1,86 @@
-import { BaseEntity, Column, Entity, JoinColumn, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Games } from "src/games/games.entity";
+import { BaseEntity, Column, Entity, ManyToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 
+/**
+ * User 테이블. 유저의 회원 정보를 저장함.
+ */
 @Entity()
-@Unique(['nickname'])
+@Unique(['intra_id', 'nickname', 'email'])
 export class User extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column({ type: "varchar", length: 20 })
+	// 42서울에서 사용하는 인트라 아이디.
+	// 나중에 닉네임이 바뀌어도 로그인 할 때 기존 유저인지 확인하기 위함.
+	@Column({ nullable : true })
+	intra_id: string;
+
+	// 사이트에서 사용하는 닉네임.
+	// 처음 로그인을 했을 때는 intra_id와 동일하게 설정됨.
+	@Column({ nullable : true, type: "varchar", length: 20 })
 	nickname: string;
-	
-	@Column()
+
+	// 사용자 프로필 이미지.
+	// 처음 로그인을 했을 때는 인트라 프로필 이미지와 동일하게 설정됨.
+	@Column({ nullable : true })
 	avatar: string;
-	
-	@Column()
+
+	// 유저가 접속 중인지 여부
+	@Column({ default: false })
 	is_online: boolean;
-	
-	@Column()
+
+	// 유저가 게임 중인지 여부
+	@Column({ default: false })
 	now_playing: boolean;
-	
-	@Column()
-	email: string;
+
+	// 2차 인증할 때 받는 이메일.
+	// 이메일이 비어있으면 아직 2차 인증을 하지 않은 것임.
+	@Column({ nullable : true })
+	email: string ;
+
+	@Column({ nullable: true })
+	tfaCode: string;
+
+	@Column({ default: false })
+	tfaAuthorized: boolean;
+
+	@Column({default : true})
+	is_first: boolean;
+
+	/** games */
+	@Column({
+		nullable: true,
+		default: 0,
+	})
+	wins: number;
+
+	@Column({
+		nullable: true,
+		default: 0,
+	})
+	losses: number;
+
+	@Column({
+		nullable: true,
+		default: '',
+	})
+	ratio: string;
+
+	@Column({
+		nullable: true,
+		default: '',
+	})
+	roomId: string;
+
+	/** chatting */
+	@Column({ nullable: true })
+	socket_id: string;
+
+	@ManyToMany(() => Games, (game)=>game.players)
+	games: Games[];
 }
 
-@Entity()
-export class Block extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
-	
-	@JoinColumn()
-	blocker: User;
-	
-	@JoinColumn()
-	blocked: User;
-}
-
-@Entity()
-export class Friend extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
-
-	@JoinColumn()
-	user_id: User;
-
-	@JoinColumn()
-	friend_id: User;
-}
-
-@Entity()
-export class History extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
-
-	@JoinColumn()
-	user_a: User;
-
-	@JoinColumn()
-	user_b: User;
-
-	@Column()
-	score_a: number;
-
-	@Column()
-	score_b: number;
-}
+/**
+ * 2022/10/06
+ * 유저엔티티 nullable 추가!
+ */

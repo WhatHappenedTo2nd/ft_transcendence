@@ -1,0 +1,45 @@
+/**
+ * 게임 화면 크기
+ * @constant CANVAS_WIDTH
+ * @constant CANVAS_HEIGHT
+ *
+ * 게임 패들(유저)
+ * @constant TIMING                     패들 색상 변경
+ * @constant PADDLE_SPEED               플레이어 속도
+ * @constant PADDLE_WIDTH
+ * @constant PADDLE_HEIGHT
+ *
+ * 게임 공
+ * @constant BALL_DEFAULT_RADIUS
+ * @constant BALL_DEFAULT_SPEED
+ * @constant BALL_MAX_SPEED
+ * @constant BALL_ACCELERATION
+ *
+ * @constant DEFAULT_MAX_USER
+ * @constant SET_INTERVAL_MILISECONDS   게임 큐를 확인하는 주기
+ * @constant MAX_GOAL                   게임 종료 골 수\
+ */
+
+export const CANVAS_WIDTH: number = 1920;
+export const CANVAS_HEIGHT: number = 1080;
+
+export const TIMING: number = 15;
+export const PADDLE_SPEED = 550;
+export const PADDLE_WIDTH = 30;
+export const PADDLE_HEIGHT = 200;
+
+export const BALL_DEFAULT_RADIUS = 25;
+export const BALL_DEFAULT_SPEED = 500;
+export const BALL_HARD_SPEED = 700;
+
+export const BALL_MAX_SPEED = 2000;
+export const BALL_ACCELERATION = 200;
+
+export const DEFAULT_MAX_USER = 100;
+export const SET_INTERVAL_MILISECONDS = 3000;
+export const MAX_GOAL = 5;
+export const MAX_QUEUE = 100;
+
+/**
+ * Game에서 필요한 값
+ */

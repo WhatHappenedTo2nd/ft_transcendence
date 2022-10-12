@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+
+/* 폰트 추가 */
+@font-face {
+  font-family: "Establish";
+  font-weight: bolder;
+  src: url("./fonts/establish\ Retrosans\ OTF.otf");
+}
+
+@font-face {
+  font-family: "WelcomeRegular";
+  src: url("./fonts/welcomeOTF\ Regular.otf");
+}
+
+@font-face {
+  font-family: "WelcomeBold";
+  src: url("./fonts/welcomeOTF\ Bold.otf");
+}
