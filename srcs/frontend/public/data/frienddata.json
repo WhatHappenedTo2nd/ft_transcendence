@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "user_id": "mseopong",
+		"friend_id": "inyangpong"
+    },
+    {
+        "id": 2,
+        "user_id": "inyangpong",
+		"friend_id": "mseopong"
+    },
+	{
+        "id": 3,
+        "user_id": "jkeumpong",
+		"friend_id": "mseopong"
+    },
+	{
+        "id": 4,
+        "user_id": "mseopong",
+		"friend_id": "jkeumpong"
+    },
+	{
+        "id": 5,
+        "user_id": "jkeumpong",
+		"friend_id": "inyangpong"
+    },
+	{
+        "id": 6,
+        "user_id": "inyangpong",
+		"friend_id": "jkeumpong"
+    },
+	{
+        "id": 7,
+        "user_id": "hkwonpong",
+		"friend_id": "yjungpong"
+    },
+	{
+        "id": 8,
+        "user_id": "yjungpong",
+		"friend_id": "hkwonpong"
+    },
+	{
+        "id": 9,
+        "user_id": "jkeumpong",
+		"friend_id": "yjungpong"
+    },
+	{
+        "id": 10,
+        "user_id": "yjungpong",
+		"friend_id": "jkeumpong"
+    },
+	{
+        "id": 11,
+        "user_id": "jkeumpong",
+		"friend_id": "hkwonpong"
+    },
+	{
+        "id": 12,
+        "user_id": "hkwonpong",
+		"friend_id": "jkeumpong"
+    }
+]

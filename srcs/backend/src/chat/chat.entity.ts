@@ -1,38 +1,32 @@
+import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn, JoinColumn } from "typeorm";
 import { User } from "src/user/user.entity";
-import { BaseEntity, Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 
+/**
+ * Chat 테이블. 채팅에 필요한 정보를 저장함.
+ */
 @Entity()
 export class Chat extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
+	// 채팅방 제목
 	@Column({ type: "varchar", length: 20 })
 	title: string;
 
-	@Column({ type: "varchar", length: 20 })
+	// 비밀채팅방의 비밀번호
+	@Column({ default: "", nullable: true })
 	password: string;
 
-	@Column()
+	// 비밀방인지 여부
+	@Column({ default: false })
 	is_private: boolean;
 
+	// 채팅방 소유자. 채팅방을 만든 사람.
+	@OneToOne(() => User, (user) => user.id)
 	@JoinColumn()
 	host: User;
 
-	@Column()
+	// 이 채팅방에서 게임이 진행되고 있는지 여부
+	@Column({ default: false })
 	now_playing: boolean;
-}
-
-@Entity()
-export class ChatUser extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
-
-	@JoinColumn()
-	chat_id: Chat;
-
-	@JoinColumn()
-	user_id: User;
-
-	@Column()
-	is_muted: boolean;
 }
