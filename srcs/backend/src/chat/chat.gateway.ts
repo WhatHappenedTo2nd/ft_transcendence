@@ -243,7 +243,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			 *  Friend 테이블에서 user_id: 초대받은 사람, another_id: 초대한 사람, block이 true인지 확인
 			*/
 			const row = await this.friendRepository.findRow(targetuser, me);
-			if (row.block === true) {
+			if (row && row.block === true) {
 				return { success: false }
 			}
 
@@ -281,15 +281,37 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			 *  Friend 테이블에서 user_id: 초대받은 사람, another_id: 초대한 사람, block이 true인지 확인
 			*/
 			const row = await this.friendRepository.findRow(targetuser, me);
-			if (row.block === true) {
+			if (row && row.block === true) {
 				return { success: false }
 			}
 
-			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
-			await this.chatUserRepository.deleteUser(prevroom, targetuser);
-			await this.chatUserRepository.deleteUser(prevroom, me);
-			socket.leave(String(prevroom.id));
-			this.nsp.in(targetuser.socket_id).socketsLeave(String(prevroom.id));
+			const MyPrevroom = await this.chatService.getWhereAreYou(me.nickname);
+			const TargetPrevroom = await this.chatService.getWhereAreYou(targetuser.nickname);
+			if (MyPrevroom && !TargetPrevroom)
+			{
+				console.log("MyPrevroom만 존재합니다.", MyPrevroom);
+				await this.chatUserRepository.deleteUser(MyPrevroom, me);
+				socket.leave(String(MyPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(MyPrevroom.id));
+			}
+			else if (!MyPrevroom && TargetPrevroom)
+			{
+				console.log("TargetPrevroom만 존재합니다.", TargetPrevroom);
+				await this.chatUserRepository.deleteUser(TargetPrevroom, me);
+				socket.leave(String(TargetPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(TargetPrevroom.id));
+			}
+			else if (MyPrevroom && TargetPrevroom)
+			{
+				console.log("MyPrevroom과 TargetPrevroom 존재합니다.", MyPrevroom, TargetPrevroom);
+				await this.chatUserRepository.deleteUser(TargetPrevroom, targetuser);
+				await this.chatUserRepository.deleteUser(MyPrevroom, me);
+				socket.leave(String(TargetPrevroom.id));
+				socket.leave(String(MyPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(MyPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(TargetPrevroom.id));
+			}
+
 			var bcrypt = require('bcryptjs');
 			var salt = bcrypt.genSaltSync(10);
 			var hash = bcrypt.hashSync(name, salt);
