@@ -160,17 +160,13 @@ function Chatting(props: any) {
 							alarm: !chat.name,
 						})}
 					>
-					<UserContextMenu
-					userId={chat.id}
-					name={chat.name}
-					mode='chat'
-					>
+					<span>
 						{chat.name
 						? socket.id === chat.socket_id
 							? ''
 							: chat.name
 						: ''}
-					</UserContextMenu>
+					</span>
 					<Message className="message">{chat.message}</Message>
 					</MessageBox>
 				))}
