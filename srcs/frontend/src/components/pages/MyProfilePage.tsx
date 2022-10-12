@@ -4,6 +4,7 @@ import History from '../mypage/History';
 import { useNavigate } from 'react-router-dom';
 import { socket } from '../../App';
 import ICreateRoomResponse from '../interface/IChatProps';
+import { useEffect } from 'react';
 
 function MyProfilePage () {
 	const navigate = useNavigate();
@@ -12,7 +13,7 @@ function MyProfilePage () {
 			navigate(`/room/${response.payload}`);
 		});
 	})
-	
+
 	return (
 		<Grid gridTemplateColumns={{
 			base: "9fr",
@@ -44,7 +45,3 @@ function MyProfilePage () {
 }
 
 export default MyProfilePage;
-function useEffect(arg0: () => void) {
-	throw new Error('Function not implemented.');
-}
-

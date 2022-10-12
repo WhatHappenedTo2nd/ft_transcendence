@@ -4,6 +4,7 @@ import ChattingRoom from "../chatting/ChattingRoom";
 import CreateButton from "../chatting/CreateButton";
 import ICreateRoomResponse from '../interface/IChatProps';
 import { socket } from "../../App";
+import { useEffect } from "react";
 /**
  * ChoicePage에서 채팅을 선택하면 나오는 선택 페이지
  */
@@ -56,7 +57,3 @@ function ChattingRoomPage() {
 }
 
 export default ChattingRoomPage;
-function useEffect(arg0: () => void) {
-	throw new Error("Function not implemented.");
-}
-
