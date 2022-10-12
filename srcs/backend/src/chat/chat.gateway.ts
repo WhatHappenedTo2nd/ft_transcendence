@@ -250,6 +250,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
 			await this.chatUserRepository.deleteUser(prevroom, targetuser);
 			await this.chatUserRepository.deleteUser(prevroom, me);
+			const check = await this.chatUserRepository.find({
+				where: {
+					chat_id: {id: Equal(prevroom.id)},
+				}
+			});
+			if (!check.length) {
+				await this.chatRepository.deleteRoom(prevroom.title);
+			} else {
+				const newHost = await this.chatUserRepository.findNextHost(prevroom);
+				await this.chatRepository.succedingHost(prevroom, newHost);
+			}
 			socket.leave(String(prevroom.id));
 			this.nsp.in(targetuser.socket_id).socketsLeave(String(prevroom.id));
 			var bcrypt = require('bcryptjs');
@@ -291,6 +302,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			{
 				console.log("MyPrevroom만 존재합니다.", MyPrevroom);
 				await this.chatUserRepository.deleteUser(MyPrevroom, me);
+				const check = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(MyPrevroom.id)},
+					}
+				});
+				if (!check.length) {
+					await this.chatRepository.deleteRoom(MyPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(MyPrevroom);
+					await this.chatRepository.succedingHost(MyPrevroom, newHost);
+				}
 				socket.leave(String(MyPrevroom.id));
 				this.nsp.in(targetuser.socket_id).socketsLeave(String(MyPrevroom.id));
 			}
@@ -298,6 +320,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			{
 				console.log("TargetPrevroom만 존재합니다.", TargetPrevroom);
 				await this.chatUserRepository.deleteUser(TargetPrevroom, me);
+				const checkother = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(TargetPrevroom.id)},
+					}
+				});
+				if (!checkother.length) {
+					await this.chatRepository.deleteRoom(TargetPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(TargetPrevroom);
+					await this.chatRepository.succedingHost(TargetPrevroom, newHost);
+				}
 				socket.leave(String(TargetPrevroom.id));
 				this.nsp.in(targetuser.socket_id).socketsLeave(String(TargetPrevroom.id));
 			}
@@ -306,6 +339,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				console.log("MyPrevroom과 TargetPrevroom 존재합니다.", MyPrevroom, TargetPrevroom);
 				await this.chatUserRepository.deleteUser(TargetPrevroom, targetuser);
 				await this.chatUserRepository.deleteUser(MyPrevroom, me);
+				const check = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(MyPrevroom.id)},
+					}
+				});
+				if (!check.length) {
+					await this.chatRepository.deleteRoom(MyPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(MyPrevroom);
+					await this.chatRepository.succedingHost(MyPrevroom, newHost);
+				}
+				const checkother = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(TargetPrevroom.id)},
+					}
+				});
+				if (!checkother.length) {
+					await this.chatRepository.deleteRoom(TargetPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(TargetPrevroom);
+					await this.chatRepository.succedingHost(TargetPrevroom, newHost);
+				}
 				socket.leave(String(TargetPrevroom.id));
 				socket.leave(String(MyPrevroom.id));
 				this.nsp.in(targetuser.socket_id).socketsLeave(String(MyPrevroom.id));
