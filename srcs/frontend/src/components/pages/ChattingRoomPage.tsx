@@ -2,12 +2,20 @@ import { useNavigate } from "react-router-dom";
 import { Grid, GridItem } from '@chakra-ui/react'
 import ChattingRoom from "../chatting/ChattingRoom";
 import CreateButton from "../chatting/CreateButton";
+import ICreateRoomResponse from '../interface/IChatProps';
+import { socket } from "../../App";
 /**
  * ChoicePage에서 채팅을 선택하면 나오는 선택 페이지
  */
 
 function ChattingRoomPage() {
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		socket.on('invite-room-end', (response: ICreateRoomResponse) => {
+			navigate(`/room/${response.payload}`);
+		});
+	})
 
 	return (
 		<Grid gridTemplateColumns={{
@@ -48,3 +56,7 @@ function ChattingRoomPage() {
 }
 
 export default ChattingRoomPage;
+function useEffect(arg0: () => void) {
+	throw new Error("Function not implemented.");
+}
+

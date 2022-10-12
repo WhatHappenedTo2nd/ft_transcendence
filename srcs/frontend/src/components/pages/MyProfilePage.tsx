@@ -1,8 +1,18 @@
 import { Grid, GridItem } from '@chakra-ui/react';
 import MyProfile from '../mypage/MyProfile';
 import History from '../mypage/History';
+import { useNavigate } from 'react-router-dom';
+import { socket } from '../../App';
+import ICreateRoomResponse from '../interface/IChatProps';
 
-function MyProfilePage (){
+function MyProfilePage () {
+	const navigate = useNavigate();
+	useEffect(() => {
+		socket.on('invite-room-end', (response: ICreateRoomResponse) => {
+			navigate(`/room/${response.payload}`);
+		});
+	})
+	
 	return (
 		<Grid gridTemplateColumns={{
 			base: "9fr",
@@ -34,3 +44,7 @@ function MyProfilePage (){
 }
 
 export default MyProfilePage;
+function useEffect(arg0: () => void) {
+	throw new Error('Function not implemented.');
+}
+

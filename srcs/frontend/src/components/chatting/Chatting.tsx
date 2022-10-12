@@ -15,7 +15,6 @@ import { useQuery, useQueryClient } from 'react-query';
 import { socket } from '../../App';
 import IUserProps from '../interface/IUserProps';
 import IChat from '../interface/IChatProps';
-import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
 import IChatListProps from '../interface/IChatListProps';
 import { history } from "../../hooks/useHistory";
