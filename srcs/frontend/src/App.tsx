@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { getCookie } from './api/cookieFunc';
 import NotFound from './components/pages/NotFound';
 
-export const socket = io('http://localhost:9633/api/chat');
+export const socket = io('http://10.28.3.7:9633/api/chat');
 
 function App() {
   const [login, setLogin] = useState(true);

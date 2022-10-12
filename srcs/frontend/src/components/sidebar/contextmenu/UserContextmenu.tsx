@@ -127,7 +127,7 @@ export default function UserContextMenu({
 			flag |= UserContextMenuFlag.BLOCK_ADD;
 		}
 		return flag;
-	}, [targetrole, friends, blocks, mode, muted, myrole, userId, Role])
+	}, [game, targetrole, friends, blocks, mode, muted, myrole, userId])
 
 	return (
 		<flagContext.Provider value={menuFlag}>

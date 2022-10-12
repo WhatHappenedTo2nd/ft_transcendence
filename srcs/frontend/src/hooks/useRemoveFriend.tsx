@@ -18,8 +18,14 @@ export default function useRemoveFriend(nickname: string) {
 			url: `/friend/remove/${nickname}`
 		})
 		.then(() => {
+			queryClient.invalidateQueries('me');
 			queryClient.invalidateQueries('Friend');
 			queryClient.invalidateQueries('online');
+			queryClient.invalidateQueries('roomuser');
+			queryClient.invalidateQueries('usernick');
+			queryClient.invalidateQueries('block');
+			queryClient.invalidateQueries('chat');
+			queryClient.invalidateQueries('findroom');
 			toast({
 				title: `${nickname}님을 친구목록에서 제거했습니다.`,
 				status: 'success',
@@ -40,6 +46,6 @@ export default function useRemoveFriend(nickname: string) {
 				});
 			}
 		});
-	}, [nickname, toast, setError]);
+	}, [nickname, toast, setError, queryClient]);
 	return { onRemoveFriend, WarningDialogComponent };
 }

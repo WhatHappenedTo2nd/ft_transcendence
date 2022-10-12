@@ -1,4 +1,3 @@
-import { useDisclosure } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { getBlockList } from "../../api/api";
@@ -21,7 +20,7 @@ const DirectMSG = styled.button`
 
 export default function DirectMessage({target}: {target: string;}) {
 	const { setError, WarningDialogComponent } = useWarningAlert();
-	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList);
+	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList, {refetchInterval: 1000});
 
 	let blockCheck = false;
 	for (let i = 0; i < block!.length; i++)

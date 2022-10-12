@@ -29,8 +29,8 @@ import ICreateRoomResponse from '../interface/IChatProps';
 function Chatting(props: any) {
 	const queryClient = useQueryClient();
 	const [chats, setChats] = useState<IChat[]>([]);
-	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData);
-	const { isLoading: titleLoading, data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
+	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData, {refetchInterval: 1000});
+	const { isLoading: titleLoading, data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname), {refetchInterval: 1000});
 	const [message, setMessage] = useState<string>('');
 	const [roomName, setRoomName] = useState<string>((chat ? chat.title : ''));
 	const [name, setNickname] = useState<string>('');
@@ -47,19 +47,12 @@ function Chatting(props: any) {
 		});
 
 		return unlistenHistoryEvent;
-	}, []);
+	});
 
 
 	useEffect(() => {
 		socket.emit('save-socket', { userIntraId: getCookie("intra_id") });
-	}, [socket]);
-
-	// useEffect(() => {
-	// 	socket.on('edit-room', (response: ICreateRoomResponse) => {
-	// 		if (response.success)
-	// 			setRoomName(response.payload);
-	// 	});
-	// }, [setRoomName, socket])
+	});
 
 	// 채팅이 길어지면(chats.length) 스크롤이 생성되므로, 스크롤의 위치를 최근 메시지에 위치시키기 위함
 	useEffect(() => {
@@ -108,7 +101,7 @@ function Chatting(props: any) {
 	const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
 		if (Mydata?.nickname) setNickname(Mydata.nickname);
 		setMessage(e.target.value);
-	}, []);
+	}, [Mydata?.nickname]);
 
 	/**
 	 * socket.io는 이벤트 기반으로 동작한다.
@@ -133,7 +126,7 @@ function Chatting(props: any) {
 				setChats((prevChats) => [...prevChats, chat]);
 				setMessage('');
 			});
-		}, [message, roomId, roomName]
+		}, [Mydata?.nickname, message, roomId, roomName, name]
 	);
 
 	const onLeaveRoom = useCallback(() => {
@@ -141,7 +134,7 @@ function Chatting(props: any) {
 			navigate('/chatting');
 		});
 		queryClient.invalidateQueries('roomuser');
-	}, [navigate, roomId, roomName]);
+	}, [navigate, roomId, roomName, queryClient]);
 
 	if ( titleLoading ) return <h1>Loading...</h1>;
 	return (

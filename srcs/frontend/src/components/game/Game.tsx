@@ -84,7 +84,7 @@ function Game() {
 	 *  loading : 데이터 fetch 중인 상태
 	 *  error : 데이터 fetch에 실패한 상태
 	 */
-	const { isLoading, data: userData, error } = useQuery<IUser>('me', getLoginUserData);
+	const { isLoading, data: userData, error } = useQuery<IUser>('game', getLoginUserData);
 
 	const joinQueue = (event: React.MouseEvent<HTMLButtonElement>) => {
 		socket.emit('joinQueue', event.currentTarget.value);
@@ -117,7 +117,7 @@ function Game() {
 		 * 연결할 서버를 설정
 		 * on/emit : 서버와 연결된 이벤트 처리, 서버에게 메세지 전송
 		 */
-		socket = io(`http://localhost:9633/api/games`);
+		socket = io(`http://10.28.3.7:9633/api/games`);
 		socket = socket.on('connect', () => {
 			socket.emit('handleUserConnect', userData);
 			socket.emit('getCurrentGames');
@@ -159,7 +159,7 @@ function Game() {
 			}
 			setGameRooms([]);
 		};
-	}, [userData]);
+	}, [userData, error, isLoading]);
 	/**
 	 * 서버와 연동 전이라 데이터를 가져올 수 없음.
 	 * return NULL에서 걸림 -> 해결

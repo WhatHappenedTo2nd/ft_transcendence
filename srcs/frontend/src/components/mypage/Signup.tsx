@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Image, Container, Flex, Stack, Text, Button } from '@chakra-ui/react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getLoginUserData } from '../../api/api';
 import IUserProps from '../interface/IUserProps'
 import { useNavigate } from 'react-router';
@@ -10,9 +10,10 @@ import { getCookie } from '../../api/cookieFunc';
 
 function SignUp() {
 	const [isFirst, setisFirst] = useState(true);
+	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 
-	const {data: Mydata} = useQuery<IUserProps>('me', getLoginUserData);
+	const {data: Mydata} = useQuery<IUserProps>('me', getLoginUserData, {refetchInterval: 1000});
 
 	const handleSubmit = async () => {
 		await axios({
@@ -29,6 +30,14 @@ function SignUp() {
 			.then((res) => {
 				alert(`즐거운 게임 되세요!👍`);
 				setisFirst(Boolean);
+				queryClient.invalidateQueries('me');
+				queryClient.invalidateQueries('Friend');
+				queryClient.invalidateQueries('online');
+				queryClient.invalidateQueries('roomuser');
+				queryClient.invalidateQueries('usernick');
+				queryClient.invalidateQueries('block');
+				queryClient.invalidateQueries('chat');
+				queryClient.invalidateQueries('findroom');
 				return (res);
 			})
 			.catch((err) => {

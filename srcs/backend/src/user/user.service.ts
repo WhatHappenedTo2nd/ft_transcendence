@@ -71,7 +71,7 @@ export class UserService {
 			throw new BadRequestException(`변경된 내용이 없습니다.`)
 		}
 		if (file) {
-			const server = 'http://localhost:9633';
+			const server = 'http://10.28.3.7:9633';
 			const photoUrl = server + join('/', file.path);
 			user.avatar = photoUrl;
 			await this.userRepository.save(user);

@@ -22,14 +22,21 @@ function BlockMenu({label, target}: {label: string; target: string;}) {
 			url: url
 		})
 		.then(() => {
+			queryClient.invalidateQueries('me');
 			queryClient.invalidateQueries('Friend');
+			queryClient.invalidateQueries('online');
+			queryClient.invalidateQueries('roomuser');
+			queryClient.invalidateQueries('usernick');
 			queryClient.invalidateQueries('block');
+			queryClient.invalidateQueries('chat');
+			queryClient.invalidateQueries('findroom');
 			toast({
 				title: `${label}`,
 				description: `${target}님을 ${label}에 성공했습니다.`,
 				status: 'success',
 				duration: 1000,
 				isClosable: true,
+				position: 'top-right',
 			});
 		})
 		.catch((err) => {

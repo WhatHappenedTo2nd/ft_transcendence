@@ -20,7 +20,14 @@ export default function RemoveAdminMenu({label, target}: {label: string; target:
 			url: `/chat/removeadmin/${roomname}/${target}`
 		})
 		.then(() => {
+			queryClient.invalidateQueries('me');
+			queryClient.invalidateQueries('Friend');
+			queryClient.invalidateQueries('online');
 			queryClient.invalidateQueries('roomuser');
+			queryClient.invalidateQueries('usernick');
+			queryClient.invalidateQueries('block');
+			queryClient.invalidateQueries('chat');
+			queryClient.invalidateQueries('findroom');
 			toast({
 				title: `${label}`,
 				description: `${target} 님의 운영자 권한을 해제했습니다.`,

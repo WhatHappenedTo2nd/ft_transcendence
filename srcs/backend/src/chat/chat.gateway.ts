@@ -23,7 +23,7 @@ interface MessagePayload {
 @WebSocketGateway({
 	namespace: 'api/chat',
 	cors: {
-		origin: ['http://localhost:3000'],
+		origin: ['http://10.28.3.7:3000'],
 	},
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -74,25 +74,32 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			// 채팅방에 속한 유저들 중 나를 차단한 사람 목록을 가져옴
 			const whoBlockedMe = await this.chatService.findWhoBlockedMe(user, room);
 
-			if (whoBlockedMe.length === 0) {
-				this.logger.log('block한 사람이 없어');
+			if (!whoBlockedMe) {
+				this.logger.log(`block한 사람이 없어 : ${String(roomId)}`);
 				socket.broadcast.to(String(roomId)).emit('message', { name, message });
 			} else {
 				// 채팅방에 있는 모든 사람들 중에
 				for (let e of chatUsers) {
-					// 날 블락한 사람들 목록 중에
-					for (let i of whoBlockedMe) {
-						// Friend 테이블에서 user_id가 날 블락한 사람이고, another_id가 나인 row 찾음.
-						const row = await this.friendRepository.findRow(i, user);
-						// 만약 찾으면 거기서 block이 true이면 i가 날 차단한 것
-						if (row && row.block === true) {
-							this.logger.log(`${row.user_id.intra_id}가 나 블락함`);
-						} else {
-							this.logger.log(`${e.user_id.intra_id}는 나 블락 안 함`);
-							// 날 차단하지 않은 유저의 소켓에먄 메세지 전송.
-							socket.to(e.user_id.socket_id).emit('message', { name, message });
-						}
+					// 날 블락한 사람들 목록에 들어가있는 사람이 있는지 확인
+					if (whoBlockedMe.includes(e.user_id)) {
+						this.logger.log(`${e.user_id.intra_id}가 나 블락함`);
+					} else {
+						this.logger.log(`${e.user_id.intra_id}는 나 블락 안 함. 메세지를 보내주자`);
+						socket.to(e.user_id.socket_id).emit('message', { name, message });
 					}
+
+					// for (let i of whoBlockedMe) {
+					// 	// Friend 테이블에서 user_id가 날 블락한 사람이고, another_id가 나인 row 찾음.
+					// 	const row = await this.friendRepository.findRow(i, user);
+					// 	// 만약 찾으면 거기서 block이 true이면 i가 날 차단한 것
+					// 	if (row && row.block === true) {
+					// 		this.logger.log(`${row.user_id.intra_id}가 나 블락함`);
+					// 	} else {
+					// 		this.logger.log(`${e.user_id.intra_id}는 나 블락 안 함`);
+					// 		// 날 차단하지 않은 유저의 소켓에만 메세지 전송.
+					// 		socket.to(e.user_id.socket_id).emit('message', { name, message });
+					// 	}
+					// }
 				}
 			}
 		}
@@ -266,7 +273,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			var bcrypt = require('bcryptjs');
 			var salt = bcrypt.genSaltSync(10);
 			var hash = bcrypt.hashSync(name, salt);
-			const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
+
+			// 현재 Chat 테이블에서 가장 큰 id값 가져옴(가장 최근에 생긴 방의 id)
+			const maxRoomId = await this.chatService.findRecentRoomId();
+			const roomNameWithId = name + maxRoomId.toString();
+			const newroom = this.chatRepository.create({title: roomNameWithId, host: me, password: hash, is_private: true});
+
+			// const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
 			await this.chatRepository.insert(newroom);
 			await this.chatUserRepository.addUser(newroom, targetuser);
 			await this.chatUserRepository.addUser(newroom, me);
@@ -367,7 +380,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			var bcrypt = require('bcryptjs');
 			var salt = bcrypt.genSaltSync(10);
 			var hash = bcrypt.hashSync(name, salt);
-			const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
+
+			// 현재 Chat 테이블에서 가장 큰 id값 가져옴(가장 최근에 생긴 방의 id)
+			const maxRoomId = await this.chatService.findRecentRoomId();
+			const roomNameWithId = name + maxRoomId.toString();
+			const newroom = this.chatRepository.create({title: roomNameWithId, host: me, password: hash, is_private: true});
+
+			// const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
 			await this.chatRepository.insert(newroom);
 			await this.chatUserRepository.addUser(newroom, targetuser);
 			await this.chatUserRepository.addUser(newroom, me);

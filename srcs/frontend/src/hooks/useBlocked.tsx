@@ -4,7 +4,7 @@ import { getBlockList } from '../api/api';
 import IFriendProps from '../components/interface/IFriendProps';
 
 export default function useBlocked() {
-  const { data, isLoading, error } = useQuery<IFriendProps[]>('block', getBlockList);
+  const { data, isLoading, error } = useQuery<IFriendProps[]>('block', getBlockList, {refetchInterval: 1000});
   const blocks = React.useMemo(() => {
     if (isLoading || error) {
       return [];

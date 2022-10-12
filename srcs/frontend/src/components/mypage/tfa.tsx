@@ -14,7 +14,7 @@ export default function CheckTFA() {
 	const [inputValue, setInputValue] = useState('');
 	const queryClient = useQueryClient();
 
-	const {data: Mydata} = useQuery<UserProps>('me', getLoginUserData);
+	const {data: Mydata} = useQuery<UserProps>('me', getLoginUserData, {refetchInterval: 1000});
 
 	//메일주소 입력
 	const mailSubmit = async() => {
@@ -32,6 +32,13 @@ export default function CheckTFA() {
 			})
 			.then((res) => {
 				queryClient.invalidateQueries('me');
+				queryClient.invalidateQueries('Friend');
+				queryClient.invalidateQueries('online');
+				queryClient.invalidateQueries('roomuser');
+				queryClient.invalidateQueries('usernick');
+				queryClient.invalidateQueries('block');
+				queryClient.invalidateQueries('chat');
+				queryClient.invalidateQueries('findroom');
 				alert(`메일이 발송되었습니다. 2차인증을 진행해주세요.`);
 				setInputValue('');
 				return (res);
@@ -60,6 +67,14 @@ export default function CheckTFA() {
 			.then((res) => {
 				alert(`2차인증이 완료되었습니다.`);
 				setInputValue('');
+				queryClient.invalidateQueries('me');
+				queryClient.invalidateQueries('Friend');
+				queryClient.invalidateQueries('online');
+				queryClient.invalidateQueries('roomuser');
+				queryClient.invalidateQueries('usernick');
+				queryClient.invalidateQueries('block');
+				queryClient.invalidateQueries('chat');
+				queryClient.invalidateQueries('findroom');
 				return (res);
 			})
 			.catch((err) => {
@@ -86,6 +101,14 @@ export default function CheckTFA() {
 			})
 			.then((res) => {
 				alert(`2차 인증이 취소되었습니다.`);
+				queryClient.invalidateQueries('me');
+				queryClient.invalidateQueries('Friend');
+				queryClient.invalidateQueries('online');
+				queryClient.invalidateQueries('roomuser');
+				queryClient.invalidateQueries('usernick');
+				queryClient.invalidateQueries('block');
+				queryClient.invalidateQueries('chat');
+				queryClient.invalidateQueries('findroom');
 				return (res);
 			})
 			.catch((err) => {

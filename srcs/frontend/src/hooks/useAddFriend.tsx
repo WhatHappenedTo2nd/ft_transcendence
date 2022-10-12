@@ -18,8 +18,14 @@ export default function useAddFriend(nickname: string) {
 			url: `/friend/request/${nickname}`
 		}) // axios로 요청할 작업 (친구추가 신청)
 		.then(() => {
+			queryClient.invalidateQueries('me');
 			queryClient.invalidateQueries('Friend');
 			queryClient.invalidateQueries('online');
+			queryClient.invalidateQueries('roomuser');
+			queryClient.invalidateQueries('usernick');
+			queryClient.invalidateQueries('block');
+			queryClient.invalidateQueries('chat');
+			queryClient.invalidateQueries('findroom');
 			toast({
 				title: `${nickname}님을 친구 추가 했습니다.`,
 				status: 'success',
@@ -40,6 +46,6 @@ export default function useAddFriend(nickname: string) {
 				});
 			}
 		});
-	}, [nickname, toast, setError]);
+	}, [nickname, toast, setError, queryClient]);
 	return { onAddFriend, WarningDialogComponent };
 }

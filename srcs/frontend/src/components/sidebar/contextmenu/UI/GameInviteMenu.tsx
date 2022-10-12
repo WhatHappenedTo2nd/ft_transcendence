@@ -9,7 +9,7 @@ import ICreateRoomResponse from '../../../interface/IChatProps';
 
 export default function GameInviteMenu({label, target}: {label: string; target: string;}) {
 	const { setError, WarningDialogComponent } = useWarningAlert();
-	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList);
+	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList, {refetchInterval: 1000});
 
 	let blockCheck = false;
 	for (let i = 0; i < block!.length; i++)

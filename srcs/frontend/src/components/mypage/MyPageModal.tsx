@@ -40,7 +40,7 @@ function MyPageModal() {
 	const [inputPhoto, setInputPhoto] = useState('');
 	const queryClient = useQueryClient();
 
-	const { data: Mydata } = useQuery<UserProps>('me', getLoginUserData);
+	const { data: Mydata } = useQuery<UserProps>('me', getLoginUserData, {refetchInterval: 1000});
 
 	useEffect(() => {
 		if (Mydata?.avatar) setPreviewPhoto(Mydata.avatar);
@@ -68,6 +68,13 @@ function MyPageModal() {
 			})
 			.then((res) => {
 				queryClient.invalidateQueries('me');
+				queryClient.invalidateQueries('Friend');
+				queryClient.invalidateQueries('online');
+				queryClient.invalidateQueries('roomuser');
+				queryClient.invalidateQueries('usernick');
+				queryClient.invalidateQueries('block');
+				queryClient.invalidateQueries('chat');
+				queryClient.invalidateQueries('findroom');
 				alert(`성공적으로 업데이트 되었습니다.`);
 				setInputValue('');
 				setInputPhoto('');

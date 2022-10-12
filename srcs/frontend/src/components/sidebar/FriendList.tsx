@@ -5,7 +5,7 @@ import IFriendProps from '../interface/IFriendProps';
 import FriendItem from './FriendItem';
 
 function FriendList() {
-	const { isLoading: isFriendListLoading, data: FriendList, error: FriendListError} = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList);
+	const { isLoading: isFriendListLoading, data: FriendList, error: FriendListError} = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList, {refetchInterval: 1000});
 	if ( isFriendListLoading ) return <h1>Loading</h1>;
 	if ( FriendListError ) return <div>Error</div>;
 

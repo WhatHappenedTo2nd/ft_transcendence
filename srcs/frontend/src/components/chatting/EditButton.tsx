@@ -14,7 +14,6 @@ import {
 	Input
 } from '@chakra-ui/react';
 import { socket } from '../../App';
-import { useNavigate } from 'react-router-dom';
 import { getCookie } from "../../api/cookieFunc";
 import { useQuery } from "react-query";
 import IUserProps from "../interface/IUserProps";
@@ -24,15 +23,14 @@ import { getLoginUserData, getWhereAreYou } from "../../api/api";
 export default function EditButton() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [password, setPassword] = useState('');
-	const navigate = useNavigate();
-	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData);
-	const { data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname));
+	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData, {refetchInterval: 1000});
+	const { data: chat } = useQuery<IChatListProps>(['findroom', Mydata?.nickname], () => getWhereAreYou(Mydata?.nickname), {refetchInterval: 1000});
 	const roomId = chat?.id;
 	const roomName = chat?.title;
 
 	const onEditRoom = useCallback(() => {
 		socket.emit('edit-room', { roomId, roomName, password, userIntraId: getCookie("intra_id")})
-	}, [roomId, roomName, password, navigate]);
+	}, [roomId, roomName, password]);
 
 	return (
 	<>

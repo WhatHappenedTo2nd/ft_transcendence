@@ -10,8 +10,8 @@ import RoomUserItem from './RoomUserItem';
 export default function RoomUserList() {
 	const location = useLocation();
 	const locationhandler = location.pathname.substring(6);
-	const { isLoading, data, error } = useQuery<IUserChatProps[]>(['roomuser', locationhandler], () => getRoomUser(locationhandler));
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
+	const { isLoading, data, error } = useQuery<IUserChatProps[]>(['roomuser', locationhandler], () => getRoomUser(locationhandler), {refetchInterval: 1000});
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData, {refetchInterval: 1000});
 	const role = data?.filter((r) => r.id === Mydata?.id).pop();
 	if ( isLoading || amILoading ) return <h1>Loading</h1>;
 	if ( error || amIError ) return <div>Error</div>;

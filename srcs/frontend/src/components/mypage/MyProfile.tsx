@@ -9,7 +9,7 @@ import UserProps from '../interface/IUserProps';
 //이미지와 닉네임과 승률이 뜨는 부분입니다. 낫 모달모달
 
 function MyProfile(){
-	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData);
+	const {isLoading: amILoading, data:Mydata, error: amIError} = useQuery<UserProps>('me', getLoginUserData, {refetchInterval: 1000});
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <h1>Error</h1>;
 

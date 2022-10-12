@@ -63,7 +63,7 @@ import { ChatService } from 'src/chat/chat.service';
  */
 @WebSocketGateway({
 	cors: {
-		origin: 'http://localhost:3000',
+		origin: 'http://10.28.3.7:3000',
 		methods: ['GET', 'POST'],
 	},
 	namespace: 'api/games',

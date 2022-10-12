@@ -29,8 +29,8 @@ const InnerDiv = styled.div`
 `;
 
 function History(){
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps | undefined>('me', getLoginUserData);
-	const { isLoading: MyHistoryLoading, data: MyHistory , error: MyHistoryError } = useQuery<IMatch[] | undefined>(['matchHistory', Mydata!.id], () => getGameHistory(Mydata!.id));
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps | undefined>('me', getLoginUserData, {refetchInterval: 1000});
+	const { isLoading: MyHistoryLoading, data: MyHistory , error: MyHistoryError } = useQuery<IMatch[] | undefined>(['matchHistory', Mydata!.id], () => getGameHistory(Mydata!.id), {refetchInterval: 1000});
 	if (amILoading || MyHistoryLoading) return <h1>Loading</h1>;
 	if (amIError || MyHistoryError) return <div>Error</div>;
 	const matchImgList = MyHistory?.map((history) => (

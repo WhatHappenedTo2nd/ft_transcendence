@@ -4,7 +4,7 @@ import ChatListProps from '../interface/IChatListProps'
 import ChatListItem from './ChatListItem';
 
 function ChattingRoom(){
-	const { isLoading: amILoading , data: ChatList, error: amIError } = useQuery<ChatListProps[]>('chat', getChatList);
+	const { isLoading: amILoading , data: ChatList, error: amIError } = useQuery<ChatListProps[]>('chat', getChatList, {refetchInterval: 1000});
 	if (amILoading) return <h1>Loading</h1>;
 	if (amIError) return <div>Error</div>;
 

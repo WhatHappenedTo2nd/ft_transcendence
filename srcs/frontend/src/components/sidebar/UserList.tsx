@@ -5,8 +5,8 @@ import IUserProps from '../interface/IUserProps'
 import UserItem from './UserItem';
 
 function OnlineUserList() {
-	const { isLoading: isUserListLoading, data: UserList, error: UserListError} = useQuery<IUserProps[]>('online', getJustOnlineUser);
-	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData);
+	const { isLoading: isUserListLoading, data: UserList, error: UserListError} = useQuery<IUserProps[]>('online', getJustOnlineUser, {refetchInterval: 1000});
+	const { isLoading: amILoading, data: Mydata, error: amIError } = useQuery<IUserProps>('me', getLoginUserData, {refetchInterval: 1000});
 	if (isUserListLoading || amILoading ) return <h1>Loading</h1>;
 	if (UserListError || amIError ) return <div>Error</div>;
 	

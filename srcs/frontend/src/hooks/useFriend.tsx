@@ -4,7 +4,7 @@ import { getLoginUserFriendList } from '../api/api';
 import IFriendProps from '../components/interface/IFriendProps';
 
 export default function useFriends() {
-  const { data, isLoading, error } = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList);
+  const { data, isLoading, error } = useQuery<IFriendProps[]>('Friend', getLoginUserFriendList, {refetchInterval: 1000});
   const friends = React.useMemo(() => {
     if (isLoading || error) {
       return [];

@@ -11,8 +11,8 @@ import IFriendProps from '../../../interface/IFriendProps';
 export default function GameSpectactorMenu({label, target}: {label: string; target: string;}) {
 	const navigate = useNavigate();
 	const { setError, WarningDialogComponent } = useWarningAlert();
-	const { data: chat } = useQuery<IChatListProps>(['findroom', target], () => getWhereAreYou(target));
-	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList);
+	const { data: chat } = useQuery<IChatListProps>(['findroom', target], () => getWhereAreYou(target), {refetchInterval: 1000});
+	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList, {refetchInterval: 1000});
 
 	let blockCheck = false;
 	for (let i = 0; i < block!.length; i++)
