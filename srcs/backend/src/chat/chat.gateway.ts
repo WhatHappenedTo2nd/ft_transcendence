@@ -68,7 +68,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		if (mutedUser && mutedUser.is_muted === true) {
 			this.logger.log(`${mutedUser.user_id.intra_id}는 뮤트됨`);
 		} else {
-			// socket.broadcast.to(roomName).except().emit('message', { name, message });
 			const room = await this.chatRepository.findOneById(roomId);
 			// 채팅방에 속한 모든 유저 목록을 가져옴
 			const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
@@ -236,10 +235,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() { name, userIntraId }: MessagePayload
 		) {
-			// name -> targetname
-			// userIntraId -> 본인!
+			// name -> targetname(targetuser, 초대받는 사람)
+			// userIntraId -> 본인!(me, 초대하는 사람)
 			const targetuser = await this.userRepository.findByNickname(name);
 			const me = await this.userRepository.findByIntraId(userIntraId);
+
+			/** 내가 블락한 사람이 나를 초대하면 초대 안 되게
+			 *  초대한 사람과 초대받은 사람을 통해... 초대받은 사람이 초대한 사람을 블락했는지 확인
+			 *  Friend 테이블에서 user_id: 초대받은 사람, another_id: 초대한 사람, block이 true인지 확인
+			*/
+			const row = await this.friendRepository.findRow(targetuser, me);
+			if (row.block === true) {
+				return { success: false }
+			}
+
 			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
 			await this.chatUserRepository.deleteUser(prevroom, targetuser);
 			await this.chatUserRepository.deleteUser(prevroom, me);
