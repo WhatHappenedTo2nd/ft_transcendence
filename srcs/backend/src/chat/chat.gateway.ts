@@ -243,13 +243,24 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			 *  Friend 테이블에서 user_id: 초대받은 사람, another_id: 초대한 사람, block이 true인지 확인
 			*/
 			const row = await this.friendRepository.findRow(targetuser, me);
-			if (row.block === true) {
+			if (row && row.block === true) {
 				return { success: false }
 			}
 
 			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
 			await this.chatUserRepository.deleteUser(prevroom, targetuser);
 			await this.chatUserRepository.deleteUser(prevroom, me);
+			const check = await this.chatUserRepository.find({
+				where: {
+					chat_id: {id: Equal(prevroom.id)},
+				}
+			});
+			if (!check.length) {
+				await this.chatRepository.deleteRoom(prevroom.title);
+			} else {
+				const newHost = await this.chatUserRepository.findNextHost(prevroom);
+				await this.chatRepository.succedingHost(prevroom, newHost);
+			}
 			socket.leave(String(prevroom.id));
 			this.nsp.in(targetuser.socket_id).socketsLeave(String(prevroom.id));
 			var bcrypt = require('bcryptjs');
