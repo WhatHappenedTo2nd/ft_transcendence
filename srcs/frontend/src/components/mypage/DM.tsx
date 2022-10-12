@@ -42,7 +42,7 @@ export default function DirectMessage({target}: {target: string;}) {
 			})
 		}
 		else {
-			socket.emit('invite-room', { name: target, userIntraId: getCookie("intra_id")}, () => {});
+			socket.emit('invite-DM', { name: target, userIntraId: getCookie("intra_id")}, () => {});
 		}
 	}
 
