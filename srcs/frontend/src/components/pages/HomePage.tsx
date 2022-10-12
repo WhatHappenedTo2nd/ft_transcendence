@@ -10,9 +10,19 @@ import IUserProps from "../interface/IUserProps";
 import { getLoginUserData } from "../../api/api";
 import SignUp from "../mypage/Signup";
 import NotFound from "./NotFound";
+import { socket } from "../../App";
+import { useNavigate } from 'react-router-dom';
+import ICreateRoomResponse from '../interface/IChatProps';
 
 export default function HomePage() {
 	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		socket.on('invite-room-end', (response: ICreateRoomResponse) => {
+			navigate(`/room/${response.payload}`);
+		});
+	})
 
 	return (
 		<>
@@ -28,3 +38,7 @@ export default function HomePage() {
 		</>
 	);
 }
+function useEffect(arg0: () => void) {
+	throw new Error("Function not implemented.");
+}
+

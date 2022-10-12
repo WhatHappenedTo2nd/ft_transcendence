@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Divider, Grid, GridItem } from '@chakra-ui/react'
 import ChoiceBox from "../login/ChoiceBox";
+import ICreateRoomResponse from '../interface/IChatProps';
+import { socket } from "../../App";
 
 /**
  * 로그인에 성공하면 나오는 프로필/채팅 선택 페이지
@@ -10,6 +12,12 @@ import ChoiceBox from "../login/ChoiceBox";
  */
 function ChoicePage() {
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		socket.on('invite-room-end', (response: ICreateRoomResponse) => {
+			navigate(`/room/${response.payload}`);
+		});
+	})
 
 	return (
 		<Grid gridTemplateColumns={{
@@ -46,3 +54,7 @@ function ChoicePage() {
 }
 
 export default ChoicePage;
+function useEffect(arg0: () => void) {
+	throw new Error("Function not implemented.");
+}
+

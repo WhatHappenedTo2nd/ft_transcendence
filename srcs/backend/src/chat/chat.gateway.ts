@@ -10,7 +10,7 @@ import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
 import { FriendRepository } from "src/friend/friend.repository";
 import * as bcrypt from 'bcryptjs';
-import Room from "src/games/class/game-room.class";
+
 interface MessagePayload {
 	userIntraId: string;
 	roomId: number;
