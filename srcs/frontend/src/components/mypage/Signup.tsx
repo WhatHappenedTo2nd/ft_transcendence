@@ -61,7 +61,6 @@ function SignUp() {
 								setisFirst(false);
 								handleSubmit();
 								navigate("/home");
-								console.log("게임 시작하기");
 							}}
 							>시작하기</Button>
 					</Stack>

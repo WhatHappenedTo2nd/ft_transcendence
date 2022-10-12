@@ -300,7 +300,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			const TargetPrevroom = await this.chatService.getWhereAreYou(targetuser.nickname);
 			if (MyPrevroom && !TargetPrevroom)
 			{
-				console.log("MyPrevroom만 존재합니다.", MyPrevroom);
 				await this.chatUserRepository.deleteUser(MyPrevroom, me);
 				const check = await this.chatUserRepository.find({
 					where: {
@@ -318,7 +317,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			else if (!MyPrevroom && TargetPrevroom)
 			{
-				console.log("TargetPrevroom만 존재합니다.", TargetPrevroom);
 				await this.chatUserRepository.deleteUser(TargetPrevroom, me);
 				const checkother = await this.chatUserRepository.find({
 					where: {
@@ -336,7 +334,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			else if (MyPrevroom && TargetPrevroom)
 			{
-				console.log("MyPrevroom과 TargetPrevroom 존재합니다.", MyPrevroom, TargetPrevroom);
 				await this.chatUserRepository.deleteUser(TargetPrevroom, targetuser);
 				await this.chatUserRepository.deleteUser(MyPrevroom, me);
 				const check = await this.chatUserRepository.find({

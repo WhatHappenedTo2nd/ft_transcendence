@@ -38,7 +38,6 @@ function ChoicePage() {
 					title="Profile"
 					onClick={() => {
 						navigate("/profile");
-						console.log("프로필 선택");
 					}}
 					/>
 				<Divider borderColor="white" borderWidth="50px" />
@@ -46,7 +45,6 @@ function ChoicePage() {
 					title="Chatting"
 					onClick={() => {
 						navigate("/chatting");
-						console.log("채팅 선택");
 					}}
 					/>
 			</GridItem>

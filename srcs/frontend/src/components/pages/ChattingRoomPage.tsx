@@ -46,7 +46,6 @@ function ChattingRoomPage() {
 						<ChattingRoom
 							onClick={() => {
 								navigate("/chattingroom");
-								console.log("채팅방 선택");
 							}}
 							/>
 					</GridItem>
