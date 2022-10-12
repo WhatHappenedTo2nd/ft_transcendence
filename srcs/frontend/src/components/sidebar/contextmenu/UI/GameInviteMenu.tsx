@@ -1,16 +1,12 @@
 import { MenuItem, Text } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from "react-query";
-import { useNavigate, useParams } from 'react-router-dom';
-import { getBlockList, getWhereAreYou } from '../../../../api/api';
+import { getBlockList } from '../../../../api/api';
 import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
-import ICreateRoomResponse from '../../../interface/IChatProps';
 import useWarningAlert from '../../../../hooks/useWarnigAlert';
 import IFriendProps from '../../../interface/IFriendProps';
 
 export default function GameInviteMenu({label, target}: {label: string; target: string;}) {
-	const navigate = useNavigate();
 	const { setError, WarningDialogComponent } = useWarningAlert();
 	const { data: block } = useQuery<IFriendProps[]>('block', getBlockList);
 

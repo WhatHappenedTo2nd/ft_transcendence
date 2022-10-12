@@ -7,6 +7,7 @@ function RoomUserItem(props: any) {
 		<UserContextMenu
 		userId={user.id}
 		name={user.nickname}
+		game={user.now_playing}
 		mode={mode}
 		myrole={myrole}
 		muted={muted}

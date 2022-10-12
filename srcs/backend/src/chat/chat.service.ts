@@ -57,6 +57,7 @@ export class ChatService {
 			user.nickname = e.user_id.nickname;
 			user.avatar = e.user_id.avatar;
 			user.is_muted = e.is_muted;
+			user.now_playing = e.user_id.now_playing;
 			if (room.host.id === e.user_id.id) {
 				user.role = Role.HOST;
 			} else if (e.is_admin) {

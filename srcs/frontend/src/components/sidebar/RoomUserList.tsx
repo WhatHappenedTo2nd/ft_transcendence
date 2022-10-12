@@ -25,6 +25,7 @@ export default function RoomUserList() {
 		<div>
 			<Box style={fontStyle} margin="1" display="flex" justifyContent="center" alignItems="center">Room User</Box>
 			{data?.map((user) => {
+				console.log(user);
 				if (Mydata?.id !== user.id) {
 					return (<RoomUserItem key={user.id} user={user} mode='chat' targetrole={user.role} myrole={role?.role} muted={user.is_muted} />);
 				}
