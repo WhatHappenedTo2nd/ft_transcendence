@@ -19,6 +19,7 @@ import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
 import IChatListProps from '../interface/IChatListProps';
 import { history } from "../../hooks/useHistory";
+import ICreateRoomResponse from '../interface/IChatProps';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -91,6 +92,12 @@ function Chatting(props: any) {
 	})
 
 	useEffect(() => {
+		socket.on('invite-room-end', (response: ICreateRoomResponse) => {
+			navigate(`/room/${response.payload}`);
+		});
+	})
+
+	useEffect(() => {
 		const roomNameHandler = (name: string) => setRoomName(name);
 		socket.on('edit-room', roomNameHandler);
 
@@ -153,17 +160,13 @@ function Chatting(props: any) {
 							alarm: !chat.name,
 						})}
 					>
-					<UserContextMenu
-					userId={chat.id}
-					name={chat.name}
-					mode='chat'
-					>
+					<span>
 						{chat.name
 						? socket.id === chat.socket_id
 							? ''
 							: chat.name
 						: ''}
-					</UserContextMenu>
+					</span>
 					<Message className="message">{chat.message}</Message>
 					</MessageBox>
 				))}

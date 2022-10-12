@@ -10,6 +10,7 @@ import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
 import { FriendRepository } from "src/friend/friend.repository";
 import * as bcrypt from 'bcryptjs';
+import Room from "src/games/class/game-room.class";
 interface MessagePayload {
 	userIntraId: string;
 	roomId: number;
@@ -123,11 +124,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				room.password = hash;
 				room.is_private = true;
 			}
-				await this.chatRepository.insert(room);
-				await this.chatUserRepository.addUser(room, user);
-				socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
+			await this.chatRepository.insert(room);
+			await this.chatUserRepository.addUser(room, user);
 
-				return { success: true, payload: room.id };
+			socket.join(String(room.id)); // 기존에 없던 room으로 join하면 room이 생성됨
+
+			return { success: true, payload: room.id };
 		}
 
 	@SubscribeMessage('join-room')
@@ -230,27 +232,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage("invite-room")
 	async handleInviteRoom(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() { roomName, name, userIntraId }: MessagePayload
+		@MessageBody() { name, userIntraId }: MessagePayload
 		) {
-			this.logger.log(`invite-room::: name: ${name}, intra: ${userIntraId}`);
-			const user = await this.userRepository.findByNickname(name);
-			this.logger.log(`targer user nickname: ${user.nickname}, id :${user.id}, intra: ${user.intra_id}, roomName: ${roomName}`);
-			await this.chatService.kickUser(roomName, name);
-			this.nsp.in(user.socket_id).socketsLeave(roomName);
-
-			const inviter = await this.userRepository.findByIntraId(userIntraId);
-			this.logger.log(`inviter user nickname: ${inviter.nickname}, id :${inviter.id}, intra: ${inviter.intra_id}`);
-			console.log(inviter);
-			console.log(user);
-			const newRoom = await this.chatRepository.findOneById(inviter.id);
-			this.logger.log(`inviter의 방정보를 확인합니다.`);
-			console.log(newRoom);
-			const nickRoom = await this.chatRepository.findOneByRoomname(user.intra_id);
-			this.logger.log(`nickname과 동일한 방의 방정보를 확인합니다.`);
-			console.log(nickRoom);
-
-			this.nsp.to(user.socket_id).emit('invite-room', {roomName: roomName, payload: user.intra_id});
-			this.logger.log(`roomName: ${roomName}, payload: ${user.intra_id}`);
-			return { success: true, payload: user.intra_id, roomName: roomName }
+			// name -> targetname
+			// userIntraId -> 본인!
+			const targetuser = await this.userRepository.findByNickname(name);
+			const me = await this.userRepository.findByIntraId(userIntraId);
+			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
+			await this.chatUserRepository.deleteUser(prevroom, targetuser);
+			await this.chatUserRepository.deleteUser(prevroom, me);
+			socket.leave(String(prevroom.id));
+			this.nsp.in(targetuser.socket_id).socketsLeave(String(prevroom.id));
+			var bcrypt = require('bcryptjs');
+			var salt = bcrypt.genSaltSync(10);
+			var hash = bcrypt.hashSync(name, salt);
+			const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
+			await this.chatRepository.insert(newroom);
+			await this.chatUserRepository.addUser(newroom, targetuser);
+			await this.chatUserRepository.addUser(newroom, me);
+			socket.join(String(newroom.id));
+			this.nsp.in(targetuser.socket_id).socketsJoin(String(newroom.id));
+			socket.emit('invite-room-end', {payload: newroom.id});
+			this.nsp.to(targetuser.socket_id).emit('invite-room-end', {payload: newroom.id});
+			return { success: true, payload: newroom.id }
 	}
 }

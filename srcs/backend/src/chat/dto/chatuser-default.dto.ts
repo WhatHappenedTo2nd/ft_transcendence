@@ -20,5 +20,7 @@ export class ChatUserDefaultDto {
 	
 	user_id: number;
 
+	now_playing: boolean;
+
 	role: Role;
 }
