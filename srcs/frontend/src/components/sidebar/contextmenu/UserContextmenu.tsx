@@ -55,7 +55,8 @@ enum UserContextMenuFlag {
 	CHAT = CHAT_KICK |
 	  CHAT_MUTE |
 	  CHAT_UNMUTE |
-	  ADMIN_APPROVE,
+	  ADMIN_APPROVE |
+	  ADMIN_UNAPPROVE
   }
 
 export default function UserContextMenu({
@@ -84,7 +85,6 @@ export default function UserContextMenu({
 		const isFriend = friends?.filter((f) => f.id === userId).length;
 		const isBlocked = blocks?.filter((b) => b.id === userId).length;
 		if (mode === 'chat') {
-			flag |= UserContextMenuFlag.GAME_INVITE;
 			if (myrole === Role.HOST) {
 				flag |= UserContextMenuFlag.CHAT_KICK;
 				if (targetrole === Role.ADMIN) {
@@ -106,6 +106,9 @@ export default function UserContextMenu({
 						flag |= UserContextMenuFlag.CHAT_MUTE;
 					}
 				}
+				flag |= UserContextMenuFlag.GAME_INVITE;
+			} else {
+				flag |= UserContextMenuFlag.GAME_INVITE;
 			}
 		}
 		if (!isFriend) {
@@ -162,7 +165,6 @@ export default function UserContextMenu({
 							<MenuDivider />
 						</UserContextMenuItem>
 						<UserContextMenuItem flag={UserContextMenuFlag.GAME_INVITE}>
-							{/* <MenuItem>게임 초대하기</MenuItem> */}
 							<GameInviteMenu
 							label="게임 초대하기"
 							target={name}

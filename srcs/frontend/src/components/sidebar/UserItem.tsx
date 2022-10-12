@@ -10,7 +10,7 @@ function UserItem(props: any) {
 		mode={mode}
 		>
 			<HStack>
-			<Box boxSize='10' justifyContent='center' marginStart="2" marginTop="0.5" padding="1" >
+			<Box boxSize='10' justifyContent='center' alignItems="center" marginStart="2" marginTop="0.5" padding="1" >
 				<Avatar size='sm' src={user?.avatar}>
 					{user.now_playing 
 					? <AvatarBadge boxSize='1em' bg='yellow.500' /> 

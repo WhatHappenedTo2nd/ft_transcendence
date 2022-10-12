@@ -19,6 +19,7 @@ import UserContextMenu from '../sidebar/contextmenu/UserContextmenu';
 import { getCookie } from '../../api/cookieFunc';
 import IChatListProps from '../interface/IChatListProps';
 import { history } from "../../hooks/useHistory";
+import ICreateRoomResponse from '../interface/IChatProps';
 
 /**
  * io의 첫 번째 인자는 서버로 연결할 주소
@@ -87,6 +88,12 @@ function Chatting(props: any) {
 	useEffect(() => {
 		socket.on('kick-room', () => {
 			navigate('/chatting');
+		});
+	})
+
+	useEffect(() => {
+		socket.on('invite-room-end', (response: ICreateRoomResponse) => {
+			navigate(`/room/${response.payload}`);
 		});
 	})
 
