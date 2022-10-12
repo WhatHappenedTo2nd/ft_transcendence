@@ -117,7 +117,7 @@ function Game() {
 		 * 연결할 서버를 설정
 		 * on/emit : 서버와 연결된 이벤트 처리, 서버에게 메세지 전송
 		 */
-		socket = io(`http://localhost:9633/api/games`);
+		socket = io(`http://10.28.3.7:9633/api/games`);
 		socket = socket.on('connect', () => {
 			socket.emit('handleUserConnect', userData);
 			socket.emit('getCurrentGames');

@@ -23,7 +23,7 @@ interface MessagePayload {
 @WebSocketGateway({
 	namespace: 'api/chat',
 	cors: {
-		origin: ['http://localhost:3000'],
+		origin: ['http://10.28.3.7:3000'],
 	},
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
