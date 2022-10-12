@@ -69,33 +69,23 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 
 	//Key Arrow Down Event
 	const keyDownEvent = (event: KeyboardEvent) => {
-		console.log("keyDown event 입니다.");
 		const keyData: IKey = {
 			roomId: room.roomId,
 			key: event.key,
 			id: userData.id,
 		};
 		if (event.repeat) return;
-		console.log(userData.nickname, "에 대한 key DOWN 이벤트 입니다.");
-		if (!event.repeat) console.log("Key pressed [event: keydown] : ", event.key);
-		else console.log("Key repeating [event: keydown]", event.key);
-		console.log("key에 대한 값은 ", keyData);
 		socket.emit('keyDown', keyData);
 	};
 
 	//Key Arrow UP Event
 	const keyUpEvent = (event: KeyboardEvent) => {
-		console.log("keyup event 입니다.");
 		const keyData: IKey = {
 			roomId: room.roomId,
 			key: event.key,
 			id: userData.id,
 		};
 		if (event.repeat) return;
-		console.log(userData.nickname, "에 대한 key UP 이벤트 입니다.");
-		if (!event.repeat) console.log("Key pressed [event: keydown] : ", event.key);
-		else console.log("Key repeating [event: keydown]", event.key);
-		console.log("key에 대한 값은 ", keyData);
 		socket.emit('keyUp', keyData);
 	};
 
@@ -123,7 +113,6 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		gameState: GameState,
 		gameData: GameData,
 	) => {
-		console.log('게임결과를 출력합니다. 게임상태는 ', gameState, '입니다.');
 		if (gameState === GameState.PLAYER_ONE_WIN || gameState === GameState.GAME_SAVED_TWO_OUT || gameState === GameState.GAME_SAVED_ONE_WIN) {
 			gameData.drawCenteredTexture(
 				`${playerOneName} Won!`,
@@ -165,7 +154,6 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		 * 게임의 상태를 확인하여 각 이벤트를 처리하면서 게임 루프를 계속해서 돌린다.
 		 */
 		const gameLoop = () => {
-			console.log('게임 상태를 확인합니다.', room.gameState);
 			if (room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN && isPlayer)
 				socket.emit('requestUpdate', room.roomId);
 			drawGame(gameData, room);

@@ -5,6 +5,7 @@ import { getCookie } from '../../../../api/cookieFunc';
 import { socket } from '../../../../App';
 import useWarningAlert from '../../../../hooks/useWarnigAlert';
 import IFriendProps from '../../../interface/IFriendProps';
+import ICreateRoomResponse from '../../../interface/IChatProps';
 
 export default function GameInviteMenu({label, target}: {label: string; target: string;}) {
 	const { setError, WarningDialogComponent } = useWarningAlert();
@@ -17,7 +18,6 @@ export default function GameInviteMenu({label, target}: {label: string; target: 
 			blockCheck = true;
 	}
 
-	// console.log("label: ", label, "target: ", target);
 	const onJoinRoom = () => () => {
 		if (blockCheck){
 			setError({
@@ -26,7 +26,14 @@ export default function GameInviteMenu({label, target}: {label: string; target: 
 			})
 		}
 		else {
-			socket.emit('invite-room', { name: target, userIntraId: getCookie("intra_id")}, () => {});
+			socket.emit('invite-room', { name: target, userIntraId: getCookie("intra_id")}, (response: ICreateRoomResponse) => {
+				if (!response.success){
+					setError({
+						headerMessage: '입장 실패',
+						bodyMessage: '현재 상대를 게임에 초대할 수 없습니다.'
+					})
+				}
+			});
 		}
 	};
 

@@ -17,7 +17,6 @@ export default function GameSpectactorMenu({label, target}: {label: string; targ
 	let blockCheck = false;
 	for (let i = 0; i < block!.length; i++)
 	{
-		console.log("블락된 유저를 확인합니다.", block![i]);
 		if (target === block![i].nickname)
 			blockCheck = true;
 	}

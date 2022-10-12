@@ -10,7 +10,7 @@ import { UserRepository } from "src/user/user.repository";
 import { ChatService } from "./chat.service";
 import { FriendRepository } from "src/friend/friend.repository";
 import * as bcrypt from 'bcryptjs';
-import Room from "src/games/class/game-room.class";
+
 interface MessagePayload {
 	userIntraId: string;
 	roomId: number;
@@ -68,7 +68,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		if (mutedUser && mutedUser.is_muted === true) {
 			this.logger.log(`${mutedUser.user_id.intra_id}는 뮤트됨`);
 		} else {
-			// socket.broadcast.to(roomName).except().emit('message', { name, message });
 			const room = await this.chatRepository.findOneById(roomId);
 			// 채팅방에 속한 모든 유저 목록을 가져옴
 			const chatUsers = await this.chatUserRepository.getAllChatUsers(room);
@@ -137,8 +136,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() { roomName, password, userIntraId }: MessagePayload
 	) {
-		this.logger.log(`join-room을 실행합니다.`);
-		this.logger.log(`roomName: ${roomName}, password: ${password}, userIntraId: ${userIntraId}`);
 		const user = await this.userRepository.findByIntraId(userIntraId);
 		if (user)
 		{
@@ -236,15 +233,137 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() { name, userIntraId }: MessagePayload
 		) {
-			// name -> targetname
-			// userIntraId -> 본인!
+			// name -> targetname(targetuser, 초대받는 사람)
+			// userIntraId -> 본인!(me, 초대하는 사람)
 			const targetuser = await this.userRepository.findByNickname(name);
 			const me = await this.userRepository.findByIntraId(userIntraId);
+
+			/** 내가 블락한 사람이 나를 초대하면 초대 안 되게
+			 *  초대한 사람과 초대받은 사람을 통해... 초대받은 사람이 초대한 사람을 블락했는지 확인
+			 *  Friend 테이블에서 user_id: 초대받은 사람, another_id: 초대한 사람, block이 true인지 확인
+			*/
+			const row = await this.friendRepository.findRow(targetuser, me);
+			if (row && row.block === true) {
+				return { success: false }
+			}
+
 			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
 			await this.chatUserRepository.deleteUser(prevroom, targetuser);
 			await this.chatUserRepository.deleteUser(prevroom, me);
+			const check = await this.chatUserRepository.find({
+				where: {
+					chat_id: {id: Equal(prevroom.id)},
+				}
+			});
+			if (!check.length) {
+				await this.chatRepository.deleteRoom(prevroom.title);
+			} else {
+				const newHost = await this.chatUserRepository.findNextHost(prevroom);
+				await this.chatRepository.succedingHost(prevroom, newHost);
+			}
 			socket.leave(String(prevroom.id));
 			this.nsp.in(targetuser.socket_id).socketsLeave(String(prevroom.id));
+			var bcrypt = require('bcryptjs');
+			var salt = bcrypt.genSaltSync(10);
+			var hash = bcrypt.hashSync(name, salt);
+			const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
+			await this.chatRepository.insert(newroom);
+			await this.chatUserRepository.addUser(newroom, targetuser);
+			await this.chatUserRepository.addUser(newroom, me);
+			socket.join(String(newroom.id));
+			this.nsp.in(targetuser.socket_id).socketsJoin(String(newroom.id));
+			socket.emit('invite-room-end', {payload: newroom.id});
+			this.nsp.to(targetuser.socket_id).emit('invite-room-end', {payload: newroom.id});
+			return { success: true, payload: newroom.id }
+	}
+
+	@SubscribeMessage("invite-DM")
+	async handleInviteDM(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() { name, userIntraId }: MessagePayload
+		) {
+			// name -> targetname(targetuser, 초대받는 사람)
+			// userIntraId -> 본인!(me, 초대하는 사람)
+			const targetuser = await this.userRepository.findByNickname(name);
+			const me = await this.userRepository.findByIntraId(userIntraId);
+
+			/** 내가 블락한 사람이 나를 초대하면 초대 안 되게
+			 *  초대한 사람과 초대받은 사람을 통해... 초대받은 사람이 초대한 사람을 블락했는지 확인
+			 *  Friend 테이블에서 user_id: 초대받은 사람, another_id: 초대한 사람, block이 true인지 확인
+			*/
+			const row = await this.friendRepository.findRow(targetuser, me);
+			if (row && row.block === true) {
+				return { success: false }
+			}
+
+			const MyPrevroom = await this.chatService.getWhereAreYou(me.nickname);
+			const TargetPrevroom = await this.chatService.getWhereAreYou(targetuser.nickname);
+			if (MyPrevroom && !TargetPrevroom)
+			{
+				await this.chatUserRepository.deleteUser(MyPrevroom, me);
+				const check = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(MyPrevroom.id)},
+					}
+				});
+				if (!check.length) {
+					await this.chatRepository.deleteRoom(MyPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(MyPrevroom);
+					await this.chatRepository.succedingHost(MyPrevroom, newHost);
+				}
+				socket.leave(String(MyPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(MyPrevroom.id));
+			}
+			else if (!MyPrevroom && TargetPrevroom)
+			{
+				await this.chatUserRepository.deleteUser(TargetPrevroom, me);
+				const checkother = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(TargetPrevroom.id)},
+					}
+				});
+				if (!checkother.length) {
+					await this.chatRepository.deleteRoom(TargetPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(TargetPrevroom);
+					await this.chatRepository.succedingHost(TargetPrevroom, newHost);
+				}
+				socket.leave(String(TargetPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(TargetPrevroom.id));
+			}
+			else if (MyPrevroom && TargetPrevroom)
+			{
+				await this.chatUserRepository.deleteUser(TargetPrevroom, targetuser);
+				await this.chatUserRepository.deleteUser(MyPrevroom, me);
+				const check = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(MyPrevroom.id)},
+					}
+				});
+				if (!check.length) {
+					await this.chatRepository.deleteRoom(MyPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(MyPrevroom);
+					await this.chatRepository.succedingHost(MyPrevroom, newHost);
+				}
+				const checkother = await this.chatUserRepository.find({
+					where: {
+						chat_id: {id: Equal(TargetPrevroom.id)},
+					}
+				});
+				if (!checkother.length) {
+					await this.chatRepository.deleteRoom(TargetPrevroom.title);
+				} else {
+					const newHost = await this.chatUserRepository.findNextHost(TargetPrevroom);
+					await this.chatRepository.succedingHost(TargetPrevroom, newHost);
+				}
+				socket.leave(String(TargetPrevroom.id));
+				socket.leave(String(MyPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(MyPrevroom.id));
+				this.nsp.in(targetuser.socket_id).socketsLeave(String(TargetPrevroom.id));
+			}
+
 			var bcrypt = require('bcryptjs');
 			var salt = bcrypt.genSaltSync(10);
 			var hash = bcrypt.hashSync(name, salt);

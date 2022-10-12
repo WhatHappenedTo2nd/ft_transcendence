@@ -10,6 +10,9 @@ import IUserProps from "../interface/IUserProps";
 import { getLoginUserData } from "../../api/api";
 import SignUp from "../mypage/Signup";
 import NotFound from "./NotFound";
+import { socket } from "../../App";
+import { useNavigate } from 'react-router-dom';
+import ICreateRoomResponse from '../interface/IChatProps';
 
 export default function HomePage() {
 	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData);
@@ -28,3 +31,4 @@ export default function HomePage() {
 		</>
 	);
 }
+

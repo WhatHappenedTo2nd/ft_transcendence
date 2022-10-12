@@ -27,7 +27,6 @@ export class AuthController {
 	@Get('42')
 	@UseGuards(AuthGuard('42'))
 	async ftCallback(@Req() req, @Res() res: Response): Promise<void> {
-		// console.log(req.user);
 		// request로 user의 intra_id와 avatar 받아옴
 		const { intra_id, avatar } = req.user;
 		// 디비에서 intra_id로 해당 유저가 있는지 찾음

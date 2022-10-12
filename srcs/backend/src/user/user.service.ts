@@ -212,7 +212,6 @@ export class UserService {
 		}
 		// user.ratio = user.wins - user.losses;
 		user.ratio = String(Math.floor(Math.abs((user.wins / (user.wins + user.losses)) * 100)));
-		this.logger.log(`updateState: 유저의 승률을 확인합니다. ${user.ratio}`);
 		return await this.userRepository.save(user);
 	}
 }
