@@ -27,10 +27,7 @@ export default function DirectMessage({target}: {target: string;}) {
 	for (let i = 0; i < block!.length; i++)
 	{
 		if (target === block![i].nickname)
-		{
-			console.log("내가 차단한 사람의 nickname은 ", target);
 			blockCheck = true;
-		}
 	}
 
 	const joinDM = () => {

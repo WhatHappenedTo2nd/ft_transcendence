@@ -101,7 +101,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	 * @param players
 	 */
 	createNewRoom(players: Array<GameUser>): void {
-		this.logger.log(`createNewRoom 함수입니다.`);
 		const roomId: string = `${players[0].nickname}&${players[1].nickname}`;
 		const room: Room = new Room(roomId, players, { mode: players[0].mode } );
 
@@ -121,7 +120,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		 * 일정 시간 간격을 두고 함수를 실행
 		 * delay: 실행 전 대기 시간으로, 단위는 밀리초(millisecond, 1000밀리초 = 1초)이며 기본값은 0
 		 */
-		this.logger.log('afterInit 함수 입니다.');
 		setInterval(() => {
 			if (this.queue.size() > 1) {
 				const players: Array<GameUser> = this.queue.matchPlayers();
@@ -161,17 +159,13 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				if (gameuser === room.paddleOne.gameuser){
 					if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN)
 					{
-						this.logger.log(`handleDisconnect: 플레이어 원이 이겼지만 방을 나갔습니다.`);
 						this.saveGame(room, true);
-						this.logger.log(`handleDisconnect: 저장 후 게임 상태는 ${room.gameState}입니다. 1`);
 						this.server.emit('updateCurrentGames', this.currentGames);
 					}
 					else if (room.gameState !== GameState.GAME_SAVED_ONE_WIN && room.gameState !== GameState.GAME_SAVED_TWO_WIN && room.gameState !== GameState.GAME_SAVED_ONE_OUT && room.gameState !== GameState.GAME_SAVED_TWO_OUT)
 					{
-						this.logger.log(`handleDisconnect: 게임이 종료되지 않았는데 플레이어원이 나갔습니다.`);
 						room.changeGameState(GameState.PLAYER_ONE_OUT);
 						this.saveGame(room, false);
-						this.logger.log(`handleDisconnect: 저장 후 게임 상태는 ${room.gameState}입니다. 2`);
 						this.server.emit('updateCurrentGames', this.currentGames);
 					}
 				}
@@ -179,17 +173,13 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 				{
 					if (room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN)
 					{
-						this.logger.log(`handleDisconnect: 플레이어 투가 이겼지만 방을 나갔습니다.`);
 						this.saveGame(room, true);
-						this.logger.log(`handleDisconnect: 저장 후 게임 상태는 ${room.gameState}입니다. 3`);
 						this.server.emit('updateCurrentGames', this.currentGames);
 					}
 					else if(room.gameState !== GameState.GAME_SAVED_ONE_OUT && room.gameState !== GameState.GAME_SAVED_TWO_OUT)
 					{
-						this.logger.log(`handleDisconnect: 게임이 종료되지 않았는데 플레이어 투가 나갔습니다.`);
 						room.changeGameState(GameState.PLAYER_TWO_OUT);
 						this.saveGame(room, false);
-						this.logger.log(`handleDisconnect: 저장 후 게임 상태는 ${room.gameState}입니다. 4`);
 						this.server.emit('updateCurrentGames', this.currentGames);
 					}
 				}
@@ -233,9 +223,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		/** GameUser 생성*/
 		let newGameUser: GameUser = this.gameconnetedUsers.getUserById(gameuser.id);
 		const chat = await this.chatsService.getWhereAreYou(gameuser.nickname);
-		// console.log("handleUserConnect에서 불러온 chat의 정보를 확인합니다. ");
-		// console.log(chat);
-		// console.log("handleUserConnect에서 불러온 chat의 방번호는 ", chat.id);
 		/**
 		 * newGameUser가 gameconnectedUser에 없으면 db에 있는 유저로 만든다. -> 친구로 설정한 사람과 연결을 할것인가? 전체유저로 해야하는가?
 		 * withoutFriend : 친구 요청 중, 친구, 차단된 친구 상태가 아닌 유저의 데이터만을 의미! -> 전체 유저를 의미
@@ -252,9 +239,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		}
 		newGameUser.setUserStatus(UserStatus.IN_HUB);
 		newGameUser.setRoomNo(chat.id);
-		// this.logger.log(`handleUserConnect: 유저의 정보를 확인합니다.`);
-		// console.log(newGameUser);
-		// this.logger.log(`handleUserConnect: 소켓에 연결되었고 유저가 접속한 방의 번호는 ${newGameUser.roomNo}입니다.`);
 
 		/**
 		 * 플레이어가 게임에 있지 않은지 확인
@@ -454,16 +438,12 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 		{
 			if (memoryUser === room.paddleOne.gameuser && (room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN) && room.gameState !== GameState.GAME_SAVED_ONE_OUT && room.gameState !== GameState.GAME_SAVED_TWO_OUT) {
 				room.changeGameState(GameState.PLAYER_ONE_OUT);
-				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 원이 나갔습니다. 현재 게임상태는 ${room.gameState}입니다.`);
 				this.saveGame(room, false);
-				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 원이 나갔습니다. 저장 후 게임상태는 ${room.gameState}입니다.`);
 				this.server.emit('updateCurrentGames', this.currentGames);
 			}
 			else if (memoryUser === room.paddleTwo.gameuser &&(room.gameState !== GameState.PLAYER_ONE_WIN && room.gameState !== GameState.PLAYER_TWO_WIN) && room.gameState !== GameState.GAME_SAVED_ONE_OUT && room.gameState !== GameState.GAME_SAVED_TWO_OUT) {
 				room.changeGameState(GameState.PLAYER_TWO_OUT);
-				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 투가 나갔습니다. 현재 게임상태는 ${room.gameState}입니다.`);
 				this.saveGame(room, false);
-				this.logger.log(`leaveRoom: 게임이 종료되지 않았는데 플레이어 투가 나갔습니다. 저장 후 게임상태는 ${room.gameState}입니다.`);
 				this.server.emit('updateCurrentGames', this.currentGames);
 			}
 		}
@@ -472,7 +452,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 			/** 방에 유저는 없지만 게임은 종료된 상태 */
 			if ((room.gameState === GameState.PLAYER_ONE_WIN || room.gameState === GameState.PLAYER_TWO_WIN) || room.gameState !== GameState.GAME_SAVED_ONE_OUT && room.gameState !== GameState.GAME_SAVED_TWO_OUT && room.gameState !== GameState.GAME_SAVED_ONE_WIN && room.gameState !== GameState.GAME_SAVED_TWO_WIN)
 			{
-				this.logger.log(`saveGame: 게임을 저장합니다. 현재 게임 상태는 ${room.gameState}입니다`);
 				this.saveGame(room, true);
 			}
 			/** 방 삭제!! -> rooms map에서 delete */
@@ -738,10 +717,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 	 */
 	@SubscribeMessage('spectateRoom')
 	handleSpectateRoom(@ConnectedSocket() client: Socket, @MessageBody() roomId: string) {
-		this.logger.log(`spectateRoom: 관전하기 버튼을 눌러 관전 소켓 처리 함수로 들어 왔습니다.`);
-		this.logger.log(`spectateRoom: 클라이언트 id는 ${client.id}입니다.`);
-		this.logger.log(`spectateRoom: 방 ID는 ${roomId}입니다.`);
-
 		/** 관전할 방이 없음 */
 		const room: Room = this.rooms.get(roomId);
 		if (!room) {
@@ -750,11 +725,7 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
 		/** 관전 방에 게임 유저가 없음 */
 		const gameuser = this.gameconnetedUsers.getUserBySocketId(client.id);
-		// this.logger.log(`spectateRoom: 클라이언트 id의 관전자 유저는 ${gameuser.nickname}입니다.`);
 
-		// console.log("방의 플레이어의 닉네임과 방번호는 ", room.paddleOne.gameuser.nickname, " 과 ", room.paddleOne.gameuser.roomNo, "입니다.");
-
-		// console.log("관전하는 사람의 방번호는 ", gameuser.roomNo, " 입니다.");
 		if (!gameuser) {
 			return this.returnMessage('spectateRoom', 400, '현재 게임 유저가 없습니다.');
 		} //내가 게임중일 때는 관전할 수 없다.
@@ -762,7 +733,6 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 			throw new Error('게임 중에는 관전할 수 없습니다.');
 		}
 		// else if (room.paddleOne.gameuser.roomNo !== gameuser.roomNo || room.paddleTwo.gameuser.roomNo !== gameuser.roomNo) {
-		// 	// this.logger.log('spectateRoom: 방 정보가 달라 관전할 수 없습니다.');
 		// 	throw new Error('방 번호가 달라 관전할 수 없습니다.');
 		// }
 

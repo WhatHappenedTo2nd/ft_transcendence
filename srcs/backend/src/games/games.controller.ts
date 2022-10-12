@@ -56,7 +56,6 @@ export class GamesController {
 	@Get('/all')
 	async getAllGame(): Promise<Games[]> {
 		const games = await this.gamesService.findAllGame();
-		console.log(games);
 		return games;
 	}
 

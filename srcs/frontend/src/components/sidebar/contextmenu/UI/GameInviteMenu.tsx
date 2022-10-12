@@ -18,7 +18,6 @@ export default function GameInviteMenu({label, target}: {label: string; target: 
 			blockCheck = true;
 	}
 
-	// console.log("label: ", label, "target: ", target);
 	const onJoinRoom = () => () => {
 		if (blockCheck){
 			setError({

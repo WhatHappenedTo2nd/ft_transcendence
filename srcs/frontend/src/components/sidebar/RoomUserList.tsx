@@ -15,7 +15,7 @@ export default function RoomUserList() {
 	const role = data?.filter((r) => r.id === Mydata?.id).pop();
 	if ( isLoading || amILoading ) return <h1>Loading</h1>;
 	if ( error || amIError ) return <div>Error</div>;
-	
+
 	const fontStyle = {
 		fontFamily : "Establish",
 		fontSize : "25px",
@@ -25,7 +25,6 @@ export default function RoomUserList() {
 		<div>
 			<Box style={fontStyle} margin="1" display="flex" justifyContent="center" alignItems="center">Room User</Box>
 			{data?.map((user) => {
-				console.log(user);
 				if (Mydata?.id !== user.id) {
 					return (<RoomUserItem key={user.id} user={user} mode='chat' targetrole={user.role} myrole={role?.role} muted={user.is_muted} />);
 				}
