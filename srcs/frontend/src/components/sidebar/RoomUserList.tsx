@@ -1,4 +1,4 @@
-import { Divider } from '@chakra-ui/react';
+import { Box, Divider } from '@chakra-ui/react';
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom';
 import { getLoginUserData,  getRoomUser } from '../../api/api';
@@ -15,9 +15,15 @@ export default function RoomUserList() {
 	const role = data?.filter((r) => r.id === Mydata?.id).pop();
 	if ( isLoading || amILoading ) return <h1>Loading</h1>;
 	if ( error || amIError ) return <div>Error</div>;
+	
+	const fontStyle = {
+		fontFamily : "Establish",
+		fontSize : "25px",
+	}
 
 	return (
 		<div>
+			<Box style={fontStyle} margin="1" display="flex" justifyContent="center" alignItems="center">Room User</Box>
 			{data?.map((user) => {
 				if (Mydata?.id !== user.id) {
 					return (<RoomUserItem key={user.id} user={user} mode='chat' targetrole={user.role} myrole={role?.role} muted={user.is_muted} />);
