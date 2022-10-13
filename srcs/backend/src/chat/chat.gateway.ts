@@ -40,6 +40,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	// 소켓이 연결되면 실행
 	handleConnection(@ConnectedSocket() socket: Socket) {
+		this.logger.log(socket);
 	}
 
 	// 소켓 연결이 끊기면 실행

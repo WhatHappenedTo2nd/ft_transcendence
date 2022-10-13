@@ -10,9 +10,16 @@ import IUserProps from "../interface/IUserProps";
 import { getLoginUserData } from "../../api/api";
 import SignUp from "../mypage/Signup";
 import NotFound from "./NotFound";
+import { useEffect } from "react";
+import { socket } from "../../App";
+import { getCookie } from "../../api/cookieFunc";
 
 export default function HomePage() {
 	const { data: Mydata } = useQuery<IUserProps>('me', getLoginUserData, {refetchInterval: 1000});
+
+	useEffect(() => {
+		socket.emit('save-socket', { userIntraId: getCookie("intra_id") });
+	});
 
 	return (
 		<>

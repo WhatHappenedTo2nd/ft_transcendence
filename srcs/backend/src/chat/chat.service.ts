@@ -157,16 +157,6 @@ export class ChatService {
 		}
 	}
 
-	async findRecentRoomId(): Promise<number> {
-		const chatList = await this.getChatList();
-		if (!chatList) {
-			return 1;
-		}
-		const room = chatList.at(chatList.length - 1);
-		console.log(room.id);
-		return room.id + 1;
-	}
-
 	async isBlockedMe(blockerList: User[], user: User): Promise<boolean> {
 		for (let e of blockerList) {
 			if (e.id === user.id) {

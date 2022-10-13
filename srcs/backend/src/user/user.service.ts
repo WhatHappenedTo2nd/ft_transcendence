@@ -99,7 +99,6 @@ export class UserService {
 			user.email = email;
 			const randomNumber: string = randomString(4, '#');
 			user.tfaCode = randomNumber;
-			console.log(user.tfaCode);
 
 			this.mailerService
 				.sendMail({
