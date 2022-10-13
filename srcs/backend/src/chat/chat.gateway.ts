@@ -241,6 +241,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				return { success: false }
 			}
 
+			const exists = await this.chatRepository.findOneByRoomname(name);
+			if (exists) {
+				return { success: false }
+			}
+
 			const prevroom = await this.chatService.getWhereAreYou(me.nickname);
 			await this.chatUserRepository.deleteUser(prevroom, targetuser);
 			await this.chatUserRepository.deleteUser(prevroom, me);
@@ -262,11 +267,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			var hash = bcrypt.hashSync(name, salt);
 
 			// 현재 Chat 테이블에서 가장 큰 id값 가져옴(가장 최근에 생긴 방의 id)
-			const maxRoomId = await this.chatService.findRecentRoomId();
-			const roomNameWithId = name + maxRoomId.toString();
-			const newroom = this.chatRepository.create({title: roomNameWithId, host: me, password: hash, is_private: true});
+			// const maxRoomId = await this.chatService.findRecentRoomId();
+			// const roomNameWithId = name + maxRoomId.toString();
+			// const newroom = this.chatRepository.create({title: roomNameWithId, host: me, password: hash, is_private: true});
 
-			// const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
+			const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
 			await this.chatRepository.insert(newroom);
 			await this.chatUserRepository.addUser(newroom, targetuser);
 			await this.chatUserRepository.addUser(newroom, me);
@@ -294,6 +299,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			const row = await this.friendRepository.findRow(targetuser, me);
 			if (row && row.block === true) {
 				return { success: false }
+			}
+
+			const exists = await this.chatRepository.findOneByRoomname(name);
+			if (exists) {
+				return { success: false };
 			}
 
 			const MyPrevroom = await this.chatService.getWhereAreYou(me.nickname);
@@ -367,13 +377,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			var bcrypt = require('bcryptjs');
 			var salt = bcrypt.genSaltSync(10);
 			var hash = bcrypt.hashSync(name, salt);
-
-			// 현재 Chat 테이블에서 가장 큰 id값 가져옴(가장 최근에 생긴 방의 id)
-			const maxRoomId = await this.chatService.findRecentRoomId();
-			const roomNameWithId = name + maxRoomId.toString();
-			const newroom = this.chatRepository.create({title: roomNameWithId, host: me, password: hash, is_private: true});
-
-			// const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
+		
+			const newroom = this.chatRepository.create({title: name, host: me, password: hash, is_private: true});
 			await this.chatRepository.insert(newroom);
 			await this.chatUserRepository.addUser(newroom, targetuser);
 			await this.chatUserRepository.addUser(newroom, me);

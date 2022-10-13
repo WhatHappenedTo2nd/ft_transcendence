@@ -1,7 +1,7 @@
 /**
  * Game Screen: 게임화면 설정 및 띄위기
  */
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 import styled from 'styled-components';
 
@@ -148,6 +148,7 @@ function GameScreen({ socketProps, roomDataProps, userDataProps }: IGameScreenPr
 		 */
 		socket.on('updateRoom', (updatedRoom: string) => {
 			const roomData: IRoom = JSON.parse(updatedRoom);
+			// eslint-disable-next-line
 			room = roomData;
 		});
 

@@ -34,7 +34,7 @@ export default function DirectMessage({target}: {target: string;}) {
 		}
 	}
 
-	const JoinDM = () => () => {
+	const JoinDM = () => {
 		if (blockCheck){
 			setError({
 				headerMessage: '입장 실패',

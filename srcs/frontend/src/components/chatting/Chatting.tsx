@@ -44,6 +44,10 @@ function Chatting(props: any) {
 			if (action === "POP") {
 				onLeaveRoom();
 			}
+			if (action === "PUSH") {
+				if (chat && roomName !== chat?.title)
+					setRoomName(chat.title);
+			}
 		});
 
 		return unlistenHistoryEvent;
