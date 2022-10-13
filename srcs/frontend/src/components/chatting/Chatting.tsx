@@ -53,11 +53,6 @@ function Chatting(props: any) {
 		return unlistenHistoryEvent;
 	});
 
-
-	// useEffect(() => {
-	// 	socket.emit('save-socket', { userIntraId: getCookie("intra_id") });
-	// });
-
 	// 채팅이 길어지면(chats.length) 스크롤이 생성되므로, 스크롤의 위치를 최근 메시지에 위치시키기 위함
 	useEffect(() => {
 		if (!chatContainerEl.current) return;
