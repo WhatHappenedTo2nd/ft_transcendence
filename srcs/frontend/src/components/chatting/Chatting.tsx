@@ -135,10 +135,10 @@ function Chatting(props: any) {
 
 	const onLeaveRoom = useCallback(() => {
 		socket.emit('leave-room', { roomId, roomName, userIntraId: getCookie("intra_id") }, () => {
-			navigate('/chatting');
+			window.location.replace('/chatting');
 		});
 		queryClient.invalidateQueries('roomuser');
-	}, [navigate, roomId, roomName, queryClient]);
+	}, [roomId, roomName, queryClient]);
 
 	if ( titleLoading ) return <h1>Loading...</h1>;
 	return (
