@@ -55,7 +55,7 @@ export default function DirectMessage({target}: {target: string;}) {
 
 	return (
 		<>
-		<DirectMSG onClick={joinDM}>
+		<DirectMSG onClick={JoinDM}>
 			DM 보내기
 		</DirectMSG>
 		{WarningDialogComponent}
