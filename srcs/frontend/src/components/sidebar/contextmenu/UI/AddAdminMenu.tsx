@@ -32,6 +32,7 @@ export default function AddAdminMenu({label, target}: {label: string; target: st
 				title: `${label}`,
 				description: `${target} 님에게 운영자 권한을 주었습니다.`,
 				status: 'success',
+				position: 'top-right',
 				duration: 1000,
 				isClosable: true,
 			});

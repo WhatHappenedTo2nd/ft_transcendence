@@ -33,6 +33,7 @@ export default function RemoveAdminMenu({label, target}: {label: string; target:
 				description: `${target} 님의 운영자 권한을 해제했습니다.`,
 				status: 'success',
 				duration: 1000,
+				position: 'top-right',
 				isClosable: true,
 			});
 		})
