@@ -80,7 +80,7 @@ export class ChatUserRepository extends Repository<ChatUser> {
 		if (newHost.is_muted) {
 			newHost.is_muted = false;
 			try {
-				await this.insert(newHost);
+				await this.save(newHost);
 			} catch (error) {
 				throw new InternalServerErrorException();
 			}
