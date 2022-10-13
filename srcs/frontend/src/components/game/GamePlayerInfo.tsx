@@ -82,9 +82,6 @@ function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
 					<PlayerDataPStyleC>
 						<Link to={`/profile/${leftPlayer.gameuser.nickname}`}>{leftPlayer.gameuser.nickname}</Link>
 					</PlayerDataPStyleC>
-					<PlayerDataPStyleC>
-						승리 {leftPlayer.gameuser.wins} 패배 {leftPlayer.gameuser.losses} 승률 {leftPlayer.gameuser.ratio}%
-					</PlayerDataPStyleC>
 				</PlayerDataDivStyleC>
 			</PlayerInfoStyleC>
 			<PlayerInfoStyleC>
@@ -96,9 +93,6 @@ function PlayerInfo({ leftPlayer, rightPlayer }: IPlayerInfo) {
 				<PlayerDataDivStyleC>
 					<PlayerDataPStyleC>
 						<Link to={`/profile/${rightPlayer.gameuser.nickname}`}>{rightPlayer.gameuser.nickname}</Link>
-					</PlayerDataPStyleC>
-					<PlayerDataPStyleC>
-						승리 {rightPlayer.gameuser.wins} 패배 {rightPlayer.gameuser.losses} 승률 {rightPlayer.gameuser.ratio}%
 					</PlayerDataPStyleC>
 				</PlayerDataDivStyleC>
 			</PlayerInfoStyleC>

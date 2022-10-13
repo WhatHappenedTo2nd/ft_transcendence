@@ -236,7 +236,11 @@ export class GamesGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 			newGameUser.setNickname(gameuser.nickname);
 		}
 		newGameUser.setUserStatus(UserStatus.IN_HUB);
-		newGameUser.setRoomNo(chat.id);
+		if (chat) {
+			newGameUser.setRoomNo(chat.id);
+		} else {
+			return this.returnMessage('handleUserConnect', 400, 'ROOM data fail');
+		}
 
 		/**
 		 * 플레이어가 게임에 있지 않은지 확인
